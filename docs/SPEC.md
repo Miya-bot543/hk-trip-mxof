@@ -193,7 +193,8 @@ ds.exportJSON() / ds.importJSON(file)   // 匯入時逐筆呼叫 upsert，需通
    - 每次發佈改 `VERSION`；保留 `skipWaiting`＋`clients.claim`＋清舊快取。
 
 ### 5.1 匯入既有資料到 Supabase（一次性腳本，放 `scripts/`）
-- `POCKET_SEED` 21 筆 → `places`（保留 `legacy_id`；`info`/`extra`/`tags`/`transport`/`venue` 原樣搬）。
+- `POCKET_SEED` 21 筆中的 19 筆 → `places`（保留 `legacy_id`；`info`/`extra`/`tags`/`transport`/`venue` 原樣搬）。`daruma`（分店未定）、`curry`（店家未定）依使用者決定不匯入。
+- 實作：`scripts/geocode.mjs`（座標）→ `scripts/build_seed.mjs` 產生 `scripts/seed.sql`，使用者在 SQL Editor 貼上執行；可重複執行，已匯入會略過。
 - 4 間住宿 → `places`（category='hotel'、is_wishlist=false、ja_name/ja_address/phone 取自 `DRIVER`）。
 - `DAYS` → `itinerary_items` 固定骨架（locked=true、kind='fixed'），例如：
   - 12/25 05:00 CI2130 桃園 T2 → 09:40 新千歲國際線（group_label=中華組）、取車、14:00 後入住 adex inn

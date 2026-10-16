@@ -22,8 +22,8 @@ const AREA = { 札幌: [43.06, 141.35, 15], 登別: [42.47, 141.16, 12], 小樽:
 const areaOf = a => Object.keys(AREA).find(k => (a || "").startsWith(k));
 const km = (a, b, c, d) => Math.hypot((a - c) * 111, (b - d) * 81);
 const near = (hit, area) => !area || km(hit.lat, hit.lng, AREA[area][0], AREA[area][1]) <= AREA[area][2];
-// 查不到也不估算的項目（店家未定）
-const SKIP = new Set(["curry"]);
+// 不匯入的項目（分店／店家未定，使用者 2026-10-16 決定先不放）
+const EXCLUDE = new Set(["daruma", "curry"]);
 
 async function gsi(q) {
   const r = await fetch(`https://msearch.gsi.go.jp/address-search/AddressSearch?q=${encodeURIComponent(q)}`, { headers: { "User-Agent": UA } });
@@ -39,14 +39,14 @@ async function osm(q) {
 }
 
 const targets = [
-  ...POCKET_SEED.map(p => ({ key: p.id, name: p.name, addr: clean(p.address), area: areaOf(p.area) })),
+  ...POCKET_SEED.filter(p => !EXCLUDE.has(p.id)).map(p => ({ key: p.id, name: p.name, addr: clean(p.address), area: areaOf(p.area) })),
   ...HOTEL_DRIVER.map(id => DRIVER.find(d => d.id === id)).map(d => ({ key: d.id, name: d.zh, addr: clean(d.addr), area: d.addr.includes("登別") ? "登別" : "札幌" })),
 ];
 
 for (const t of targets) {
   if (cache[t.key]?.lat) continue;
   let hit = null;
-  if (!SKIP.has(t.key)) {
+  {
     if (t.addr && hasBanchi(t.addr)) hit = await gsi(t.addr);
     if (hit && !near(hit, t.area)) hit = null;
     if (!hit && JA_NAME[t.key]) hit = await osm(JA_NAME[t.key]);

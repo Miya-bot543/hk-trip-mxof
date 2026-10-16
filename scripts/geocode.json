@@ -20,20 +20,6 @@
   "query": "北海道札幌市東区北12条東1丁目1-10",
   "display": "北海道札幌市東区北十二条東一丁目１番１０号"
  },
- "daruma": {
-  "lat": null,
-  "lng": null,
-  "src": null,
-  "query": null,
-  "display": null
- },
- "curry": {
-  "lat": null,
-  "lng": null,
-  "src": null,
-  "query": null,
-  "display": null
- },
  "kani": {
   "lat": 43.055004,
   "lng": 141.351059,
