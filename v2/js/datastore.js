@@ -31,6 +31,8 @@ export const ds = {
   expenses: () => D.expenses,
   splits: () => D.expense_splits,
   trip: () => D.trip,
+  // 備份用：目前手上的全部資料（格式和 data/snapshot.json 一樣）
+  dump: () => JSON.parse(JSON.stringify(Object.assign({ saved_at: new Date().toISOString() }, D))),
   on(ev, fn) { if (ev === "change") subs.add(fn); return () => subs.delete(fn); },
 };
 

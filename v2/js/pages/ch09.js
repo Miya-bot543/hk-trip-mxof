@@ -3,6 +3,7 @@ import { CHECKLIST } from "../../data/static.js";
 import { store } from "../util.js";
 import { head, pager } from "../ui.js";
 import { vjwHTML } from "../features/vjw.js";
+import { backupHTML } from "../features/backup.js";
 
 export default function ch09(){
   const st=store.get("hk-check",{}); const done=CHECKLIST.filter((_,i)=>st[i]).length;
@@ -19,5 +20,6 @@ export default function ch09(){
     <div class="bar" style="margin-top:8px"><i id="cBar" style="width:${done/CHECKLIST.length*100}%"></i></div></div>
   <div class="grid" style="margin-top:14px">${groups.map(g=>`<div class="card"><span class="tag ice">${g}</span>
     ${CHECKLIST.map((c,i)=>c[0]!==g?'':`<label class="check ${st[i]?'done':''}"><input type="checkbox" data-ck="${i}" ${st[i]?'checked':''}><span>${c[1]}</span></label>`).join("")}</div>`).join("")}</div>
-  <p class="muted">勾選狀態記在你這台裝置的瀏覽器裡。</p>${pager("09")}`;
+  <p class="muted">勾選狀態記在你這台裝置的瀏覽器裡。</p>
+  ${backupHTML()}${pager("09")}`;
 }
