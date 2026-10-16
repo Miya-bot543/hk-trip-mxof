@@ -395,3 +395,10 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .bd.dragging .bd-drag{cursor:grabbing}
 .bd-item.dragging{border-style:solid;border-color:var(--lilac-d);box-shadow:0 14px 28px rgba(0,0,0,.45);transform:scale(1.03) rotate(-1deg);pointer-events:none}
 .bd-ph{border:2px dashed var(--lilac-d);border-radius:12px;background:transparent;opacity:.6}
+.bd-pickgrp{margin-top:12px}
+.bd-pickgrp>b{display:block;font-size:14px;color:var(--lilac-d)}
+.bd-picks{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:6px;margin-top:6px}
+.bd-pick{display:flex;flex-direction:column;align-items:flex-start;gap:2px;text-align:left;padding:8px 10px;border-radius:12px;border:1px solid var(--lilac);background:var(--cream);color:inherit;font:inherit;cursor:pointer}
+.bd-pick:hover{border-color:var(--lilac-d)}
+.bd-pick:disabled{opacity:.5}
+.bd-pick small{font-size:12px}
