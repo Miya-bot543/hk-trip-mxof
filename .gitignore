@@ -1,0 +1,4 @@
+# 截圖基準只留在本機
+scripts/baseline/
+node_modules/
+.DS_Store
