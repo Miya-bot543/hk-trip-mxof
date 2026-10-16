@@ -48,7 +48,7 @@ ds.verifyCode = async code => {
 
 async function call(fn, args) {
   if (!ds.canEdit()) throw new DsError("no_code");
-  const { data, error } = await withTimeout(sb.rpc(fn, Object.assign({ p_trip: D.trip.id, p_code: store.get("hk-code", ""), p_actor: ds.me() || "家人" }, args)), 8000)
+  const { data, error } = await withTimeout(sb.rpc(fn, Object.assign({ p_trip: D.trip.id, p_code: store.get("hk-code", ""), p_actor: ds.me() || "旅伴" }, args)), 8000)
     .catch(e => ({ error: e }));
   if (error) {
     const m = String(error.message || "");
@@ -80,6 +80,13 @@ ds.deletePlace = async id => {
 ds.restorePlace = async id => {
   await call("place_restore", { p_id: id });
   D.places = await fetchTable("places"); saveLocal(); emit();
+};
+
+// 行程：新增或修改一筆（固定行程由資料庫擋下）
+ds.upsertItem = async p => {
+  const row = await call("item_upsert", { p });
+  D.itinerary_items = D.itinerary_items.filter(x => x.id !== row.id).concat(row);
+  saveLocal(); emit(); return row;
 };
 
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
