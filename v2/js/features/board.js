@@ -1,5 +1,5 @@
 /* 05 章行程規劃板：整日／上午／下午／晚上四個時段，資料來自 ds.items(day)。
-   自訂行程可新增（自己輸入或從口袋名單挑）、修改、刪除、按住 ⇅ 拖曳調整順序、可跨時段（需通關碼）；順路排序之後再加。 */
+   自訂行程可新增（自己輸入或從口袋名單挑）、修改、刪除、📌 釘選、按住 ⇅ 拖曳調整順序、可跨時段（需通關碼）。 */
 import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
@@ -49,6 +49,7 @@ function itemHTML(it){
   const meta = (area?`<span class="bd-grp area">📍 ${esc(area.replace(/（(.+)）/,"・$1"))}</span>`:'') +
     (stay?`<span class="bd-grp area">⏱️ 約 ${stayTxt(stay)}</span>`:'') +
     (it.locked?'<span class="bd-grp lock">🔒 固定</span>':'') +
+    (it.pinned?'<span class="bd-grp pin">📌 釘選</span>':'') +
     (it.group_label?`<span class="bd-grp">${esc(it.group_label)}</span>`:'') +
     (it.status==="maybe"?'<span class="bd-grp">備案</span>':'');
   const edit = ds.mode==="live" && !it.locked;
@@ -59,7 +60,7 @@ function itemHTML(it){
     ${alertsOf(it, pl).map(a=>`<div class="bd-warn">⚠️ ${esc(a)}</div>`).join("")}
     ${addrOf(it)?`<a class="bd-map" href="${gmaps(mapQ(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
-    ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
+    ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bdpin="${it.id}">📌 ${it.pinned?'取消釘選':'釘選'}</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
 }
 
 function boardHTML(i){
@@ -157,6 +158,15 @@ document.addEventListener("click",async e=>{
   const ed=t.closest("[data-bdedit]");
   if(ed){ if(!await ensureEditor()) return; BD.editing=ed.dataset.bdedit; BD.formOpen=true; BD.pick=false; renderForm();
     const c=$("#bdFormCard"); if(c) c.scrollIntoView({behavior:"smooth",block:"center"}); return; }
+  // 📌 釘選：順路排序時留在原位，不會被移動
+  const pn=t.closest("[data-bdpin]");
+  if(pn){ const it=itemOf(pn.dataset.bdpin); if(!it) return;
+    if(!await ensureEditor()) return;
+    pn.disabled=true;
+    try{ await ds.upsertItem(Object.assign({}, it, {pinned:!it.pinned})); BD.menu=null; refreshBoard();
+      toast(it.pinned?"已取消釘選":"已釘選，順路排序時會留在原位"); }
+    catch(err){ pn.disabled=false; pkError(err); }
+    return; }
   const dl=t.closest("[data-bddel]");
   if(dl){ const it=itemOf(dl.dataset.bddel); if(!it) return;
     if(!await ensureEditor()) return;
