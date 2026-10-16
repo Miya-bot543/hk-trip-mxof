@@ -1,6 +1,7 @@
-/* 07 口袋名單（v1 原樣；5.2 會改接 datastore）。 */
-import { DAYS, POCKET_SEED } from "../../data/static.js";
+/* 07 口袋名單：資料來自 datastore（places 裡 is_wishlist=true 的景點、購物、美食）。 */
+import { DAYS } from "../../data/static.js";
 import { $, esc, v, store, gmaps, toast } from "../util.js";
+import { ds } from "../datastore.js";
 
 export const STATIC_BUILD = true;
 
@@ -52,8 +53,15 @@ export async function resolvePkNames(){
   try{ const ps=await PK.user.profiles(ids); ids.forEach(id=>{PK.names[id]=(ps[id]&&ps[id].name)||"";}); refreshPocket(); }catch(e){}
 }
 
-/* 沒有共用資料庫（例如在 Claude 以外開啟）時，顯示內建的預設清單，勾選存本機 */
-export function pkList(){ return PK.db ? PK.items : POCKET_SEED.map(x=>Object.assign({},x,(store.get("hk-pocket",{})[x.id])||{})); }
+/* 資料庫的地點轉成卡片用的格式。id 沿用舊版代號（legacy_id），手機裡原本的勾選紀錄（hk-pocket）才不會不見 */
+const fromPlace = p => ({ id:p.legacy_id||p.id, uuid:p.id, name:p.name, cat:p.category, area:p.area, venue:p.venue, address:p.address||"",
+  transport:p.transport||[], tags:p.tags||[], info:p.info||{}, extra:p.extra||[], note:p.note||"", stay:p.stay_minutes, lat:p.lat, lng:p.lng, createdAt:p.created_at });
+/* 「♡ 想去」「✓ 已去」目前記在自己的手機（5.2 第 4 步改為全家共用） */
+export function pkList(){
+  if(PK.db) return PK.items;
+  const st=store.get("hk-pocket",{});
+  return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace).map(x=>Object.assign(x,st[x.id]||{}));
+}
 export const wantCount = st => Object.values(st.wantBy||{}).filter(Boolean).length;
 export const iWant = st => PK.db ? !!(PK.uid && st.wantBy && st.wantBy[PK.uid]) : !!st.want;
 export const pkQuery = it => it.address ? it.address : `${it.name} ${(it.area||"").replace(/（.*）/,"").replace("其他","北海道")}`;
@@ -89,6 +97,7 @@ export function pkCardHTML(it){
 export function pocketListHTML(){
   const list=pkList().filter(i=>i&&i.name).filter(i=>PK.afilter==="all" || (PK.afilter==="其他" ? !/^(札幌|登別)/.test(i.area||"") : (i.area||"").startsWith(PK.afilter)));
   if(PK.db && PK.ready && !list.length) return `<p class="muted" style="margin-top:14px">清單是空的，用上面的表單新增第一個地點吧。</p>`;
+  if(!PK.db && !ds.trip()) return `<p class="muted" style="margin-top:14px">口袋名單讀取中…</p>`;
   const show = PK_CATS.filter(([k])=>PK.filter==="all"||PK.filter===k);
   return show.map(([k,t])=>{ const L=list.filter(c=>(PK_FIELDS[c.cat]?c.cat:"spot")===k);
     return `<div class="cat-h">${t}<span class="muted">（${L.length}）</span></div>${L.length?`<div class="grid pk-grid">${L.map(pkCardHTML).join("")}</div>`:'<p class="muted">還沒有項目。</p>'}`;}).join("");
@@ -163,6 +172,8 @@ export function refreshPocket(full){
   if(full){ $("#pk-status").innerHTML=pkStatusHTML(); const n=$("#pkName"); if(!n || (!n.value && !PK.editing)){ PK.draftExtra=null; pkRenderForm(); } }
   area.innerHTML=pocketListHTML(); PK.pending=false;
 }
+ds.ready().then(()=>refreshPocket());
+ds.on("change",()=>refreshPocket());
 document.addEventListener("focusout",()=>{ if(PK.pending) setTimeout(()=>{ if(PK.pending) refreshPocket(); },50); });
 
 export async function pkSave(){
