@@ -69,11 +69,10 @@ export function pocketListHTML(){
 }
 
 export function pkStatusHTML(){
-  const mine="「♡ 想去」「✓ 已去」目前只記在你自己的手機上。";
-  if(ds.mode==="offline") return `<div class="caution">📴 目前沒有網路，顯示最後一次讀到的清單，連上網路後才能修改。${mine}</div>`;
-  if(ds.mode!=="live") return `<div class="caution">📌 目前為唯讀模式，暫時無法新增或修改。${mine}</div>`;
-  if(!pkWritable()) return `<div class="caution">👨‍👩‍👧 全家共用清單：按「＋ 新增地點」或卡片裡的「修改」，輸入家庭通關碼就能編輯。${mine}</div>`;
-  return `<div class="caution">👨‍👩‍👧 全家共用中：新增、修改、刪除，家人打開網站都看得到。${mine}${editorBarHTML()}</div>`;
+  if(ds.mode==="offline") return `<div class="caution">📴 目前沒有網路，顯示最後一次讀到的清單，連上網路後才能修改。</div>`;
+  if(ds.mode!=="live") return `<div class="caution">📌 目前為唯讀模式，暫時無法新增或修改。</div>`;
+  if(!pkWritable()) return `<div class="caution">👨‍👩‍👧 全家共用清單：按「＋ 新增地點」或卡片裡的「修改」，輸入家庭通關碼就能編輯。</div>`;
+  return `<div class="caution">👨‍👩‍👧 共用中：新增、修改、刪除，打開網站都看得到。${editorBarHTML()}</div>`;
 }
 
 /* ---------- 表單 ---------- */
