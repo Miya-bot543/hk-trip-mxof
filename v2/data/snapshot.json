@@ -1,0 +1,1476 @@
+{
+ "saved_at": "2026-10-16T09:11:10.013Z",
+ "trip": {
+  "id": "94419d88-c426-4b67-b963-b0029b223886",
+  "slug": "hokkaido-2026",
+  "name": "北海道 10 日遊",
+  "start_date": "2026-12-25",
+  "end_date": "2027-01-03",
+  "base_currency": "TWD"
+ },
+ "places": [
+  {
+   "id": "52eab232-b2f4-4ae0-95ee-4fa445e0b122",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "h1",
+   "name": "登別 adex inn（登別温泉）",
+   "category": "hotel",
+   "area": "登別",
+   "venue": "室內",
+   "address": "北海道登別市登別温泉町76-2",
+   "ja_name": "adex inn（アデックスイン）",
+   "ja_address": "〒059-0551 北海道登別市登別温泉町76-2",
+   "phone": "0143-84-2205",
+   "lat": 42.493881,
+   "lng": 141.143143,
+   "stay_minutes": null,
+   "transport": [],
+   "tags": [
+    "住宿"
+   ],
+   "info": {
+    "inDate": "2026/12/25（五）",
+    "checkin": "下午 2:00 後",
+    "outDate": "2026/12/28（一）",
+    "checkout": "上午 10:00 前"
+   },
+   "extra": [],
+   "note": "巨無霸溫泉免費泡：免費無限使用對面「第一瀧本館」的溫泉大浴場",
+   "is_wishlist": false,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:00+00:00",
+   "updated_at": "2026-10-13T00:00:00+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "ca645cb5-2deb-408f-8bed-f062fc902902",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "h2",
+   "name": "APA 札幌薄野站前飯店",
+   "category": "hotel",
+   "area": "札幌（薄野）",
+   "venue": "室內",
+   "address": "〒064-0804 北海道札幌市中央区南4条西2丁目2-5",
+   "ja_name": "アパホテル〈札幌すすきの駅前〉",
+   "ja_address": "〒064-0804 北海道札幌市中央区南4条西2丁目2-5",
+   "phone": "011-511-4111",
+   "lat": 43.055649,
+   "lng": 141.355774,
+   "stay_minutes": null,
+   "transport": [],
+   "tags": [
+    "住宿"
+   ],
+   "info": {
+    "inDate": "2026/12/28（一）",
+    "checkin": "下午 3:00 後",
+    "outDate": "2026/12/31（四）",
+    "checkout": "上午 10:00 前"
+   },
+   "extra": [],
+   "note": "附近是薄野不夜城；成吉思汗烤羊肉達摩（だるま）和湯咖哩名店在步行 5 分鐘內；走路 3 分鐘可到狸小路商店街",
+   "is_wishlist": false,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:00+00:00",
+   "updated_at": "2026-10-13T00:00:00+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "63def13d-3a4b-483d-9de6-d9dd6bc7a25b",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "h3",
+   "name": "札幌民宿",
+   "category": "hotel",
+   "area": "札幌（中島公園）",
+   "venue": "室內",
+   "address": "北海道札幌市中央区南12条西8-1-24 第37松井ビル",
+   "ja_name": "第37松井ビル",
+   "ja_address": "北海道札幌市中央区南12条西8丁目1-24",
+   "phone": null,
+   "lat": 43.044662,
+   "lng": 141.346954,
+   "stay_minutes": null,
+   "transport": [],
+   "tags": [
+    "住宿"
+   ],
+   "info": {
+    "inDate": "2026/12/31（四）",
+    "checkin": "下午 3:00 後",
+    "outDate": "2027/01/02（六）",
+    "checkout": "上午 10:00 前"
+   },
+   "extra": [],
+   "note": "房間內有洗衣機（附洗衣精），可洗淨烘乾，免費使用；位在中島公園附近（中島公園通站步行約 2 分鐘），不在薄野中心",
+   "is_wishlist": false,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:00+00:00",
+   "updated_at": "2026-10-13T00:00:00+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "206bd2d8-1404-460c-b2a1-e25ee07cc2fd",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "h4",
+   "name": "Vessel Hotel Campana Susukino 船舶花園薄野飯店",
+   "category": "hotel",
+   "area": "札幌（薄野）",
+   "venue": "室內",
+   "address": "〒064-0805 北海道札幌市中央区南5条西6丁目16-1",
+   "ja_name": "ベッセルホテルカンパーナすすきの",
+   "ja_address": "〒064-0805 北海道札幌市中央区南5条西6丁目16-1",
+   "phone": "011-531-8111",
+   "lat": 43.054165,
+   "lng": 141.349655,
+   "stay_minutes": null,
+   "transport": [],
+   "tags": [
+    "住宿"
+   ],
+   "info": {
+    "inDate": "2027/01/02（六）",
+    "checkin": "下午 2:00 後",
+    "outDate": "2027/01/03（日）",
+    "checkout": "上午 11:00 前"
+   },
+   "extra": [],
+   "note": "免費飲料吧 14:00～23:00（可用外帶杯帶回房間）；北海道牛奶霜淇淋 19:00～21:00 免費供應；早餐為現場加購：鮭魚卵、干貝、甜蝦等 10 種海鮮吃到飽；檜木大浴場與桑拿；回程班機 10:40 起飛，實際需比退房期限（11:00）更早出發前往機場。",
+   "is_wishlist": false,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:00+00:00",
+   "updated_at": "2026-10-13T00:00:00+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "d0724646-11d3-4b6c-81c6-b18ddb513bbe",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "susukino",
+   "name": "薄野鬧區",
+   "category": "spot",
+   "area": "札幌（薄野）",
+   "venue": "戶外",
+   "address": null,
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.0553612,
+   "lng": 141.3533762,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "市區散步",
+    "夜間活動",
+    "美食"
+   ],
+   "info": {
+    "fee": "—",
+    "stay": "自由",
+    "tips": "晚上人多，注意隨身物品",
+    "when": "住宿札幌期間（12/28～01/03）",
+    "hours": "多數店家營業到深夜"
+   },
+   "extra": [],
+   "note": "APA 與 Vessel 兩間飯店都位在薄野一帶。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:00+00:00",
+   "updated_at": "2026-10-13T00:00:00+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "e7be33ec-8c34-4ecf-8751-8bcdf09eec85",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "tanuki",
+   "name": "狸小路商店街",
+   "category": "shop",
+   "area": "札幌（大通・狸小路）",
+   "venue": "室內",
+   "address": "北海道札幌市中央区南2条～南3条 西1～7丁目",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.0572584,
+   "lng": 141.352698,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "市電（路面電車）",
+    "步行"
+   ],
+   "tags": [
+    "購物",
+    "藥妝",
+    "伴手禮"
+   ],
+   "info": {
+    "buy": "藥妝、伴手禮、零食",
+    "hours": "各店不同",
+    "closed": "各店不同",
+    "taxfree": "待確認"
+   },
+   "extra": [],
+   "note": "橫跨 7 個街區、有屋頂的商店街，下雪天也好逛。依你提供的資料，從 APA 飯店走路約 3 分鐘；AOAO SAPPORO 就在旁邊。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:01+00:00",
+   "updated_at": "2026-10-13T00:00:01+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "1cc581fc-7a34-4964-8b5d-3dc2a981fad8",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "suwa",
+   "name": "札幌諏訪神社",
+   "category": "spot",
+   "area": "札幌（市區其他）",
+   "venue": "戶外",
+   "address": "北海道札幌市東区北12条東1丁目1-10",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.076134,
+   "lng": 141.354095,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "神社參拜",
+    "長尾山雀御守",
+    "蕾絲御守",
+    "拍照"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "約 20～30 分",
+    "tips": "御守和剪紙御朱印很受歡迎；花手水春～秋最漂亮，冬天也有季節裝飾",
+    "hours": "24 小時可參拜（社務所約 9:00～17:00）"
+   },
+   "extra": [
+    {
+     "k": "交通說明",
+     "v": "地下鐵東豐線北13條東站步行約 3 分"
+    }
+   ],
+   "note": "以「シマエナガ（長尾山雀）」透明御守、透明蕾絲／光雕御守聞名，另有每月更換的剪紙御朱印。可考慮排在 12/30 或 01/02 的札幌市區時間（候選，尚未確認）。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-13T00:00:02+00:00",
+   "updated_at": "2026-10-13T00:00:02+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "75ff6ec8-4bc5-4650-a7b8-5a8a91a299da",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "kani",
+   "name": "三大蟹 Buffet 日式涮涮鍋 宮之森 餐廳廣場店",
+   "category": "food",
+   "area": "札幌（薄野）",
+   "venue": "室內",
+   "address": "北海道札幌市中央区南4条西5丁目1 東急レストランプラザ 2F",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.055004,
+   "lng": 141.351059,
+   "stay_minutes": 75,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "⚠️ 年末年始公休",
+    "三大蟹吃到飽",
+    "和牛涮涮鍋"
+   ],
+   "info": {
+    "dish": "毛蟹、松葉蟹、帝王蟹＋和牛涮涮鍋、壽司吃到飽",
+    "hours": "17:00～22:00（L.O. 21:30，最後入店約 20:30）",
+    "queue": "可預訂當天起算 7 天內的座位",
+    "branch": "レストランプラザ店",
+    "budget": "套餐約 ¥8,800～9,900（兒童約 ¥6,600）",
+    "closed": "年末年始（實際休息日待確認）",
+    "reserve": "需要預約"
+   },
+   "extra": [
+    {
+     "k": "⚠️ 注意",
+     "v": "店家年末年始公休，我們在札幌的 12/28～01/03 期間是否營業待確認，訂位前請先向店家確認"
+    },
+    {
+     "k": "電話",
+     "v": "011-211-1291"
+    },
+    {
+     "k": "交通說明",
+     "v": "地下鐵南北線薄野站步行約 1～3 分"
+    }
+   ],
+   "note": "三種北海道代表螃蟹和和牛涮涮鍋吃到飽。⚠️ 店家年末年始公休，我們在札幌的 12/28～01/03 正好跨年，請先確認營業日再訂位。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:01+00:00",
+   "updated_at": "2026-10-14T00:00:01+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "13e30c71-59f0-47b5-b9ad-dd992a7f214a",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "aoao",
+   "name": "AOAO SAPPORO",
+   "category": "spot",
+   "area": "札幌（大通・狸小路）",
+   "venue": "室內",
+   "address": "北海道札幌市中央区南2条西3丁目20 moyuk SAPPORO 4～6F",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.057949,
+   "lng": 141.3535,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "市電（路面電車）",
+    "步行"
+   ],
+   "tags": [
+    "水族館",
+    "企鵝",
+    "水母",
+    "雨雪天 OK"
+   ],
+   "info": {
+    "fee": "大人約 ¥2,200（依時期變動）",
+    "stay": "約 1.5～2 小時",
+    "tips": "全室內，下雪天也適合；晚上也能去",
+    "hours": "10:00～22:00（最後入館 21:00）"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "011-212-1316"
+    },
+    {
+     "k": "交通說明",
+     "v": "地下鐵大通站步行約 3 分；市電狸小路站步行約 1 分"
+    }
+   ],
+   "note": "「美術館型」的都市水族館，以企鵝和水母為主角，設計感很強；館內有吧台，可以邊喝飲料邊欣賞。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:02+00:00",
+   "updated_at": "2026-10-14T00:00:02+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "d52f2590-98ca-4fb3-9da8-d7050988c0a4",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "odori",
+   "name": "大通公園",
+   "category": "spot",
+   "area": "札幌（大通・狸小路）",
+   "venue": "戶外",
+   "address": "北海道札幌市中央区大通西1～12丁目",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.0599018,
+   "lng": 141.3475101,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "市區散步",
+    "拍照",
+    "電視塔"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "30 分～1 小時",
+    "tips": "冬天積雪路滑，請穿防滑鞋",
+    "hours": "全天開放"
+   },
+   "extra": [],
+   "note": "橫貫札幌市中心的長條公園，東端就是札幌電視塔；冬季燈飾活動的檔期每年不同，出發前可以查一下。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:03+00:00",
+   "updated_at": "2026-10-14T00:00:03+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "fe8e4de4-2620-46ea-b814-9f8ca58f29f3",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "jingu",
+   "name": "北海道神宮",
+   "category": "spot",
+   "area": "札幌（圓山・宮之森）",
+   "venue": "戶外",
+   "address": "北海道札幌市中央区宮ヶ丘474",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.0545798,
+   "lng": 141.3092009,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "神社參拜",
+    "新年參拜"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "參拜約 30 分，含散步約 1～1.5 小時",
+    "tips": "⚠️ 12/31 深夜～1/3 是札幌最熱門的新年參拜地，人非常多，建議搭地下鐵",
+    "hours": "冬季（11～2 月）約 7:00～16:00；年末年始另有特別開門時間"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "011-611-0261"
+    },
+    {
+     "k": "交通說明",
+     "v": "地下鐵東西線圓山公園站步行約 15 分"
+    }
+   ],
+   "note": "北海道最具代表性的神社，1869 年創建，緊鄰圓山公園，可以一起排。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:04+00:00",
+   "updated_at": "2026-10-14T00:00:04+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3fa57575-10b3-4329-921b-347928e930ca",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "shiroi",
+   "name": "白色戀人公園（觀光工廠）",
+   "category": "spot",
+   "area": "札幌（市區其他）",
+   "venue": "園區",
+   "address": "北海道札幌市西区宮の沢2条2丁目11-36",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.089111,
+   "lng": 141.271469,
+   "stay_minutes": 120,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "觀光工廠",
+    "伴手禮",
+    "甜點",
+    "冬季燈飾"
+   ],
+   "info": {
+    "fee": "免費區域可逛；付費區大人 ¥800",
+    "stay": "約 1.5～2 小時",
+    "tips": "「チョコトピアファクトリー」預定 2026 年 1～7 月整修，部分參觀可能暫停",
+    "hours": "約 10:00～18:00（冬季燈飾期可能延長；年末年始有休館日，待確認）"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "011-666-1481"
+    },
+    {
+     "k": "交通說明",
+     "v": "地下鐵東西線宮之澤站步行約 7 分"
+    }
+   ],
+   "note": "石屋製菓「白色戀人」的觀光工廠，可以看生產線、親手做大愛心白色戀人；冬天英式庭園有燈飾。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:05+00:00",
+   "updated_at": "2026-10-14T00:00:05+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "23819fc3-5866-4247-b757-bbe41002db8d",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "maruyama",
+   "name": "圓山公園",
+   "category": "spot",
+   "area": "札幌（圓山・宮之森）",
+   "venue": "戶外",
+   "address": "北海道札幌市中央区宮ヶ丘",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.0557385,
+   "lng": 141.319452,
+   "stay_minutes": 60,
+   "transport": [
+    "地下鐵",
+    "步行"
+   ],
+   "tags": [
+    "公園散步",
+    "雪景"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "30 分～1 小時",
+    "tips": "冬季步道積雪，注意腳步",
+    "hours": "全天開放"
+   },
+   "extra": [
+    {
+     "k": "交通說明",
+     "v": "地下鐵東西線圓山公園站附近"
+    }
+   ],
+   "note": "緊鄰北海道神宮和圓山動物園的大公園，適合和神宮安排在同一天。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:06+00:00",
+   "updated_at": "2026-10-14T00:00:06+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "2058ad70-ec21-48ea-8c84-d5e343ccfc89",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "otaru",
+   "name": "小樽運河",
+   "category": "spot",
+   "area": "小樽",
+   "venue": "戶外",
+   "address": "北海道小樽市港町",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.2020231,
+   "lng": 141.0006005,
+   "stay_minutes": 60,
+   "transport": [
+    "JR 電車／鐵路",
+    "步行"
+   ],
+   "tags": [
+    "港町散步",
+    "夜景",
+    "一日遊"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "半天",
+    "tips": "運河周邊石板路結冰很滑；傍晚點燈後最有氣氛",
+    "hours": "全天開放"
+   },
+   "extra": [
+    {
+     "k": "交通說明",
+     "v": "札幌站搭 JR 約 32～34 分到小樽站，再步行約 10 分"
+    }
+   ],
+   "note": "石造倉庫沿著運河排列的懷舊港町，附近的堺町通可以逛玻璃工藝和甜點店。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:07+00:00",
+   "updated_at": "2026-10-14T00:00:07+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "fb41f7f4-ff0f-4b5e-8e3c-b9be6166702b",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "ningle",
+   "name": "森林精靈露臺（ニングルテラス）",
+   "category": "shop",
+   "area": "富良野",
+   "venue": "園區",
+   "address": "北海道富良野市中御料（新富良野王子大飯店旁）",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 43.3234308,
+   "lng": 142.3563389,
+   "stay_minutes": 60,
+   "transport": [
+    "租車自駕",
+    "計程車"
+   ],
+   "tags": [
+    "手作工藝",
+    "雪夜點燈"
+   ],
+   "info": {
+    "buy": "木雕、蠟燭、玻璃等手作工藝品",
+    "hours": "冬季（12～3 月）約 12:00～20:45",
+    "closed": "11 月維護休業；各店公休不一",
+    "taxfree": "待確認"
+   },
+   "extra": [],
+   "note": "森林裡 15 間小木屋組成的工藝小店街，雪夜點燈很夢幻。⚠️ 離札幌開車約 2 小時，不在目前行程路線上。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:08+00:00",
+   "updated_at": "2026-10-14T00:00:08+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "ceb66f5c-d339-4e43-825a-f0d001de70fb",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "bear",
+   "name": "登別熊牧場",
+   "category": "spot",
+   "area": "登別",
+   "venue": "園區",
+   "address": "北海道登別市登別温泉町224",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.486217,
+   "lng": 141.157654,
+   "stay_minutes": 120,
+   "transport": [
+    "步行",
+    "其他"
+   ],
+   "tags": [
+    "棕熊",
+    "纜車",
+    "親子"
+   ],
+   "info": {
+    "fee": "大人約 ¥3,200（含纜車來回，以官網為準）",
+    "stay": "約 1～2 小時",
+    "tips": "強風纜車停駛時會休園；年末年始照常營業",
+    "hours": "冬季（10/21～4/20）9:30～16:30（最後入園約 15:50）"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "0143-84-2225"
+    },
+    {
+     "k": "交通說明",
+     "v": "登別溫泉巴士總站步行約 5 分到纜車站"
+    }
+   ],
+   "note": "從溫泉街搭纜車約 7 分鐘上山，可以近距離看棕熊，還能從「人的籠子」裡觀察熊。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:09+00:00",
+   "updated_at": "2026-10-14T00:00:09+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "ad08aa7e-64ca-4641-9bd7-96fe60feefd4",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "enma",
+   "name": "閻魔堂",
+   "category": "spot",
+   "area": "登別",
+   "venue": "戶外",
+   "address": "北海道登別市登別温泉町50",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.494759,
+   "lng": 141.145325,
+   "stay_minutes": 60,
+   "transport": [
+    "步行"
+   ],
+   "tags": [
+    "溫泉街",
+    "機關秀"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "15～30 分",
+    "tips": "每場約 5 分鐘；天候不佳時可能暫停",
+    "hours": "9:00～21:00；「地獄審判」機關秀每天約 6～7 場（10:00、13:00、15:00、17:00、20:00、21:00 等，以現場公告為準）"
+   },
+   "extra": [],
+   "note": "溫泉街上供奉閻魔大王的小堂，時間一到，閻魔大王會瞪眼變臉「審判」。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:10+00:00",
+   "updated_at": "2026-10-14T00:00:10+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "342a2d46-dc6e-466b-aaf6-5a507d7fc658",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "ooyunuma",
+   "name": "大湯沼",
+   "category": "spot",
+   "area": "登別",
+   "venue": "戶外",
+   "address": "北海道登別市登別温泉町",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.5025849,
+   "lng": 141.1471778,
+   "stay_minutes": 60,
+   "transport": [
+    "步行",
+    "租車自駕"
+   ],
+   "tags": [
+    "火山景觀",
+    "溫泉沼"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "約 30 分",
+    "tips": "⚠️ 大湯沼停車場冬季關閉，雪季步道也可能封閉，請先向登別觀光協會確認",
+    "hours": "自由參觀"
+   },
+   "extra": [
+    {
+     "k": "洽詢",
+     "v": "登別觀光協會 0143-84-3311"
+    }
+   ],
+   "note": "火山爆裂口積水形成的溫泉沼，周長約 1 公里，湖面冒著白煙和硫磺味。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:11+00:00",
+   "updated_at": "2026-10-14T00:00:11+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3f4c0469-1c03-405b-9f39-7394e194478f",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "okunoyu",
+   "name": "奧之湯",
+   "category": "spot",
+   "area": "登別",
+   "venue": "戶外",
+   "address": "北海道登別市登別温泉町（大湯沼旁）",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.5022588,
+   "lng": 141.1489021,
+   "stay_minutes": 60,
+   "transport": [
+    "步行",
+    "租車自駕"
+   ],
+   "tags": [
+    "火山景觀",
+    "溫泉沼"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "約 15 分（可與大湯沼一起）",
+    "tips": "冬季通路可能封閉，和大湯沼一起先確認",
+    "hours": "自由參觀"
+   },
+   "extra": [],
+   "note": "大湯沼旁的小溫泉沼，冒著硫磺蒸氣，可以順路一起看。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:12+00:00",
+   "updated_at": "2026-10-14T00:00:12+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3ea70dc8-212e-48b2-9a77-c09aa6a636f8",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "gensen",
+   "name": "泉源公園",
+   "category": "spot",
+   "area": "登別",
+   "venue": "戶外",
+   "address": "北海道登別市登別温泉町（泉源公園）",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.4948853,
+   "lng": 141.1436714,
+   "stay_minutes": 60,
+   "transport": [
+    "步行"
+   ],
+   "tags": [
+    "間歇泉",
+    "鬼像",
+    "拍照"
+   ],
+   "info": {
+    "fee": "免費",
+    "stay": "15～30 分",
+    "tips": "間歇泉約每 3 小時噴發一次，最高約 8 公尺",
+    "hours": "自由參觀"
+   },
+   "extra": [],
+   "note": "溫泉街裡的小公園，有可愛的鬼像和祈願金棒，運氣好能看到間歇泉噴發。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:13+00:00",
+   "updated_at": "2026-10-14T00:00:13+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "76e97f02-032a-4b88-aad1-df5a589b3d08",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "jidaimura",
+   "name": "登別伊達時代村",
+   "category": "spot",
+   "area": "登別",
+   "venue": "園區",
+   "address": "北海道登別市中登別町53-1",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.462486,
+   "lng": 141.167389,
+   "stay_minutes": 120,
+   "transport": [
+    "路線巴士",
+    "租車自駕"
+   ],
+   "tags": [
+    "江戶主題樂園",
+    "忍者秀",
+    "おにゃんこ寺",
+    "親子"
+   ],
+   "info": {
+    "fee": "大人 ¥3,300",
+    "stay": "半天",
+    "tips": "冬季有幾天維護休村，出發前先查開村日",
+    "hours": "冬季（11/1～3/19）9:00～16:00（最後入村約 15:00）"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "0143-83-3311"
+    }
+   ],
+   "note": "重現江戶時代街景的主題樂園，有忍者秀、花魁表演和手裏劍體驗；村內還有可以參觀的貓咪寺院「おにゃんこ寺」。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:14+00:00",
+   "updated_at": "2026-10-14T00:00:14+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "ecc149f9-508e-4b2c-8a79-9b8e86d6638d",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "nixe",
+   "name": "登別尼克斯海洋公園",
+   "category": "spot",
+   "area": "登別",
+   "venue": "園區",
+   "address": "北海道登別市登別東町1-22",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.454559,
+   "lng": 141.182541,
+   "stay_minutes": 150,
+   "transport": [
+    "JR 電車／鐵路",
+    "步行",
+    "租車自駕"
+   ],
+   "tags": [
+    "水族館",
+    "企鵝遊行",
+    "雨雪天 OK"
+   ],
+   "info": {
+    "fee": "大人 ¥3,000",
+    "stay": "約 2～3 小時",
+    "tips": "有維護休園日，出發前先確認",
+    "hours": "9:00～17:00（最後入園 16:30）"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "0143-83-3800"
+    },
+    {
+     "k": "交通說明",
+     "v": "JR 登別站步行約 5 分"
+    }
+   ],
+   "note": "以丹麥古堡為造型的水族館，有企鵝遊行、海豚表演和上萬隻沙丁魚的「銀河水槽」。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:15+00:00",
+   "updated_at": "2026-10-14T00:00:15+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "5b110529-5182-475d-b30e-d742d77a2fa9",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": "maruhira",
+   "name": "肴 雲丹 まるひら",
+   "category": "food",
+   "area": "登別",
+   "venue": "室內",
+   "address": "北海道登別市登別東町4-15-2",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": 42.453842,
+   "lng": 141.174789,
+   "stay_minutes": 75,
+   "transport": [
+    "步行",
+    "租車自駕"
+   ],
+   "tags": [
+    "海膽",
+    "海鮮丼"
+   ],
+   "info": {
+    "dish": "海膽丼、海鮮丼",
+    "hours": "11:00～15:00（L.O. 14:30）",
+    "queue": "待確認",
+    "branch": "本店（JR 登別站附近）",
+    "budget": "待確認",
+    "closed": "週一（12/28 是週一）",
+    "reserve": "待確認"
+   },
+   "extra": [
+    {
+     "k": "電話",
+     "v": "0143-84-4577"
+    },
+    {
+     "k": "交通說明",
+     "v": "JR 登別站步行約 5 分"
+    }
+   ],
+   "note": "創業 80 多年的登別海膽專門加工商「マルヒラ渡邊水產」直營的海鮮丼店。營業資訊是 2025 年公開資料，請出發前再確認。",
+   "is_wishlist": true,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-14T00:00:16+00:00",
+   "updated_at": "2026-10-14T00:00:16+00:00",
+   "deleted_at": null
+  }
+ ],
+ "itinerary_items": [
+  {
+   "id": "47c6cce0-08a5-4579-8567-507e46235c9e",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-25",
+   "slot": "morning",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "✈️ CI2130 桃園機場第 2 航站 → 新千歲機場國際線航廈",
+   "kind": "fixed",
+   "start_time": "05:00:00",
+   "end_time": "09:40:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": "清晨 05:00 起飛，前往桃園機場的交通與集合時間待確認",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "e11f1f63-ebf7-48ab-aa72-570e5a14dc9e",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-25",
+   "slot": "afternoon",
+   "position": 1,
+   "place_id": "52eab232-b2f4-4ae0-95ee-4fa445e0b122",
+   "place_snapshot": {
+    "lat": 42.493881,
+    "lng": 141.143143,
+    "name": "登別 adex inn（登別温泉）",
+    "address": "北海道登別市登別温泉町76-2"
+   },
+   "title": "🏨 入住登別 adex inn（14:00 後）",
+   "kind": "fixed",
+   "start_time": "14:00:00",
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "c59bc742-ff85-4a8b-a8e7-c4f8639c699a",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-25",
+   "slot": "morning",
+   "position": 2,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "🚗 World Net Rent-A-Car 報到、搭免費接駁車到營業所取車",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": "1 樓櫃檯（無人時拿起櫃台電話按 1）；Sienta hybrid 或同級車",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "4e828e52-dfaa-43ca-a40a-bfd05effe412",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-26",
+   "slot": "afternoon",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "🚗 第 2 台車取車",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "星宇組",
+   "note": "Raize / Yaris Cross 或同級車；冬季天黑早，開車請放慢、預留時間",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "bbff0c66-6e1e-482f-819e-95a28fe2e768",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-26",
+   "slot": "morning",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "✈️ JX318 台中機場 → 新千歲機場國際線航廈",
+   "kind": "fixed",
+   "start_time": "10:20:00",
+   "end_time": "15:00:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "星宇組",
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "5a6d0dc2-114d-45d9-b555-d0305970986d",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-26",
+   "slot": "evening",
+   "position": 1,
+   "place_id": "52eab232-b2f4-4ae0-95ee-4fa445e0b122",
+   "place_snapshot": {
+    "lat": 42.493881,
+    "lng": 141.143143,
+    "name": "登別 adex inn（登別温泉）",
+    "address": "北海道登別市登別温泉町76-2"
+   },
+   "title": "🏨 入住登別 adex inn（第 2 筆訂房）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "星宇組",
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3364991b-4d62-4b10-b0ce-61faa80ec590",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-28",
+   "slot": "morning",
+   "position": 1,
+   "place_id": "52eab232-b2f4-4ae0-95ee-4fa445e0b122",
+   "place_snapshot": {
+    "lat": 42.493881,
+    "lng": 141.143143,
+    "name": "登別 adex inn（登別温泉）",
+    "address": "北海道登別市登別温泉町76-2"
+   },
+   "title": "🏨 退房登別 adex inn（10:00 前）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": "10:00:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "72b3f472-6482-4be9-aa93-3b01b622e79e",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-28",
+   "slot": "afternoon",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "🚗 新千歲空港營業所還車（兩台車）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": "Map Code 113774672；搭營業所接駁巴士到新千歲機場（末班 19:00）；機場前往札幌的交通方式待確認",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "fe3aacac-1ad1-493d-bf0d-a272c182f69b",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-28",
+   "slot": "afternoon",
+   "position": 2,
+   "place_id": "ca645cb5-2deb-408f-8bed-f062fc902902",
+   "place_snapshot": {
+    "lat": 43.055649,
+    "lng": 141.355774,
+    "name": "APA 札幌薄野站前飯店",
+    "address": "〒064-0804 北海道札幌市中央区南4条西2丁目2-5"
+   },
+   "title": "🏨 入住 APA 札幌薄野站前飯店（15:00 後）",
+   "kind": "fixed",
+   "start_time": "15:00:00",
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "5f267f32-e4ca-4ffe-8a3d-311341afb612",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-28",
+   "slot": "morning",
+   "position": 2,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "⛽ 千歲市內加油站加滿 REGULAR（紅色）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": "保留收據",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "c3ac9bc4-1940-46eb-9b9d-763ccde2c650",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-29",
+   "slot": "allday",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "🚌 旭川一日遊套裝行程",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": "集合時間、地點與景點待確認；TWD 1,710／每位",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "3d14ca54-db2d-4b12-ab34-4033e247ff85",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-31",
+   "slot": "morning",
+   "position": 1,
+   "place_id": "ca645cb5-2deb-408f-8bed-f062fc902902",
+   "place_snapshot": {
+    "lat": 43.055649,
+    "lng": 141.355774,
+    "name": "APA 札幌薄野站前飯店",
+    "address": "〒064-0804 北海道札幌市中央区南4条西2丁目2-5"
+   },
+   "title": "🏨 退房 APA 札幌薄野站前飯店（10:00 前）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": "10:00:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "d8d7dc47-5926-48b7-a01e-e14f6b8f2528",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2026-12-31",
+   "slot": "afternoon",
+   "position": 1,
+   "place_id": "63def13d-3a4b-483d-9de6-d9dd6bc7a25b",
+   "place_snapshot": {
+    "lat": 43.044662,
+    "lng": 141.346954,
+    "name": "札幌民宿",
+    "address": "北海道札幌市中央区南12条西8-1-24 第37松井ビル"
+   },
+   "title": "🏨 入住札幌民宿（15:00 後）",
+   "kind": "fixed",
+   "start_time": "15:00:00",
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": "換宿交通：計程車或市電",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "1c788b28-b6d4-419f-a865-bf7b87881d3b",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-01",
+   "slot": "allday",
+   "position": 1,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "⛷️ 札幌手稻滑雪場（預定）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": "雪具、課程待確認",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "be76e564-ae98-4898-ba8b-ea144c4107ce",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-02",
+   "slot": "morning",
+   "position": 1,
+   "place_id": "63def13d-3a4b-483d-9de6-d9dd6bc7a25b",
+   "place_snapshot": {
+    "lat": 43.044662,
+    "lng": 141.346954,
+    "name": "札幌民宿",
+    "address": "北海道札幌市中央区南12条西8-1-24 第37松井ビル"
+   },
+   "title": "🏨 退房札幌民宿（10:00 前）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": "10:00:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": null,
+   "note": null,
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "1c4c9c4e-1d26-4ec9-9fb5-b2990b09d478",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-02",
+   "slot": "afternoon",
+   "position": 1,
+   "place_id": "206bd2d8-1404-460c-b2a1-e25ee07cc2fd",
+   "place_snapshot": {
+    "lat": 43.054165,
+    "lng": 141.349655,
+    "name": "Vessel Hotel Campana Susukino 船舶花園薄野飯店",
+    "address": "〒064-0805 北海道札幌市中央区南5条西6丁目16-1"
+   },
+   "title": "🏨 入住 Vessel Hotel Campana Susukino（14:00 後）",
+   "kind": "fixed",
+   "start_time": "14:00:00",
+   "end_time": null,
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": "換宿交通：計程車或市電",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "c85708d2-a370-40ac-8e97-21194e4806cc",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-02",
+   "slot": "afternoon",
+   "position": 2,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "✈️ JX319 新千歲機場 → 台中機場",
+   "kind": "fixed",
+   "start_time": "16:00:00",
+   "end_time": "19:55:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "星宇組",
+   "note": "前往新千歲機場的交通與出發時間待確認",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "f6181bfa-a2a7-4ffb-929d-5f8d52ca3531",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-03",
+   "slot": "morning",
+   "position": 1,
+   "place_id": "206bd2d8-1404-460c-b2a1-e25ee07cc2fd",
+   "place_snapshot": {
+    "lat": 43.054165,
+    "lng": 141.349655,
+    "name": "Vessel Hotel Campana Susukino 船舶花園薄野飯店",
+    "address": "〒064-0805 北海道札幌市中央区南5条西6丁目16-1"
+   },
+   "title": "🏨 退房 Vessel Hotel（11:00 前）",
+   "kind": "fixed",
+   "start_time": null,
+   "end_time": "11:00:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": "回程班機 10:40 起飛，實際需比退房期限（11:00）更早出發前往機場",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "e6d0b60f-4bb1-430f-acb7-28c27827b581",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "day": "2027-01-03",
+   "slot": "morning",
+   "position": 2,
+   "place_id": null,
+   "place_snapshot": {},
+   "title": "✈️ CI2131 新千歲機場國際線航廈 → 桃園機場第 2 航站",
+   "kind": "fixed",
+   "start_time": "10:40:00",
+   "end_time": "14:15:00",
+   "locked": true,
+   "pinned": false,
+   "status": "must",
+   "group_label": "中華組",
+   "note": "出發時間與前往機場的交通待確認",
+   "created_by": "匯入",
+   "updated_by": "匯入",
+   "created_at": "2026-10-16T08:49:48.669525+00:00",
+   "updated_at": "2026-10-16T08:49:48.669525+00:00",
+   "deleted_at": null
+  }
+ ],
+ "travelers": [],
+ "place_marks": [],
+ "fx_rates": [],
+ "expenses": [],
+ "expense_splits": []
+}

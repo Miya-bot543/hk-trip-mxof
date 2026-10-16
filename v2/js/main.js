@@ -11,6 +11,7 @@ import "./features/vjw.js";
 import "./features/driver.js";
 import "./features/weather.js";
 import { netBanner } from "./features/net.js";
+import { ds } from "./datastore.js";
 import home from "./pages/home.js";
 import ch01 from "./pages/ch01.js";
 import ch02 from "./pages/ch02.js";
@@ -88,3 +89,5 @@ if("serviceWorker" in navigator && location.protocol==="https:"){ window.addEven
 netBanner();
 fxInit();
 route();
+ds.ready();
+window.hkds = ds;   /* 方便在瀏覽器主控台檢查資料層 */
