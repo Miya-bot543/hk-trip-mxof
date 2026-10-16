@@ -384,3 +384,5 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 /* 05 章今日安排：時間固定寬度靠左，內容對齊 */
 .pl-time{flex:0 0 4.6em}
 .pl-meta{margin-left:calc(4.6em + 8px)}
+.bd-more{margin-left:auto;background:none;border:0;padding:0 6px;font-size:20px;line-height:1;color:var(--lilac-d);cursor:pointer}
+.bd-acts{margin-top:8px}

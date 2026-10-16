@@ -88,6 +88,16 @@ ds.upsertItem = async p => {
   D.itinerary_items = D.itinerary_items.filter(x => x.id !== row.id).concat(row);
   saveLocal(); emit(); return row;
 };
+ds.deleteItem = async id => {
+  const before = D.itinerary_items;
+  D.itinerary_items = D.itinerary_items.filter(x => x.id !== id); emit();
+  try { await call("item_delete", { p_id: id }); saveLocal(); }
+  catch (e) { D.itinerary_items = before; emit(); throw e; }
+};
+ds.restoreItem = async id => {
+  await call("item_restore", { p_id: id });
+  D.itinerary_items = await fetchTable("itinerary_items"); saveLocal(); emit();
+};
 
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
 const setData = (d, save) => {
