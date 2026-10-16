@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="北海道10日遊">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>(function(){try{var n=new Date(),h=n.getHours(),d=new Date(n);if(h<6)d.setDate(d.getDate()-1);var p=d.toDateString()+((h>=6&&h<18)?"D":"N"),t=(h>=18||h<6)?"dark":"light",o=JSON.parse(localStorage.getItem("hk-theme")||"null");if(o&&o.p===p)t=o.t;document.documentElement.dataset.theme=t;}catch(e){}})();</script>
 <title>❄️ 北海道 10 日遊｜Hokkaido Winter Trip 2026–2027</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -262,7 +263,7 @@ select{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(-
 .tdy{position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--lilac-d);color:#fff;font-style:normal;font-size:11px;font-weight:900;border-radius:999px;padding:0 8px;white-space:nowrap}
 .today-chip{background:var(--pink);border-color:var(--pink-d)}
 .fx-fab{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;width:54px;height:54px;border-radius:50%;
-  border:2px solid var(--lilac-d);background:var(--card);font-size:24px;box-shadow:var(--shadow)}
+  border:3px solid #fff;background:linear-gradient(135deg,#f3a2c6,#9a7fd6);font-size:24px;box-shadow:0 4px 16px rgba(0,0,0,.35),0 0 0 2px #9a7fd6}
 .fx-panel{position:fixed;right:16px;bottom:calc(80px + env(safe-area-inset-bottom,0px));z-index:41;width:min(340px,calc(100vw - 32px));
   max-height:calc(100vh - 140px);overflow:auto;background:var(--card);border:2px solid var(--lilac-d);border-radius:22px;padding:14px 16px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .fx-panel[hidden]{display:none}
@@ -365,6 +366,10 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .wx-t .hi{color:#e05a7a;font-weight:900} .wx-t .lo{color:var(--ice-d);font-weight:900}
 #netBar{position:fixed;left:0;right:0;top:0;z-index:60;background:#3e3557;color:#fff;text-align:center;font-size:13px;font-weight:700;padding:calc(6px + env(safe-area-inset-top,0px)) 10px 6px}
 #netBar[hidden]{display:none}
+#drvOverlay{--bg:#fbf6f1;--card:#fffdfa;--ink:#3e3557;--soft:#776d92;--line:#ecdff3;--lilac:#ddd0f6;--lilac-d:#9a7fd6;--pink:#f7cfe0;--pink-d:#e88db4;color:#3e3557;color-scheme:light}
+#drvOverlay .btn{color:#3e3557;background:#ddd0f6;border-color:#9a7fd6;font-size:17px;padding:10px 20px}
+#drvOverlay .btn.ghost{background:#fff}
+.nobr{white-space:nowrap}
 </style>
 </head>
 <body>
@@ -1337,7 +1342,7 @@ function openDriver(id){
     <div class="drv-ask">こちらまでお願いします。</div>
     <div class="drv-name">${esc(d.ja)}</div>
     ${d.sub?`<div class="drv-sub">${esc(d.sub)}</div>`:''}
-    <div class="drv-addr">${d.zip?esc(d.zip)+"<br>":""}${esc(d.addr)}</div>
+    <div class="drv-addr">${d.zip?esc(d.zip)+"<br>":""}${esc(d.addr).replace(/([0-9０-９][0-9０-９\-丁目番地号]*)$/,'<span class="nobr">$1</span>')}</div>
     ${d.tel?`<div class="drv-tel">TEL ${esc(d.tel)}<span>（電話番号でナビ検索できます）</span></div>`:''}
     <div class="drv-actions">
       ${d.tel?`<a class="btn ghost" href="tel:${d.tel.replace(/-/g,"")}">📞 撥打</a>`:''}
@@ -1472,10 +1477,16 @@ document.addEventListener("change",e=>{
 });
 window.addEventListener("hashchange",route);
 
-$("#themeT").onclick=()=>{
-  const r=document.documentElement, dark = r.dataset.theme ? r.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches;
-  r.dataset.theme = dark?"light":"dark"; $("#themeT").textContent = dark?"🌙":"☀️";
-};
+/* 日夜模式：18:00～隔天 06:00 自動夜間；手動切換只在目前這個白天／夜晚時段有效 */
+function themePeriod(){ const n=new Date(), h=n.getHours(), d=new Date(n); if(h<6) d.setDate(d.getDate()-1); return d.toDateString()+((h>=6&&h<18)?"D":"N"); }
+function applyTheme(){
+  const h=new Date().getHours(); let t=(h>=18||h<6)?"dark":"light";
+  const o=store.get("hk-theme",null); if(o && o.p===themePeriod()) t=o.t;
+  document.documentElement.dataset.theme=t;
+  const b=$("#themeT"); b.textContent = t==="dark"?"☀️":"🌙"; b.setAttribute("aria-label", t==="dark"?"切換成日間模式":"切換成夜間模式");
+}
+$("#themeT").onclick=()=>{ const t=document.documentElement.dataset.theme==="dark"?"light":"dark"; store.set("hk-theme",{t,p:themePeriod()}); applyTheme(); };
+applyTheme(); setInterval(applyTheme, 5*60*1000);
 (function(){const s=$("#snow");for(let i=0;i<18;i++){const f=document.createElement("i");f.textContent=i%5===0?"♡":"❄";
   f.style.left=Math.random()*100+"%";f.style.fontSize=(10+Math.random()*12)+"px";
   f.style.animationDuration=(9+Math.random()*10)+"s";f.style.animationDelay=(-Math.random()*15)+"s";s.appendChild(f);}})();

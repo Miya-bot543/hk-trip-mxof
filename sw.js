@@ -1,5 +1,5 @@
 /* 北海道 10 日遊：離線快取。更新網站時請把 VERSION 改掉，讓手機抓到新版 */
-const VERSION = "hk-2026-10-15b";
+const VERSION = "hk-2026-10-15c";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
