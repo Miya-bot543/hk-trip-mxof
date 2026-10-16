@@ -14,7 +14,7 @@ export function dayDate(i){ return new Date(START.getTime() + i*86400000).toISOS
 
 const hm = t => t ? String(t).slice(0,5) : "";
 const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
-// 地圖用「名稱＋地址」搜尋：只給地址時，同一棟樓會跳到建築物本身而不是店家
+// 地圖直接用這格搜尋：填店名最準（只填地址時，同一棟樓可能跳到別家）
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
@@ -28,7 +28,7 @@ function itemHTML(it){
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
       ?`<button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
-    ${addrOf(it)?`<a class="bd-map" href="${gmaps(name+" "+addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
+    ${addrOf(it)?`<a class="bd-map" href="${gmaps(addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
     ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
 }
@@ -59,7 +59,7 @@ function formHTML(){
       <label>時段<select id="bdSlot">${SLOTS.map(([k,t])=>`<option value="${k}" ${k===slot?'selected':''}>${t}</option>`).join("")}</select></label>
       <label>開始時間（可留空）<input type="time" id="bdStart" value="${hm(it.start_time)}"></label>
       <label>必去／備案<select id="bdStatus"><option value="must">必去</option><option value="maybe" ${it.status==="maybe"?'selected':''}>備案</option></select></label>
-      <label class="full">地址（可留空，填了就能用 Google Maps 開啟）<input type="text" id="bdAddr" maxlength="150" placeholder="例如：北海道札幌市中央区南5条西4丁目" value="${esc(addrOf(it))}"></label>
+      <label class="full">地點（可留空，填了就能用 Google Maps 開啟；填店名最準，也可以填地址）<input type="text" id="bdAddr" maxlength="150" placeholder="例如：adex BAKERY&amp;CAFE" value="${esc(addrOf(it))}"></label>
       <label class="full">備註（可留空）<textarea id="bdNote" maxlength="300">${esc(it.note||"")}</textarea></label>
     </div>
     <div class="row" style="margin-top:12px"><button class="btn" id="bdSave">${BD.editing?'儲存修改':'加入行程'}</button>
