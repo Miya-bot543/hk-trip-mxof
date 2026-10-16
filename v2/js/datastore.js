@@ -88,6 +88,13 @@ ds.upsertItem = async p => {
   D.itinerary_items = D.itinerary_items.filter(x => x.id !== row.id).concat(row);
   saveLocal(); emit(); return row;
 };
+// 行程：調整順序，只送 id 和新 position（固定行程由資料庫擋下）
+ds.reorderItems = async list => {
+  const before = D.itinerary_items, pos = new Map(list.map(x => [x.id, x.position]));
+  D.itinerary_items = D.itinerary_items.map(x => pos.has(x.id) ? Object.assign({}, x, { position: pos.get(x.id) }) : x); emit();
+  try { await call("items_reorder", { p_items: list }); saveLocal(); }
+  catch (e) { D.itinerary_items = before; emit(); throw e; }
+};
 ds.deleteItem = async id => {
   const before = D.itinerary_items;
   D.itinerary_items = D.itinerary_items.filter(x => x.id !== id); emit();

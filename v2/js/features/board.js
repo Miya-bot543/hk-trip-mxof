@@ -1,5 +1,5 @@
 /* 05 章行程規劃板：整日／上午／下午／晚上四個時段，資料來自 ds.items(day)。
-   自訂行程可新增、修改、刪除（需通關碼）；拖曳、順路排序之後再加。 */
+   自訂行程可新增、修改、刪除、用 ↑↓ 調整順序（需通關碼）；拖曳、順路排序之後再加。 */
 import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
@@ -17,7 +17,7 @@ const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
 // 地圖直接用這格搜尋：填店名最準（只填地址時，同一棟樓可能跳到別家）
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
-function itemHTML(it){
+function itemHTML(it, idx, n){
   const name = it.title || (it.place_snapshot && it.place_snapshot.name) || "（未命名）";
   const time = hm(it.start_time) + (it.end_time ? "～"+hm(it.end_time) : "");
   const meta = (it.locked?'<span class="bd-grp lock">🔒 固定</span>':'') +
@@ -26,7 +26,7 @@ function itemHTML(it){
   const edit = ds.mode==="live" && !it.locked;
   return `<li class="bd-item${it.locked?' locked':''}">
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
-      ?`<button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
+      ?`<span class="bd-move"><button type="button" data-bdmove="${it.id}" data-dir="-1" aria-label="往上移" ${idx===0?'disabled':''}>↑</button><button type="button" data-bdmove="${it.id}" data-dir="1" aria-label="往下移" ${idx===n-1?'disabled':''}>↓</button></span><button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
     ${addrOf(it)?`<a class="bd-map" href="${gmaps(addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
@@ -39,7 +39,7 @@ function boardHTML(i){
     const list = items.filter(x => x.slot===k).sort(byOrder);
     if(k==="allday" && !list.length) return "";
     return `<div class="bd-slot"><b>${t}</b>${list.length
-      ? `<ul class="bd-list">${list.map(itemHTML).join("")}</ul>`
+      ? `<ul class="bd-list">${list.map((x,j)=>itemHTML(x,j,list.length)).join("")}</ul>`
       : '<p class="muted bd-empty">還沒有安排</p>'}</div>`;
   }).join("");
   return slots;
@@ -48,6 +48,19 @@ function boardHTML(i){
 /* ---------- 新增・修改・刪除自訂行程 ---------- */
 const BD = {formOpen:false, editing:null, menu:null};
 const itemOf = id => ds.items().find(x => x.id===id);
+// 同一天同一時段、畫面上看得到的自訂行程（已排好順序）
+const slotList = it => ds.items(it.day).filter(x => !x.locked && x.slot===it.slot).sort(byOrder);
+
+// ↑↓：和隔壁交換，整個時段重新編號 1、2、3…
+async function moveItem(id, dir){
+  const it=itemOf(id); if(!it) return;
+  const list=slotList(it), i=list.findIndex(x=>x.id===id), j=i+dir;
+  if(i<0 || j<0 || j>=list.length) return;
+  if(!await ensureEditor()) return;
+  [list[i],list[j]]=[list[j],list[i]];
+  try{ await ds.reorderItems(list.map((x,k)=>({id:x.id, position:k+1}))); }
+  catch(e){ pkError(e); }
+}
 
 function formHTML(){
   if(ds.mode!=="live") return "";
@@ -91,6 +104,7 @@ document.addEventListener("click",async e=>{
   if(t.id==="bdOpenForm"){ if(!await ensureEditor()) return; BD.formOpen=true; BD.editing=null; renderForm(); const n=$("#bdTitle"); if(n) n.focus(); return; }
   if(t.id==="bdCancel"){ BD.formOpen=false; BD.editing=null; renderForm(); return; }
   if(t.id==="bdSave"){ saveItem(); return; }
+  const mv=t.closest("[data-bdmove]"); if(mv){ moveItem(mv.dataset.bdmove, +mv.dataset.dir); return; }
   const mn=t.closest("[data-bdmenu]"); if(mn){ BD.menu = BD.menu===mn.dataset.bdmenu ? null : mn.dataset.bdmenu; refreshBoard(); return; }
   const ed=t.closest("[data-bdedit]");
   if(ed){ if(!await ensureEditor()) return; BD.editing=ed.dataset.bdedit; BD.formOpen=true; renderForm();
