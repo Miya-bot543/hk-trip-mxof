@@ -1,11 +1,12 @@
 /* 05 章行程規劃板：整日／上午／下午／晚上四個時段，資料來自 ds.items(day)。
-   自訂行程可新增（自己輸入或從口袋名單挑）、修改、刪除、📌 釘選、按住 ⇅ 拖曳調整順序、可跨時段（需通關碼）。 */
+   自訂行程可新增（自己輸入或從口袋名單挑）、修改、刪除、📌 釘選、按住 ⇅ 拖曳調整順序、可跨時段、🧭 一鍵順路排序（需通關碼）。 */
 import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
 import { DAYS } from "../../data/static.js";
 import { ensureEditor } from "./editor.js";
 import { pkError, pkList, PK_CATS, pkCatName } from "./pocket.js";
+import { routeSort } from "../lib/route-sort.js";
 
 const SLOTS = [["allday","整日"],["morning","上午"],["afternoon","下午"],["evening","晚上"]];
 const START = new Date(Date.UTC(2026, 11, 25));
@@ -75,12 +76,13 @@ function boardHTML(i){
 }
 
 /* ---------- 新增・修改・刪除自訂行程 ---------- */
-const BD = {formOpen:false, editing:null, menu:null, pick:false};
+const BD = {formOpen:false, editing:null, menu:null, pick:false, route:false};
 const itemOf = id => ds.items().find(x => x.id===id);
 function formHTML(){
   if(ds.mode!=="live") return "";
   if(BD.pick) return pickHTML();
-  if(!BD.formOpen) return `<div class="row" style="margin-top:12px"><button class="btn" id="bdOpenPick">＋ 從口袋名單挑</button><button class="btn ghost" id="bdOpenForm">＋ 新增自訂行程</button></div>`;
+  if(BD.route) return routeHTML();
+  if(!BD.formOpen) return `<div class="row" style="margin-top:12px"><button class="btn" id="bdOpenPick">＋ 從口袋名單挑</button><button class="btn ghost" id="bdOpenForm">＋ 新增自訂行程</button><button class="btn ghost" id="bdOpenRoute">🧭 順路排序</button></div>`;
   const it = (BD.editing && itemOf(BD.editing)) || {}, slot = it.slot || "morning";
   const day = it.day ? DAYS.findIndex((_,i)=>dayDate(i)===it.day) : S.curDay;
   return `<div class="card lilac" id="bdFormCard" style="margin-top:12px"><span class="tag lilac">${BD.editing?'✏️ 修改行程':'＋ 新增自訂行程'}</span>
@@ -124,6 +126,40 @@ async function pickPlace(uuid, btn){
     toast(`已加入「${pl.name}」`); BD.pick=false; renderForm(); refreshBoard();
   }catch(e){ btn.disabled=false; pkError(e); }
 }
+/* ---------- 一鍵順路排序：先預覽，按「套用」才改 ---------- */
+const hotelPt = n => { const h = n==null ? null : ds.places().find(p=>p.legacy_id==="h"+(n+1));
+  return h && h.lat!=null ? {lat:h.lat, lng:h.lng} : null; };
+function routePlan(i){
+  const items = ds.items(dayDate(i)).filter(x => !x.locked), places = ds.places();
+  const ptOf = it => { const pl = it.place_id && places.find(p=>p.id===it.place_id);
+    return pl && pl.lat!=null && pl.lng!=null ? {lat:pl.lat, lng:pl.lng} : null; };
+  const slots = SLOTS.map(([k]) => ({ key:k, items: items.filter(x=>x.slot===k).sort(byOrder)
+    .map(it => ({ id:it.id, it, pt:ptOf(it), fixed: !!(it.pinned || it.start_time) })) })).filter(s=>s.items.length);
+  // 起點：前一晚住的地方；終點：當晚住的地方（第一天從機場出發，最後一天去機場，就不算）
+  const r = routeSort({ start: i>0 ? hotelPt(DAYS[i-1].stay) : null, end: hotelPt(DAYS[i].stay), slots });
+  r.patch = r.slots.flatMap(s => s.items.map((x,k)=>({id:x.id, slot:s.key, position:k+1})).filter(p=>itemOf(p.id).position!==p.position));
+  return r;
+}
+const kmTxt = v => v<1 ? `${Math.round(v*1000)} 公尺` : `${v.toFixed(1)} 公里`;
+function routeHTML(){
+  const r = routePlan(S.curDay), name = it => it.title || (it.place_snapshot && it.place_snapshot.name) || "（未命名）";
+  const why = x => x.it.pinned ? "📌 釘選" : x.it.start_time ? `🕘 ${hm(x.it.start_time)}` : !x.pt ? "沒有座標" : "";
+  const body = !r.changed ? '<p style="margin:10px 0 0">目前的順序已經很順了，不用調整 👍</p>'
+    : `<p style="margin:10px 0 0">移動距離約 ${kmTxt(r.before)} → <b>約 ${kmTxt(r.after)}</b></p>` +
+      r.slots.map(s=>`<div class="bd-rt"><b>${SLOTS.find(x=>x[0]===s.key)[1]}</b><ol>${s.items.map(x=>
+        `<li>${esc(name(x.it))}${why(x)?` <small class="muted">（${why(x)}，留在原位）</small>`:''}</li>`).join("")}</ol></div>`).join("");
+  return `<div class="card lilac" id="bdRouteCard" style="margin-top:12px"><span class="tag lilac">🧭 順路排序預覽</span>${body}
+    <p class="muted" style="margin:10px 0 0">每個時段裡重新排順序，時段不會變。從前一晚的住宿出發、回到當晚的住宿；距離是直線距離 ×1.3 的估算。📌 釘選、有填開始時間、自訂地點（沒有座標）的行程會留在原位。</p>
+    <div class="row" style="margin-top:12px">${r.changed?'<button class="btn" id="bdRouteGo">套用這個順序</button>':''}<button class="btn ghost" id="bdRouteCancel">${r.changed?'取消':'關閉'}</button></div></div>`;
+}
+async function applyRoute(btn){
+  if(!await ensureEditor()) return;
+  const r = routePlan(S.curDay);   // 重新算一次，避免預覽之後資料有變
+  btn.disabled=true;
+  try{ if(r.changed && r.patch.length) await ds.reorderItems(r.patch);
+    toast("已照順路順序排好"); BD.route=false; renderForm(); refreshBoard(); }
+  catch(e){ btn.disabled=false; pkError(e); }
+}
 const renderForm = () => { const w=$("#bd-formwrap"); if(w) w.innerHTML=formHTML(); };
 
 async function saveItem(){
@@ -148,15 +184,18 @@ async function saveItem(){
 
 document.addEventListener("click",async e=>{
   const t=e.target;
-  if(t.id==="bdOpenPick"){ if(!await ensureEditor()) return; BD.pick=true; BD.formOpen=false; BD.editing=null; renderForm(); return; }
+  if(t.id==="bdOpenPick"){ if(!await ensureEditor()) return; BD.route=false; BD.pick=true; BD.formOpen=false; BD.editing=null; renderForm(); return; }
+  if(t.id==="bdOpenRoute"){ BD.route=true; BD.pick=false; BD.formOpen=false; BD.editing=null; renderForm(); return; }
+  if(t.id==="bdRouteCancel"){ BD.route=false; renderForm(); return; }
+  if(t.id==="bdRouteGo"){ applyRoute(t); return; }
   if(t.id==="bdPickCancel"){ BD.pick=false; renderForm(); return; }
   const pk=t.closest("[data-bdpick]"); if(pk){ pickPlace(pk.dataset.bdpick, pk); return; }
-  if(t.id==="bdOpenForm"){ BD.pick=false; if(!await ensureEditor()) return; BD.formOpen=true; BD.editing=null; renderForm(); const n=$("#bdTitle"); if(n) n.focus(); return; }
+  if(t.id==="bdOpenForm"){ BD.pick=false; BD.route=false; if(!await ensureEditor()) return; BD.formOpen=true; BD.editing=null; renderForm(); const n=$("#bdTitle"); if(n) n.focus(); return; }
   if(t.id==="bdCancel"){ BD.formOpen=false; BD.editing=null; renderForm(); return; }
   if(t.id==="bdSave"){ saveItem(); return; }
   const mn=t.closest("[data-bdmenu]"); if(mn){ BD.menu = BD.menu===mn.dataset.bdmenu ? null : mn.dataset.bdmenu; refreshBoard(); return; }
   const ed=t.closest("[data-bdedit]");
-  if(ed){ if(!await ensureEditor()) return; BD.editing=ed.dataset.bdedit; BD.formOpen=true; BD.pick=false; renderForm();
+  if(ed){ if(!await ensureEditor()) return; BD.editing=ed.dataset.bdedit; BD.formOpen=true; BD.pick=false; BD.route=false; renderForm();
     const c=$("#bdFormCard"); if(c) c.scrollIntoView({behavior:"smooth",block:"center"}); return; }
   // 📌 釘選：順路排序時留在原位，不會被移動
   const pn=t.closest("[data-bdpin]");
@@ -177,7 +216,7 @@ document.addEventListener("click",async e=>{
 });
 
 export function boardSectionHTML(i){
-  BD.formOpen=false; BD.editing=null; BD.menu=null; BD.pick=false;
+  BD.formOpen=false; BD.editing=null; BD.menu=null; BD.pick=false; BD.route=false;
   return `<div class="card" style="margin-top:14px"><span class="tag lilac">行程規劃板</span>
     <div id="bd-area" class="bd">${boardHTML(i)}</div><div id="bd-formwrap">${formHTML()}</div></div>`;
 }
