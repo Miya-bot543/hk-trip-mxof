@@ -1,5 +1,5 @@
 {
- "saved_at": "2026-10-16T09:11:10.013Z",
+ "saved_at": "2026-10-16T10:21:59.222Z",
  "trip": {
   "id": "94419d88-c426-4b67-b963-b0029b223886",
   "slug": "hokkaido-2026",
@@ -191,7 +191,7 @@
    "legacy_id": "tanuki",
    "name": "狸小路商店街",
    "category": "shop",
-   "area": "札幌（大通・狸小路）",
+   "area": "札幌（大通）",
    "venue": "室內",
    "address": "北海道札幌市中央区南2条～南3条 西1～7丁目",
    "ja_name": null,
@@ -220,9 +220,9 @@
    "note": "橫跨 7 個街區、有屋頂的商店街，下雪天也好逛。依你提供的資料，從 APA 飯店走路約 3 分鐘；AOAO SAPPORO 就在旁邊。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "整理",
    "created_at": "2026-10-13T00:00:01+00:00",
-   "updated_at": "2026-10-13T00:00:01+00:00",
+   "updated_at": "2026-10-16T10:21:37.489139+00:00",
    "deleted_at": null
   },
   {
@@ -331,7 +331,7 @@
    "legacy_id": "aoao",
    "name": "AOAO SAPPORO",
    "category": "spot",
-   "area": "札幌（大通・狸小路）",
+   "area": "札幌（大通）",
    "venue": "室內",
    "address": "北海道札幌市中央区南2条西3丁目20 moyuk SAPPORO 4～6F",
    "ja_name": null,
@@ -370,9 +370,9 @@
    "note": "「美術館型」的都市水族館，以企鵝和水母為主角，設計感很強；館內有吧台，可以邊喝飲料邊欣賞。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "整理",
    "created_at": "2026-10-14T00:00:02+00:00",
-   "updated_at": "2026-10-14T00:00:02+00:00",
+   "updated_at": "2026-10-16T10:21:37.489139+00:00",
    "deleted_at": null
   },
   {
@@ -381,7 +381,7 @@
    "legacy_id": "odori",
    "name": "大通公園",
    "category": "spot",
-   "area": "札幌（大通・狸小路）",
+   "area": "札幌（大通）",
    "venue": "戶外",
    "address": "北海道札幌市中央区大通西1～12丁目",
    "ja_name": null,
@@ -409,9 +409,9 @@
    "note": "橫貫札幌市中心的長條公園，東端就是札幌電視塔；冬季燈飾活動的檔期每年不同，出發前可以查一下。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "整理",
    "created_at": "2026-10-14T00:00:03+00:00",
-   "updated_at": "2026-10-14T00:00:03+00:00",
+   "updated_at": "2026-10-16T10:21:37.489139+00:00",
    "deleted_at": null
   },
   {
@@ -569,8 +569,8 @@
    "lng": 141.0006005,
    "stay_minutes": 60,
    "transport": [
-    "JR 電車／鐵路",
-    "步行"
+    "步行",
+    "JR 電車／鐵路"
    ],
    "tags": [
     "港町散步",
@@ -592,9 +592,9 @@
    "note": "石造倉庫沿著運河排列的懷舊港町，附近的堺町通可以逛玻璃工藝和甜點店。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "Miya",
    "created_at": "2026-10-14T00:00:07+00:00",
-   "updated_at": "2026-10-14T00:00:07+00:00",
+   "updated_at": "2026-10-16T09:46:53.876806+00:00",
    "deleted_at": null
   },
   {
@@ -981,6 +981,47 @@
    "updated_by": "匯入",
    "created_at": "2026-10-14T00:00:16+00:00",
    "updated_at": "2026-10-14T00:00:16+00:00",
+   "deleted_at": null
+  },
+  {
+   "id": "9551bb5a-69c4-4d2e-a047-6bdf83d1aa75",
+   "trip_id": "94419d88-c426-4b67-b963-b0029b223886",
+   "legacy_id": null,
+   "name": "MEGA 唐吉訶德 札幌狸小路本店",
+   "category": "shop",
+   "area": "札幌（大通）",
+   "venue": "室內",
+   "address": "4 Chome-12-1 Minami 3 Jonishi, Chuo Ward, Sapporo, Hokkaido 060-0063日本",
+   "ja_name": null,
+   "ja_address": null,
+   "phone": null,
+   "lat": null,
+   "lng": null,
+   "stay_minutes": 120,
+   "transport": [
+    "步行",
+    "地下鐵"
+   ],
+   "tags": [
+    "狸小路",
+    "唐吉訶德",
+    "免稅購物",
+    "藥妝",
+    "伴手禮",
+    "零食"
+   ],
+   "info": {
+    "buy": "藥妝、伴手禮、零食、北海道土產、免稅購物",
+    "hours": "24 小時營業",
+    "closed": "無固定公休日"
+   },
+   "extra": [],
+   "note": "札幌狸小路商店街內的大型折扣購物店，適合一次採買藥妝、零食、伴手禮及日用品。可留意免稅購物規定與護照要求。建議預留 1～2 小時。",
+   "is_wishlist": true,
+   "created_by": "Miya",
+   "updated_by": "整理",
+   "created_at": "2026-10-16T09:44:16.952063+00:00",
+   "updated_at": "2026-10-16T10:21:37.489139+00:00",
    "deleted_at": null
   }
  ],
