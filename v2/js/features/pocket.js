@@ -8,7 +8,7 @@ import { ensureEditor, editorBarHTML } from "./editor.js";
 export const PK = {pending:false, filter:"all", afilter:"all", open:new Set(), editing:null, formOpen:false, draftExtra:null};
 export const PK_CATS = [["spot","⛩️ 景點・散步"],["shop","🛍️ 購物"],["food","🍜 美食"]];
 export const PK_COLOR = {spot:"ice", shop:"lilac", food:"pink"};
-export const PK_AREAS = ["札幌（薄野）","札幌（大通・狸小路）","札幌（札幌站周邊）","札幌（中島公園）","札幌（圓山・宮之森）","札幌（市區其他）",
+export const PK_AREAS = ["札幌（薄野）","札幌（大通）","札幌（札幌站周邊）","札幌（中島公園）","札幌（圓山・宮之森）","札幌（市區其他）",
   "手稻","定山溪","小樽","登別","白老","洞爺湖","室蘭","千歲・新千歲機場","苫小牧","旭川","美瑛","富良野","層雲峽","二世谷","函館","其他"];
 export const PK_TRANSPORT = ["步行","地下鐵","JR 電車／鐵路","市電（路面電車）","路線巴士","高速巴士","機場巴士","飯店接駁車","免費接駁車","計程車","租車自駕","套裝行程接送","飛機","其他"];
 export const PK_FIELDS = {
