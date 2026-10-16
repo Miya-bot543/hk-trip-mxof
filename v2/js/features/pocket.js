@@ -1,6 +1,6 @@
 /* 07 口袋名單：資料來自 datastore（places 裡 is_wishlist=true 的景點、購物、美食）。 */
 import { DAYS } from "../../data/static.js";
-import { $, esc, v, store, gmaps, toast, toastAction } from "../util.js";
+import { $, esc, v, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { ensureEditor, editorBarHTML } from "./editor.js";
 
@@ -29,23 +29,18 @@ export function pkError(e){
   else toast("暫時無法儲存，請稍後再試");
 }
 
-/* 資料庫的地點轉成卡片用的格式。id 沿用舊版代號（legacy_id），手機裡原本的勾選紀錄（hk-pocket）才不會不見 */
+/* 資料庫的地點轉成卡片用的格式。id 沿用舊版代號（legacy_id） */
 const fromPlace = p => ({ id:p.legacy_id||p.id, uuid:p.id, name:p.name, cat:p.category, area:p.area, venue:p.venue, address:p.address||"",
   transport:p.transport||[], tags:p.tags||[], info:p.info||{}, extra:p.extra||[], note:p.note||"", stay:p.stay_minutes, lat:p.lat, lng:p.lng, createdAt:p.created_at, by:p.created_by });
-/* 「♡ 想去」「✓ 已去」目前記在自己的手機（5.2 第 4 步改為全家共用） */
 export function pkList(){
-  const st=store.get("hk-pocket",{});
-  return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace).map(x=>Object.assign(x,st[x.id]||{}));
+  return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace);
 }
-export const iWant = st => !!st.want;
 const placeOf = it => ds.places().find(p=>p.id===it.uuid);
 export const pkQuery = it => it.address ? it.address : `${it.name} ${(it.area||"").replace(/（.*）/,"").replace("其他","北海道")}`;
 
-export function pkUpdate(id,local){ const st=store.get("hk-pocket",{}); st[id]=Object.assign({},st[id]||{},local); store.set("hk-pocket",st); }
-
 export function pkCardHTML(it){
   const cat=PK_FIELDS[it.cat]?it.cat:"spot", color=PK_COLOR[cat];
-  const info=it.info||{}, mine=iWant(it), live=ds.mode==="live";
+  const info=it.info||{}, live=ds.mode==="live";
   // 地區統一顯示在上方（札幌加上細分區域）；標籤裡跟地區重複的字就不再顯示
   const areaRaw=it.area||"其他", areaLabel=areaRaw.replace(/（(.+)）/,"・$1");
   const tags=(it.tags||[]).filter(t=>t && !areaRaw.includes(t));
@@ -59,9 +54,6 @@ export function pkCardHTML(it){
     <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'<span class="pk-venue">室內／戶外待確認</span>';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
     ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${v(x)}</dd>`).join("")}</dl>`:''}
-    <div class="stars">
-      <label><input type="checkbox" data-pk="${it.id}" data-f="want" ${mine?'checked':''}>♡ 想去</label>
-      <label><input type="checkbox" data-pk="${it.id}" data-f="done" ${it.done?'checked':''}>✓ 已去</label></div>
     ${who&&PK.open.has(it.id)?`<p class="muted" style="margin:8px 0 0">由 ${esc(who)} 新增</p>`:''}
     <div class="mapgo row"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
       <a class="btn" href="${gmaps(pkQuery(it))}" target="_blank" rel="noopener">🗺️ 地圖</a>
@@ -200,9 +192,5 @@ document.addEventListener("click",async e=>{
 document.addEventListener("change",e=>{
   const t=e.target;
   if(t.id==="pkCat"){ const cur={}; document.querySelectorAll("#pkCatFields [data-info]").forEach(el=>cur[el.dataset.info]=el.value);
-    $("#pkCatFields").innerHTML=pkCatFieldsHTML(t.value,cur); const s=document.querySelector("#pkFormCard .pk-sub"); if(s) s.textContent="📋 "+pkCatName(t.value)+"的資料"; return; }
-  if(t.dataset.pk){
-    const f=t.dataset.f, id=t.dataset.pk;
-    pkUpdate(id,{[f]:t.checked});
-  }
+    $("#pkCatFields").innerHTML=pkCatFieldsHTML(t.value,cur); const s=document.querySelector("#pkFormCard .pk-sub"); if(s) s.textContent="📋 "+pkCatName(t.value)+"的資料"; }
 });
