@@ -36,7 +36,8 @@ export function pkList(){
   return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace);
 }
 const placeOf = it => ds.places().find(p=>p.id===it.uuid);
-export const pkQuery = it => it.address ? it.address : `${it.name} ${(it.area||"").replace(/（.*）/,"").replace("其他","北海道")}`;
+// 有地址時用「店名＋地址」搜尋：只用地址的話，同一棟樓可能跳到別家店
+export const pkQuery = it => it.address ? `${it.name} ${it.address}` : `${it.name} ${(it.area||"").replace(/（.*）/,"").replace("其他","北海道")}`;
 
 export function pkCardHTML(it){
   const cat=PK_FIELDS[it.cat]?it.cat:"spot", color=PK_COLOR[cat];
