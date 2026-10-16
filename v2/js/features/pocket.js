@@ -46,14 +46,17 @@ export function pkUpdate(id,local){ const st=store.get("hk-pocket",{}); st[id]=O
 export function pkCardHTML(it){
   const cat=PK_FIELDS[it.cat]?it.cat:"spot", color=PK_COLOR[cat];
   const info=it.info||{}, mine=iWant(it), live=ds.mode==="live";
+  // 地區統一顯示在上方（札幌加上細分區域）；標籤裡跟地區重複的字就不再顯示
+  const areaRaw=it.area||"其他", areaLabel=areaRaw.replace(/（(.+)）/,"・$1");
+  const tags=(it.tags||[]).filter(t=>t && !areaRaw.includes(t));
   const who = it.by && it.by!=="匯入" ? it.by : "";
   const rows = [["地址", it.address||null],["交通方式",(it.transport&&it.transport.length)?it.transport.join("、"):null],
     ...PK_FIELDS[cat].map(([k,l])=>[l, info[k]&&info[k]!=="待確認"?info[k]:null]),
     ...((it.extra||[]).filter(x=>x&&x.k).map(x=>[x.k, x.v||null]))];
   return `<div class="card ${color} hcard">
-    <div class="htop"><span class="tag ${color==='pink'?'':color}">${pkCatName(cat)}</span>${/（.+）/.test(it.area||"")?`<span class="nights">📍 ${esc((it.area.match(/（(.+)）/)||[])[1])}</span>`:''}</div>
+    <div class="htop"><span class="tag ${color==='pink'?'':color}">${pkCatName(cat)}</span><span class="nights">📍 ${esc(areaLabel)}</span></div>
     <h3 style="margin-top:6px">${esc(it.name)}</h3>
-    <div class="pk-tags"><span class="pk-city">📍 ${esc((it.area||"其他").replace(/（.*）/,""))}</span>${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'<span class="pk-venue">室內／戶外待確認</span>';})()}${(it.tags||[]).map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+    <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'<span class="pk-venue">室內／戶外待確認</span>';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
     ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${v(x)}</dd>`).join("")}</dl>`:''}
     <div class="stars">
