@@ -13,3 +13,11 @@ export function toast(msg){
   let t=$("#toast"); if(!t){t=document.createElement("div");t.id="toast";document.body.appendChild(t);}
   t.textContent=msg; t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),3200);
 }
+
+/* 帶按鈕的提示（例如刪除後的「復原」），6 秒後自動消失 */
+export function toastAction(msg, label, fn){
+  let t=$("#toastA"); if(!t){t=document.createElement("div");t.id="toastA";t.setAttribute("role","status");document.body.appendChild(t);}
+  t.innerHTML=`<span>${esc(msg)}</span><button type="button">${esc(label)}</button>`;
+  t.querySelector("button").onclick=()=>{ t.classList.remove("show"); fn(); };
+  t.classList.add("show"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("show"),6000);
+}

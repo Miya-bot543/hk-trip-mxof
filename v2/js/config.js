@@ -3,4 +3,4 @@
 export const SUPABASE_URL = "https://ebebqnnzwmarxhopinsf.supabase.co";
 export const SUPABASE_ANON_KEY = "sb_publishable_hz88ZWiWC0eDRK4-uhUnyg_fb4xnQ6S";
 export const TRIP_SLUG = "hokkaido-2026";
-export const LIVE_ENABLED = false;   /* 5.2 口袋名單接上資料庫後才改成 true */
+export const LIVE_ENABLED = true;    /* 關掉就退回唯讀快照 */

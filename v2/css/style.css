@@ -353,3 +353,18 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 #drvOverlay .btn{color:#3e3557;background:#ddd0f6;border-color:#9a7fd6;font-size:17px;padding:10px 20px}
 #drvOverlay .btn.ghost{background:#fff}
 .nobr{white-space:nowrap}
+
+/* v2：通關碼視窗、帶按鈕的提示 */
+#edDialog{border:2px solid var(--lilac-d);border-radius:18px;background:var(--card);color:var(--ink);padding:18px 20px;width:min(92vw,360px);box-shadow:var(--shadow)}
+#edDialog::backdrop{background:rgba(30,26,43,.45)}
+.ed-form h3{margin:0 0 4px}
+.ed-form label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700;margin-top:10px}
+.ed-form input{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 10px}
+.ed-form .row{margin-top:12px}
+.ed-msg{color:var(--pink-d);font-weight:700;min-height:1.2em;margin:8px 0 0;font-size:14px}
+.ed-bar{display:inline-flex;gap:8px;align-items:center;margin-left:6px;font-weight:700}
+.linkbtn{background:none;border:0;padding:0;color:var(--lilac-d);text-decoration:underline;font:inherit;font-size:13px;cursor:pointer}
+#toastA{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
+  display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--bg);padding:8px 10px 8px 16px;border-radius:999px;font-weight:700;font-size:14px;transition:.25s;z-index:51}
+#toastA.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+#toastA button{background:var(--lilac);color:#3e3557;border:0;border-radius:999px;padding:4px 12px;font-weight:900}

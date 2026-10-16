@@ -19,7 +19,10 @@ const subs = new Set();
 export const ds = {
   mode: "snapshot",
   ready: () => readyP || init(),
-  canEdit: () => false,   // 5.2 第 3 步加入通關碼後開放
+  canEdit: () => ds.mode === "live" && !!store.get("hk-code", ""),
+  me: () => store.get("hk-me", ""),
+  setMe: name => { store.set("hk-me", String(name || "").trim().slice(0, 8)); emit(); },
+  logout: () => { localStorage.removeItem("hk-code"); emit(); },
   places: () => D.places,
   items: day => day ? D.itinerary_items.filter(i => i.day === day) : D.itinerary_items,
   travelers: () => D.travelers,
@@ -29,6 +32,54 @@ export const ds = {
   splits: () => D.expense_splits,
   trip: () => D.trip,
   on(ev, fn) { if (ev === "change") subs.add(fn); return () => subs.delete(fn); },
+};
+
+/* ---------- 寫入（全部走 RPC，第一步由資料庫檢查通關碼） ---------- */
+export class DsError extends Error { constructor(code, msg) { super(msg || code); this.code = code; } }
+
+// 驗證通關碼，正確才存進手機
+ds.verifyCode = async code => {
+  if (ds.mode !== "live") throw new DsError("offline", "目前不是即時模式");
+  const { data, error } = await withTimeout(sb.rpc("verify_code", { p_trip: D.trip.id, p_code: code }), TIMEOUT);
+  if (error) throw new DsError("network", error.message);
+  if (data === true) { store.set("hk-code", code); emit(); }
+  return data === true;
+};
+
+async function call(fn, args) {
+  if (!ds.canEdit()) throw new DsError("no_code");
+  const { data, error } = await withTimeout(sb.rpc(fn, Object.assign({ p_trip: D.trip.id, p_code: store.get("hk-code", ""), p_actor: ds.me() || "家人" }, args)), 8000)
+    .catch(e => ({ error: e }));
+  if (error) {
+    const m = String(error.message || "");
+    if (m.includes("invalid_code")) { localStorage.removeItem("hk-code"); emit(); throw new DsError("invalid_code", m); }
+    if (m.includes("locked_item")) throw new DsError("locked_item", m);
+    throw new DsError("failed", m);
+  }
+  return data;
+}
+const saveLocal = () => setData(D, true);
+
+// 樂觀更新：先改畫面，失敗再改回來
+ds.upsertPlace = async p => {
+  const before = D.places;
+  const i = p.id ? D.places.findIndex(x => x.id === p.id) : -1;
+  if (i >= 0) { D.places = D.places.slice(); D.places[i] = Object.assign({}, D.places[i], p); emit(); }
+  try {
+    const row = await call("place_upsert", { p });
+    D.places = before.filter(x => x.id !== row.id).concat(row).sort((a, b) => (a.created_at < b.created_at ? -1 : a.created_at > b.created_at ? 1 : 0));
+    saveLocal(); emit(); return row;
+  } catch (e) { D.places = before; emit(); throw e; }
+};
+ds.deletePlace = async id => {
+  const before = D.places;
+  D.places = D.places.filter(x => x.id !== id); emit();
+  try { await call("place_delete", { p_id: id }); saveLocal(); }
+  catch (e) { D.places = before; emit(); throw e; }
+};
+ds.restorePlace = async id => {
+  await call("place_restore", { p_id: id });
+  D.places = await fetchTable("places"); saveLocal(); emit();
 };
 
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
