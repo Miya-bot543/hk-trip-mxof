@@ -406,3 +406,4 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .pk-add .pk-form{grid-template-columns:1fr 1fr}
 .bd-grp.area{background:none;border:1px solid var(--ice)}
 .today-bd{margin:8px 0 0;font-weight:700}
+.bd-warn{margin-top:6px;width:fit-content;background:var(--tbd-bg);color:var(--tbd-ink);border:1px dashed var(--tbd-line);border-radius:10px;padding:2px 8px;font-size:.85em}

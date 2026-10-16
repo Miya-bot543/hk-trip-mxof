@@ -20,6 +20,24 @@ const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
 const mapQ = it => it.place_id ? `${(it.place_snapshot&&it.place_snapshot.name)||it.title||""} ${addrOf(it)}`.trim() : addrOf(it);
 // 預估停留：60 → 1 小時、75 → 1 小時 15 分、45 → 45 分
 const stayTxt = m => m>=60 ? `${Math.floor(m/60)} 小時${m%60?` ${m%60} 分`:""}` : `${m} 分`;
+/* 自動提醒：只顯示在卡片上，不擋排行程 */
+const WD = "日一二三四五六";
+function alertsOf(it, pl){
+  if(!pl) return [];
+  const out=[], info=pl.info||{}, closed=String(info.closed||""), md=it.day.slice(5);
+  // 公休日：公休欄寫了「週一」這類星期，剛好排在那個星期
+  const wd=WD[new Date(it.day+"T00:00:00Z").getUTCDay()];
+  if(!/無固定/.test(closed) && [...closed.matchAll(/(?:週|星期|禮拜)([一二三四五六日天])/g)].some(m=>m[1].replace("天","日")===wd))
+    out.push(`這天是週${wd}，店家可能公休`);
+  // 年末年始：公休欄或標籤寫了年末年始休，排在 12/29～01/03
+  const nenmatsu = /年末年始/.test(closed) || (pl.tags||[]).some(t=>/年末年始.*休/.test(t));
+  if(nenmatsu && (md>="12-29" || md<="01-03")) out.push("年末年始，店家可能公休");
+  // 地區不符：只比對登別和札幌（例如住札幌那天排了登別）；小樽、旭川這類一日遊不算
+  const d=DAYS.find((_,i)=>dayDate(i)===it.day), root=(pl.area||"").replace(/（.*）/,"");
+  if(d && (root==="登別" || root==="札幌") && !d.area.includes(root))
+    out.push(`這天在${d.area}，這裡在${root}`);
+  return out;
+}
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
@@ -38,6 +56,7 @@ function itemHTML(it){
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
       ?`<button type="button" class="bd-drag" data-bddrag="${it.id}" aria-label="按住拖曳調整順序" title="按住拖曳">⇅</button><button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
+    ${alertsOf(it, pl).map(a=>`<div class="bd-warn">⚠️ ${esc(a)}</div>`).join("")}
     ${addrOf(it)?`<a class="bd-map" href="${gmaps(mapQ(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
     ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
