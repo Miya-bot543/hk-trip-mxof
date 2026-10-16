@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#9a7fd6">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="北海道10日遊">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>(function(){try{var n=new Date(),h=n.getHours(),d=new Date(n);if(h<6)d.setDate(d.getDate()-1);var p=d.toDateString()+((h>=6&&h<18)?"D":"N"),t=(h>=18||h<6)?"dark":"light",o=JSON.parse(localStorage.getItem("hk-theme")||"null");if(o&&o.p===p)t=o.t;document.documentElement.dataset.theme=t;}catch(e){}})();</script>
+<title>❄️ 北海道 10 日遊｜Hokkaido Winter Trip 2026–2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="snow" id="snow" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="top-in">
+    <button class="brand" data-go="home" aria-label="回首頁">❄️ 北海道 10 日遊</button>
+    <nav class="nav" id="nav" aria-label="章節"></nav>
+    <button class="theme-t" id="themeT" aria-label="切換深淺色">🌙</button>
+  </div>
+</header>
+
+<main class="wrap" id="app"></main>
+<footer>❄️ Hokkaido Winter Trip 2026–2027 ・ 標示 <span class="tbd">待確認</span> 的資料尚未確定，請以訂位紀錄為準</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
