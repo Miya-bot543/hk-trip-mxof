@@ -4,7 +4,7 @@ import { $, esc, v, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { ensureEditor, editorBarHTML } from "./editor.js";
 
-/* ---------- 07 全家共用口袋名單（新增・修改・刪除走 datastore，需家庭通關碼） ---------- */
+/* ---------- 07 共用口袋名單（新增・修改・刪除走 datastore，需通關碼） ---------- */
 export const PK = {pending:false, filter:"all", afilter:"all", open:new Set(), editing:null, formOpen:false, draftExtra:null};
 export const PK_CATS = [["spot","⛩️ 景點・散步"],["shop","🛍️ 購物"],["food","🍜 美食"]];
 export const PK_COLOR = {spot:"ice", shop:"lilac", food:"pink"};
@@ -71,8 +71,8 @@ export function pocketListHTML(){
 export function pkStatusHTML(){
   if(ds.mode==="offline") return `<div class="caution">📴 目前沒有網路，顯示最後一次讀到的清單，連上網路後才能修改。</div>`;
   if(ds.mode!=="live") return `<div class="caution">📌 目前為唯讀模式，暫時無法新增或修改。</div>`;
-  if(!pkWritable()) return `<div class="caution">👨‍👩‍👧 全家共用清單：按「＋ 新增地點」或卡片裡的「修改」，輸入家庭通關碼就能編輯。</div>`;
-  return `<div class="caution">👨‍👩‍👧 共用中：新增、修改、刪除，打開網站都看得到。${editorBarHTML()}</div>`;
+  if(!pkWritable()) return `<div class="caution">👥 共用清單：按「＋ 新增地點」或卡片裡的「修改」，輸入通關碼就能編輯。</div>`;
+  return `<div class="caution">👥 共用中：新增、修改、刪除，打開網站都看得到。${editorBarHTML()}</div>`;
 }
 
 /* ---------- 表單 ---------- */
@@ -183,7 +183,7 @@ document.addEventListener("click",async e=>{
   const d=t.closest("[data-delpk]");
   if(d){ const it=pkList().find(i=>i.id===d.dataset.delpk); if(!it) return;
     if(!await ensureEditor()) return;
-    if(!confirm(`確定要從全家的口袋名單刪除「${it.name}」嗎？`)) return;
+    if(!confirm(`確定要從口袋名單刪除「${it.name}」嗎？`)) return;
     try{ await ds.deletePlace(it.uuid); if(PK.editing===it.id){PK.editing=null;PK.draftExtra=null;pkRenderForm();}
       toastAction(`已刪除「${it.name}」`,"復原",()=>ds.restorePlace(it.uuid).then(()=>toast("已復原")).catch(pkError)); }
     catch(err){ pkError(err); } }

@@ -1,13 +1,13 @@
-/* 家庭通關碼與「我是誰」：第一次要新增／修改／刪除時跳出小視窗，之後記在手機。 */
+/* 通關碼與「我是誰」：第一次要新增／修改／刪除時跳出小視窗，之後記在手機。 */
 import { $, esc } from "../util.js";
 import { ds } from "../datastore.js";
 
 function dialogHTML(needCode){
   const names=ds.travelers().filter(t=>t.active).map(t=>t.nickname);
   return `<form method="dialog" class="ed-form">
-    <h3>🔑 ${needCode?'輸入家庭通關碼':'你是哪位旅伴'}</h3>
+    <h3>🔑 ${needCode?'輸入通關碼':'你是哪位旅伴'}</h3>
     <p class="muted">${needCode?'輸入一次後這支手機會記住，之後不用再輸入。':'新增或修改時會記錄是誰改的。'}</p>
-    ${needCode?'<label>家庭通關碼<input type="password" id="edCode" autocomplete="current-password" required></label>':''}
+    ${needCode?'<label>通關碼<input type="password" id="edCode" autocomplete="current-password" required></label>':''}
     <label>你的暱稱（最多 8 字）<input type="text" id="edMe" maxlength="8" list="edMeList" required value="${esc(ds.me())}"></label>
     <datalist id="edMeList">${names.map(n=>`<option value="${esc(n)}">`).join("")}</datalist>
     <p class="ed-msg" id="edMsg" role="alert"></p>
@@ -45,7 +45,7 @@ export function ensureEditor(){
 
 export function editorBarHTML(){
   if(!ds.canEdit()) return "";
-  return `<span class="ed-bar">✍️ ${esc(ds.me()||"家人")}<button type="button" class="linkbtn" data-edswitch>換人</button><button type="button" class="linkbtn" data-edlogout>登出通關碼</button></span>`;
+  return `<span class="ed-bar">✍️ ${esc(ds.me()||"旅伴")}<button type="button" class="linkbtn" data-edswitch>換人</button><button type="button" class="linkbtn" data-edlogout>登出通關碼</button></span>`;
 }
 document.addEventListener("click",async e=>{
   if(e.target.closest("[data-edlogout]")){ if(confirm("登出後要再輸入通關碼才能修改，確定嗎？")) ds.logout(); return; }
