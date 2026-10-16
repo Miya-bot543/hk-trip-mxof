@@ -3,9 +3,10 @@ import { DAYS } from "../../data/static.js";
 import { $, esc, v, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { ensureEditor, editorBarHTML } from "./editor.js";
+import { S } from "../state.js";
 
 /* ---------- 07 共用口袋名單（新增・修改・刪除走 datastore，需通關碼） ---------- */
-export const PK = {pending:false, filter:"all", afilter:"all", open:new Set(), editing:null, formOpen:false, draftExtra:null};
+export const PK = {pending:false, filter:"all", afilter:"all", open:new Set(), adding:null, editing:null, formOpen:false, draftExtra:null};
 export const PK_CATS = [["spot","⛩️ 景點・散步"],["shop","🛍️ 購物"],["food","🍜 美食"]];
 export const PK_COLOR = {spot:"ice", shop:"lilac", food:"pink"};
 export const PK_AREAS = ["札幌（薄野）","札幌（大通）","札幌（札幌站周邊）","札幌（中島公園）","札幌（圓山）","札幌（市區其他）",
@@ -21,6 +22,9 @@ export const PK_VENUES = [["室內","🏠 室內"],["戶外","🌲 戶外"],["�
 export const PK_WHEN = ["住宿札幌期間（12/28～01/03）", ...DAYS.map(d=>`${d.md}（${d.wd}）`)];
 export const pkWritable = () => ds.canEdit();
 export const pkCatName = k => (PK_CATS.find(c=>c[0]===k)||PK_CATS[0])[1];
+const PK_SLOTS = [["allday","整日"],["morning","上午"],["afternoon","下午"],["evening","晚上"]];
+// 第 i 天（0 起算）對應的日期，跟 05 章規劃板一樣從 12/25 開始
+const pkDay = i => new Date(Date.UTC(2026, 11, 25) + i*86400000).toISOString().slice(0,10);
 
 
 export function pkError(e){
@@ -58,7 +62,36 @@ export function pkCardHTML(it){
     ${who&&PK.open.has(it.id)?`<p class="muted" style="margin:8px 0 0">由 ${esc(who)} 新增</p>`:''}
     <div class="mapgo row"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
       <a class="btn" href="${gmaps(pkQuery(it))}" target="_blank" rel="noopener">🗺️ 地圖</a>
-      ${live&&PK.open.has(it.id)?`<button class="btn ghost" data-editpk="${it.id}">✏️ 修改</button><button class="btn ghost" data-delpk="${it.id}">🗑️ 刪除</button>`:''}</div></div>`;
+      ${live?`<button class="btn ghost" data-pkadd="${it.id}" aria-expanded="${PK.adding===it.id}">＋ 加入行程</button>`:''}
+      ${live&&PK.open.has(it.id)?`<button class="btn ghost" data-editpk="${it.id}">✏️ 修改</button><button class="btn ghost" data-delpk="${it.id}">🗑️ 刪除</button>`:''}</div>
+    ${live&&PK.adding===it.id?pkAddHTML(it):''}</div>`;
+}
+
+/* ---------- 卡片上的「＋ 加入行程」：選哪一天、哪個時段，加進 05 章規劃板 ---------- */
+function pkAddHTML(it){
+  const days=DAYS.map((d,i)=>[i,d]).filter(([i])=>ds.items(pkDay(i)).some(x=>x.place_id===it.uuid && !x.locked)).map(([,d])=>d.md);
+  const cur=Math.min(Math.max(S.curDay||0,0),DAYS.length-1);
+  return `<div class="pk-add">
+    <div class="pk-form">
+      <label class="full">哪一天<select data-pkaddday>${DAYS.map((d,i)=>`<option value="${i}" ${i===cur?'selected':''}>${d.md}（${d.wd}）</option>`).join("")}</select></label>
+      <label>時段<select data-pkaddslot>${PK_SLOTS.map(([k,t])=>`<option value="${k}" ${k==="morning"?'selected':''}>${t}</option>`).join("")}</select></label>
+      <label>必去／備案<select data-pkaddstatus><option value="must">必去</option><option value="maybe">備案</option></select></label>
+    </div>
+    ${days.length?`<p class="muted" style="margin:8px 0 0">✓ 已排在 ${days.join("、")}</p>`:''}
+    <div class="row" style="margin-top:10px"><button class="btn" data-pkaddgo="${it.id}">加入</button><button class="btn ghost" data-pkaddno>取消</button></div></div>`;
+}
+async function pkAddToDay(id, btn){
+  const it=pkList().find(i=>i.id===id); if(!it) return;
+  if(!await ensureEditor()) return;
+  const box=btn.closest(".pk-add"), i=+box.querySelector("[data-pkaddday]").value, slot=box.querySelector("[data-pkaddslot]").value;
+  const day=pkDay(i), pos=ds.items(day).filter(x=>x.slot===slot).reduce((m,x)=>Math.max(m,x.position||0),0)+1;
+  const snap={ name:it.name }; if(it.address) snap.address=it.address; if(it.area) snap.area=it.area;
+  btn.disabled=true;
+  try{
+    await ds.upsertItem({ kind:"visit", day, slot, position:pos, title:it.name, place_id:it.uuid, place_snapshot:snap,
+      status:box.querySelector("[data-pkaddstatus]").value, start_time:null, note:null });
+    toast(`已把「${it.name}」加入 ${DAYS[i].md} ${PK_SLOTS.find(x=>x[0]===slot)[1]}`); PK.adding=null; refreshPocket();
+  }catch(e){ btn.disabled=false; pkError(e); }
 }
 
 export function pocketListHTML(){
@@ -175,6 +208,10 @@ document.addEventListener("click",async e=>{
   if(t.id==="pkXAdd"){ PK.draftExtra=pkReadExtra(); PK.draftExtra.push({k:"",v:""}); $("#pkExtra").innerHTML=pkExtraRowsHTML(PK.draftExtra);
     const ins=document.querySelectorAll("#pkExtra [data-xk]"); if(ins.length) ins[ins.length-1].focus(); return; }
   const xd=t.closest("[data-xdel]"); if(xd){ PK.draftExtra=pkReadExtra(); PK.draftExtra.splice(+xd.dataset.xdel,1); $("#pkExtra").innerHTML=pkExtraRowsHTML(PK.draftExtra); return; }
+  const pa2=t.closest("[data-pkadd]");
+  if(pa2){ const id=pa2.dataset.pkadd; if(PK.adding!==id && !await ensureEditor()) return; PK.adding = PK.adding===id ? null : id; refreshPocket(); return; }
+  if(t.closest("[data-pkaddno]")){ PK.adding=null; refreshPocket(); return; }
+  const go=t.closest("[data-pkaddgo]"); if(go){ pkAddToDay(go.dataset.pkaddgo, go); return; }
   const po=t.closest("[data-pkopen]"); if(po){ const id=po.dataset.pkopen; PK.open.has(id)?PK.open.delete(id):PK.open.add(id); refreshPocket(); return; }
   const pa=t.closest("[data-pkall]"); if(pa){ if(pa.dataset.pkall==="open") pkList().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
   const fa=t.closest("[data-pka]"); if(fa){ PK.afilter=fa.dataset.pka; document.querySelectorAll("[data-pka]").forEach(b=>b.toggleAttribute("aria-current",b===fa)); refreshPocket(); return; }
