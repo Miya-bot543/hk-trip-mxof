@@ -18,12 +18,19 @@ const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
 // 地圖直接用這格搜尋：填店名最準（只填地址時，同一棟樓可能跳到別家）
 // 從口袋名單挑的行程，地址是真的地址，所以搜尋時前面加上店名
 const mapQ = it => it.place_id ? `${(it.place_snapshot&&it.place_snapshot.name)||it.title||""} ${addrOf(it)}`.trim() : addrOf(it);
+// 預估停留：60 → 1 小時、75 → 1 小時 15 分、45 → 45 分
+const stayTxt = m => m>=60 ? `${Math.floor(m/60)} 小時${m%60?` ${m%60} 分`:""}` : `${m} 分`;
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
   const name = it.title || (it.place_snapshot && it.place_snapshot.name) || "（未命名）";
   const time = hm(it.start_time) + (it.end_time ? "～"+hm(it.end_time) : "");
-  const meta = (it.locked?'<span class="bd-grp lock">🔒 固定</span>':'') +
+  // 從口袋名單挑的行程：地區和預估停留跟著口袋名單最新的資料
+  const pl = it.place_id && ds.places().find(p=>p.id===it.place_id);
+  const area = (pl && pl.area) || (it.place_snapshot && it.place_snapshot.area) || "", stay = pl && pl.stay_minutes;
+  const meta = (area?`<span class="bd-grp area">📍 ${esc(area.replace(/（(.+)）/,"・$1"))}</span>`:'') +
+    (stay?`<span class="bd-grp area">⏱️ 約 ${stayTxt(stay)}</span>`:'') +
+    (it.locked?'<span class="bd-grp lock">🔒 固定</span>':'') +
     (it.group_label?`<span class="bd-grp">${esc(it.group_label)}</span>`:'') +
     (it.status==="maybe"?'<span class="bd-grp">備案</span>':'');
   const edit = ds.mode==="live" && !it.locked;
