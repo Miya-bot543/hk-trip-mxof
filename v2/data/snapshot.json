@@ -1,5 +1,5 @@
 {
- "saved_at": "2026-10-16T10:21:59.222Z",
+ "saved_at": "2026-10-16T10:24:52.108Z",
  "trip": {
   "id": "94419d88-c426-4b67-b963-b0029b223886",
   "slug": "hokkaido-2026",
@@ -420,7 +420,7 @@
    "legacy_id": "jingu",
    "name": "北海道神宮",
    "category": "spot",
-   "area": "札幌（圓山・宮之森）",
+   "area": "札幌（圓山）",
    "venue": "戶外",
    "address": "北海道札幌市中央区宮ヶ丘474",
    "ja_name": null,
@@ -456,9 +456,9 @@
    "note": "北海道最具代表性的神社，1869 年創建，緊鄰圓山公園，可以一起排。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "整理",
    "created_at": "2026-10-14T00:00:04+00:00",
-   "updated_at": "2026-10-14T00:00:04+00:00",
+   "updated_at": "2026-10-16T10:24:19.193682+00:00",
    "deleted_at": null
   },
   {
@@ -516,7 +516,7 @@
    "legacy_id": "maruyama",
    "name": "圓山公園",
    "category": "spot",
-   "area": "札幌（圓山・宮之森）",
+   "area": "札幌（圓山）",
    "venue": "戶外",
    "address": "北海道札幌市中央区宮ヶ丘",
    "ja_name": null,
@@ -548,9 +548,9 @@
    "note": "緊鄰北海道神宮和圓山動物園的大公園，適合和神宮安排在同一天。",
    "is_wishlist": true,
    "created_by": "匯入",
-   "updated_by": "匯入",
+   "updated_by": "整理",
    "created_at": "2026-10-14T00:00:06+00:00",
-   "updated_at": "2026-10-14T00:00:06+00:00",
+   "updated_at": "2026-10-16T10:24:19.193682+00:00",
    "deleted_at": null
   },
   {
