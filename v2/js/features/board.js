@@ -3,6 +3,7 @@
 import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
+import { DAYS } from "../../data/static.js";
 import { ensureEditor } from "./editor.js";
 import { pkError, pkList, PK_CATS, pkCatName } from "./pocket.js";
 
@@ -54,9 +55,11 @@ function formHTML(){
   if(BD.pick) return pickHTML();
   if(!BD.formOpen) return `<div class="row" style="margin-top:12px"><button class="btn" id="bdOpenPick">＋ 從口袋名單挑</button><button class="btn ghost" id="bdOpenForm">＋ 新增自訂行程</button></div>`;
   const it = (BD.editing && itemOf(BD.editing)) || {}, slot = it.slot || "morning";
+  const day = it.day ? DAYS.findIndex((_,i)=>dayDate(i)===it.day) : S.curDay;
   return `<div class="card lilac" id="bdFormCard" style="margin-top:12px"><span class="tag lilac">${BD.editing?'✏️ 修改行程':'＋ 新增自訂行程'}</span>
     <div class="pk-form">
       <label class="full">名稱 *<input type="text" id="bdTitle" maxlength="60" placeholder="例如：去超市買早餐" value="${esc(it.title||"")}"></label>
+      <label>哪一天<select id="bdDay">${DAYS.map((d,i)=>`<option value="${i}" ${i===day?'selected':''}>${d.md}（${d.wd}）</option>`).join("")}</select></label>
       <label>時段<select id="bdSlot">${SLOTS.map(([k,t])=>`<option value="${k}" ${k===slot?'selected':''}>${t}</option>`).join("")}</select></label>
       <label>開始時間（可留空）<input type="time" id="bdStart" value="${hm(it.start_time)}"></label>
       <label>必去／備案<select id="bdStatus"><option value="must">必去</option><option value="maybe" ${it.status==="maybe"?'selected':''}>備案</option></select></label>
@@ -101,9 +104,9 @@ async function saveItem(){
   if(!title){ msg.textContent="請先填寫名稱"; $("#bdTitle").focus(); return; }
   if(!await ensureEditor()) return;
   const old = BD.editing ? itemOf(BD.editing) : null;
-  const day = old ? old.day : dayDate(S.curDay), slot=$("#bdSlot").value;
-  // 新增或換時段時排在該時段最後；只改內容就留在原位
-  const pos = old && old.slot===slot ? old.position
+  const di=+$("#bdDay").value, day=dayDate(di), slot=$("#bdSlot").value;
+  // 新增、換天或換時段時排在該時段最後；只改內容就留在原位
+  const pos = old && old.day===day && old.slot===slot ? old.position
     : ds.items(day).filter(x=>x.slot===slot).reduce((m,x)=>Math.max(m,x.position||0),0)+1;
   const address=$("#bdAddr").value.trim(), snap=Object.assign({}, old && old.place_snapshot);   // 地址放在 place_snapshot，不用改資料表
   if(address) snap.address=address; else delete snap.address;
@@ -111,7 +114,8 @@ async function saveItem(){
   try{
     await ds.upsertItem(Object.assign({ kind:"visit" }, old, { day, slot, position:pos, title, place_snapshot:snap, status:$("#bdStatus").value,
       start_time:$("#bdStart").value||null, note:$("#bdNote").value.trim()||null }));
-    toast(old?"已儲存修改":"已加入行程"); BD.formOpen=false; BD.editing=null; BD.menu=null; renderForm(); refreshBoard();
+    const moved = di!==S.curDay ? `，排在 ${DAYS[di].md} ${SLOTS.find(x=>x[0]===slot)[1]}` : "";
+    toast((old?"已儲存修改":"已加入行程")+moved); BD.formOpen=false; BD.editing=null; BD.menu=null; renderForm(); refreshBoard();
   }catch(e){ msg.textContent=""; btn.disabled=false; pkError(e); }
 }
 
