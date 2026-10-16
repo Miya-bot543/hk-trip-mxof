@@ -1,6 +1,6 @@
 /* 05 章行程規劃板：整日／上午／下午／晚上四個時段，資料來自 ds.items(day)。
    自訂行程可新增、修改、刪除（需通關碼）；拖曳、順路排序之後再加。 */
-import { $, esc, toast, toastAction } from "../util.js";
+import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
 import { ensureEditor } from "./editor.js";
@@ -13,6 +13,7 @@ const START = new Date(Date.UTC(2026, 11, 25));
 export function dayDate(i){ return new Date(START.getTime() + i*86400000).toISOString().slice(0,10); }
 
 const hm = t => t ? String(t).slice(0,5) : "";
+const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
@@ -26,6 +27,7 @@ function itemHTML(it){
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
       ?`<button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
+    ${addrOf(it)?`<a class="bd-map" href="${gmaps(addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
     ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
 }
@@ -56,6 +58,7 @@ function formHTML(){
       <label>時段<select id="bdSlot">${SLOTS.map(([k,t])=>`<option value="${k}" ${k===slot?'selected':''}>${t}</option>`).join("")}</select></label>
       <label>開始時間（可留空）<input type="time" id="bdStart" value="${hm(it.start_time)}"></label>
       <label>必去／備案<select id="bdStatus"><option value="must">必去</option><option value="maybe" ${it.status==="maybe"?'selected':''}>備案</option></select></label>
+      <label class="full">地址（可留空，填了就能用 Google Maps 開啟）<input type="text" id="bdAddr" maxlength="150" placeholder="例如：北海道札幌市中央区南5条西4丁目" value="${esc(addrOf(it))}"></label>
       <label class="full">備註（可留空）<textarea id="bdNote" maxlength="300">${esc(it.note||"")}</textarea></label>
     </div>
     <div class="row" style="margin-top:12px"><button class="btn" id="bdSave">${BD.editing?'儲存修改':'加入行程'}</button>
@@ -72,9 +75,11 @@ async function saveItem(){
   // 新增或換時段時排在該時段最後；只改內容就留在原位
   const pos = old && old.slot===slot ? old.position
     : ds.items(day).filter(x=>x.slot===slot).reduce((m,x)=>Math.max(m,x.position||0),0)+1;
+  const address=$("#bdAddr").value.trim(), snap=Object.assign({}, old && old.place_snapshot);   // 地址放在 place_snapshot，不用改資料表
+  if(address) snap.address=address; else delete snap.address;
   const btn=$("#bdSave"); btn.disabled=true; msg.textContent="儲存中…";
   try{
-    await ds.upsertItem(Object.assign({ kind:"visit" }, old, { day, slot, position:pos, title, status:$("#bdStatus").value,
+    await ds.upsertItem(Object.assign({ kind:"visit" }, old, { day, slot, position:pos, title, place_snapshot:snap, status:$("#bdStatus").value,
       start_time:$("#bdStart").value||null, note:$("#bdNote").value.trim()||null }));
     toast(old?"已儲存修改":"已加入行程"); BD.formOpen=false; BD.editing=null; BD.menu=null; renderForm(); refreshBoard();
   }catch(e){ msg.textContent=""; btn.disabled=false; pkError(e); }

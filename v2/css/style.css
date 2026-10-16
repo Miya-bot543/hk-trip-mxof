@@ -386,3 +386,4 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .pl-meta{margin-left:calc(4.6em + 8px)}
 .bd-more{margin-left:auto;background:none;border:0;padding:0 6px;font-size:20px;line-height:1;color:var(--lilac-d);cursor:pointer}
 .bd-acts{margin-top:8px}
+.bd-map{display:inline-block;margin-top:4px;font-size:14px;color:var(--lilac-d);text-decoration:underline;word-break:break-all}
