@@ -26,7 +26,7 @@ function itemHTML(it){
 }
 
 function boardHTML(i){
-  const items = ds.items(dayDate(i));
+  const items = ds.items(dayDate(i)).filter(x => !x.locked);   // 固定行程看上方「今日安排」，這裡不重複顯示
   const slots = SLOTS.map(([k,t]) => {
     const list = items.filter(x => x.slot===k).sort(byOrder);
     if(k==="allday" && !list.length) return "";
