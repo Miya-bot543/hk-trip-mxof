@@ -1,5 +1,5 @@
 /* 05 章行程規劃板：整日／上午／下午／晚上四個時段，資料來自 ds.items(day)。
-   自訂行程可新增、修改、刪除、按住 ⠿ 拖曳調整順序、可跨時段（需通關碼）；順路排序之後再加。 */
+   自訂行程可新增、修改、刪除、按住 ⇅ 拖曳調整順序、可跨時段（需通關碼）；順路排序之後再加。 */
 import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
@@ -26,7 +26,7 @@ function itemHTML(it){
   const edit = ds.mode==="live" && !it.locked;
   return `<li class="bd-item${it.locked?' locked':''}" data-id="${it.id}">
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
-      ?`<button type="button" class="bd-drag" data-bddrag="${it.id}" aria-label="按住拖曳調整順序">⠿</button><button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
+      ?`<button type="button" class="bd-drag" data-bddrag="${it.id}" aria-label="按住拖曳調整順序" title="按住拖曳">⇅</button><button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
     ${addrOf(it)?`<a class="bd-map" href="${gmaps(addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
@@ -108,15 +108,16 @@ export function boardSectionHTML(i){
     <div id="bd-area" class="bd">${boardHTML(i)}</div><div id="bd-formwrap">${formHTML()}</div></div>`;
 }
 
-/* ---------- 拖曳排序：按住 ⠿ 拖到想要的位置，可以跨時段 ---------- */
+/* ---------- 拖曳排序：按住 ⇅ 把卡片拎起來，拖到想要的位置，可以跨時段 ---------- */
 let drag=null;
-// 依手指位置把卡片移到對應時段的對應位置（直接搬 DOM，放開時再存）
+// 卡片浮起來跟著手指走；原位留一個虛線空位，空位會跟著手指換到要放的地方
+function follow(y){ drag.li.style.top=(y-drag.dy)+"px"; }
 function placeAt(y){
   const slots=[...document.querySelectorAll("#bd-area .bd-slot")]; if(!slots.length) return;
   const s=slots.find(x=>y<x.getBoundingClientRect().bottom) || slots[slots.length-1];
-  const ul=s.querySelector(".bd-list"), li=drag.li;
-  const before=[...ul.children].find(x=>{ if(x===li) return false; const r=x.getBoundingClientRect(); return y<r.top+r.height/2; }) || null;
-  if(li.parentNode!==ul || li.nextElementSibling!==before) ul.insertBefore(li, before);
+  const ul=s.querySelector(".bd-list"), {li,ph}=drag;
+  const before=[...ul.children].find(x=>{ if(x===li||x===ph) return false; const r=x.getBoundingClientRect(); return y<r.top+r.height/2; }) || null;
+  if(ph.parentNode!==ul || ph.nextElementSibling!==before) ul.insertBefore(ph, before);
 }
 // 拖到畫面上下邊緣時自動捲動
 function autoScroll(){
@@ -128,17 +129,21 @@ function autoScroll(){
 document.addEventListener("pointerdown", async e=>{
   const h=e.target.closest("[data-bddrag]"); if(!h) return;
   e.preventDefault();
-  if(!ds.canEdit()){ if(await ensureEditor()) toast("可以了，再按住 ⠿ 拖一次"); return; }
-  const li=h.closest(".bd-item");
-  drag={li, y:e.clientY};
+  if(!ds.canEdit()){ if(await ensureEditor()) toast("可以了，再按住 ⇅ 拖一次"); return; }
+  const li=h.closest(".bd-item"), r=li.getBoundingClientRect();
+  const ph=document.createElement("li"); ph.className="bd-ph"; ph.style.height=r.height+"px";
+  li.after(ph);
+  drag={li, ph, y:e.clientY, dy:e.clientY-r.top};
+  Object.assign(li.style,{position:"fixed", left:r.left+"px", width:r.width+"px", zIndex:50}); follow(e.clientY);
   li.classList.add("dragging"); $("#bd-area").classList.add("dragging");
   h.setPointerCapture(e.pointerId);
   requestAnimationFrame(autoScroll);
 });
-document.addEventListener("pointermove", e=>{ if(!drag) return; drag.y=e.clientY; placeAt(e.clientY); });
+document.addEventListener("pointermove", e=>{ if(!drag) return; drag.y=e.clientY; follow(e.clientY); placeAt(e.clientY); });
 function endDrag(){
   if(!drag) return;
-  drag.li.classList.remove("dragging"); $("#bd-area").classList.remove("dragging"); drag=null;
+  const {li,ph}=drag; ph.replaceWith(li); li.removeAttribute("style");
+  li.classList.remove("dragging"); $("#bd-area").classList.remove("dragging"); drag=null;
   // 每個時段照畫面順序重新編號 1、2、3…，只送有變的
   const patch=[];
   document.querySelectorAll("#bd-area .bd-slot").forEach(s=>{
