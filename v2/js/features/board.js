@@ -23,9 +23,21 @@ const mapQ = it => it.place_id ? `${(it.place_snapshot&&it.place_snapshot.name)|
 const stayTxt = m => m>=60 ? `${Math.floor(m/60)} 小時${m%60?` ${m%60} 分`:""}` : `${m} 分`;
 /* 自動提醒：只顯示在卡片上，不擋排行程 */
 const WD = "日一二三四五六";
+const mins = t => { const [h,m]=hm(t).split(":"); return +h*60 + +m; };
+const DRIVE = /租車期間|開車/;   // 有開車的日子（12/25～12/27）
 function alertsOf(it, pl){
-  if(!pl) return [];
-  const out=[], info=pl.info||{}, closed=String(info.closed||""), md=it.day.slice(5);
+  const out=[], d=DAYS.find((_,i)=>dayDate(i)===it.day);
+  // 太晚：開始時間或預估結束時間超過 22:00
+  if(it.start_time){
+    const st=mins(it.start_time), end=it.end_time ? mins(it.end_time) : st+((pl&&pl.stay_minutes)||0);
+    if(st>=22*60) out.push("22:00 以後了，注意回程交通");
+    else if(end>22*60) out.push("預估會待到 22:00 以後，注意回程交通");
+  }
+  // 天黑：開車的日子排在 16:00 以後（晚上時段也算）
+  if(d && DRIVE.test(d.transport||"") && ((it.start_time && mins(it.start_time)>=16*60) || it.slot==="evening"))
+    out.push("開車日 16:00 以後天就黑了，雪路開車要多小心");
+  if(!pl) return out;
+  const info=pl.info||{}, closed=String(info.closed||""), md=it.day.slice(5);
   // 公休日：公休欄寫了「週一」這類星期，剛好排在那個星期
   const wd=WD[new Date(it.day+"T00:00:00Z").getUTCDay()];
   if(!/無固定/.test(closed) && [...closed.matchAll(/(?:週|星期|禮拜)([一二三四五六日天])/g)].some(m=>m[1].replace("天","日")===wd))
@@ -34,11 +46,13 @@ function alertsOf(it, pl){
   const nenmatsu = /年末年始/.test(closed) || (pl.tags||[]).some(t=>/年末年始.*休/.test(t));
   if(nenmatsu && (md>="12-29" || md<="01-03")) out.push("年末年始，店家可能公休");
   // 地區不符：只比對登別和札幌（例如住札幌那天排了登別）；小樽、旭川這類一日遊不算
-  const d=DAYS.find((_,i)=>dayDate(i)===it.day), root=(pl.area||"").replace(/（.*）/,"");
+  const root=(pl.area||"").replace(/（.*）/,"");
   if(d && (root==="登別" || root==="札幌") && !d.area.includes(root))
     out.push(`這天在${d.area}，這裡在${root}`);
   return out;
 }
+// 各時段大約有多久（分鐘）：上午 09:30～12:00、下午 13:30～18:00、晚上 18:00～22:00
+const CAP = {morning:150, afternoon:270, evening:240};
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
@@ -65,12 +79,15 @@ function itemHTML(it){
 }
 
 function boardHTML(i){
-  const items = ds.items(dayDate(i)).filter(x => !x.locked);   // 固定行程看上方「今日安排」，這裡不重複顯示
+  const items = ds.items(dayDate(i)).filter(x => !x.locked), places = ds.places();   // 固定行程看上方「今日安排」，這裡不重複顯示
   const slots = SLOTS.map(([k,t]) => {
     const list = items.filter(x => x.slot===k).sort(byOrder);
     if(k==="allday" && !list.length) return "";
+    // 太滿：必去行程的預估停留加起來超過這個時段的長度（不含移動時間，備案不算）
+    const full = CAP[k] && list.filter(x=>x.status!=="maybe").reduce((m,x)=>{ const pl=x.place_id && places.find(p=>p.id===x.place_id); return m+((pl&&pl.stay_minutes)||0); },0);
+    const warn = full>CAP[k] ? `<div class="bd-warn">⚠️ 這個時段的停留時間加起來約 ${stayTxt(full)}，可能排太滿了</div>` : "";
     // 空的時段也留一個 ul，拖曳時才放得進去
-    return `<div class="bd-slot" data-slot="${k}"><b>${t}</b><ul class="bd-list">${list.map(itemHTML).join("")}</ul><p class="muted bd-empty">還沒有安排</p></div>`;
+    return `<div class="bd-slot" data-slot="${k}"><b>${t}</b>${warn}<ul class="bd-list">${list.map(itemHTML).join("")}</ul><p class="muted bd-empty">還沒有安排</p></div>`;
   }).join("");
   return slots;
 }
