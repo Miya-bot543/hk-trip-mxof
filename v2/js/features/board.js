@@ -14,6 +14,7 @@ export function dayDate(i){ return new Date(START.getTime() + i*86400000).toISOS
 
 const hm = t => t ? String(t).slice(0,5) : "";
 const addrOf = it => (it.place_snapshot && it.place_snapshot.address) || "";
+// 地圖用「名稱＋地址」搜尋：只給地址時，同一棟樓會跳到建築物本身而不是店家
 const byOrder = (a,b) => (a.position-b.position) || hm(a.start_time).localeCompare(hm(b.start_time));
 
 function itemHTML(it){
@@ -27,7 +28,7 @@ function itemHTML(it){
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
       ?`<button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
-    ${addrOf(it)?`<a class="bd-map" href="${gmaps(addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
+    ${addrOf(it)?`<a class="bd-map" href="${gmaps(name+" "+addrOf(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
     ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
 }
