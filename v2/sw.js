@@ -1,11 +1,11 @@
 /* 北海道 10 日遊：離線快取。更新網站時請把 VERSION 改掉，讓手機抓到新版。
    只清除自己（PREFIX 開頭）的舊快取，不會動到其他版本的快取。 */
 const PREFIX = "hk-v2-";
-const VERSION = PREFIX + "2026-10-16h";
+const VERSION = PREFIX + "2026-10-16i";
 const CORE = [
   "./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png",
   "./css/style.css", "./data/static.js", "./data/snapshot.json",
-  "./js/main.js", "./js/state.js", "./js/util.js", "./js/ui.js", "./js/config.js", "./js/datastore.js", "./js/features/editor.js",
+  "./js/main.js", "./js/state.js", "./js/util.js", "./js/ui.js", "./js/config.js", "./js/datastore.js", "./js/features/editor.js", "./js/features/board.js",
   "./js/features/map.js", "./js/features/pocket.js", "./js/features/today.js", "./js/features/fx.js",
   "./js/features/vjw.js", "./js/features/driver.js", "./js/features/weather.js", "./js/features/net.js",
   "./js/pages/home.js", "./js/pages/ch01.js", "./js/pages/ch02.js", "./js/pages/ch03.js", "./js/pages/ch04.js",

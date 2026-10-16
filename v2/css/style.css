@@ -365,3 +365,19 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
   display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--bg);padding:8px 10px 8px 16px;border-radius:999px;font-weight:700;font-size:14px;transition:.25s;z-index:51}
 #toastA.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 #toastA button{background:var(--lilac);color:#3e3557;border:0;border-radius:999px;padding:4px 12px;font-weight:900}
+
+/* 05 章行程規劃板 */
+.bd{display:grid;gap:12px;margin-top:10px}
+.bd-slot>b{display:block;font-size:15px;color:var(--lilac-d);border-bottom:2px dashed var(--lilac);padding-bottom:2px}
+.bd-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.bd-item{padding:8px 10px;border-radius:12px;background:var(--cream);border:1px solid var(--lilac)}
+.bd-head{display:flex;gap:8px;align-items:baseline}
+.bd-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.bd-item.locked{border-style:dashed}
+.bd-time{font-weight:700;font-variant-numeric:tabular-nums}
+.bd-name{flex:1}
+.bd-time{white-space:nowrap}
+.bd-grp.lock{background:var(--lilac)}
+.bd-grp{background:var(--ice);border-radius:999px;padding:0 8px;font-size:.82em}
+.bd-note{margin-top:4px}
+.bd-empty{margin:6px 0 0}

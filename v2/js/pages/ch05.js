@@ -4,6 +4,7 @@ import { FLIGHTS, HOTELS, DAYS, HOTEL_DRIVER } from "../../data/static.js";
 import { esc, v } from "../util.js";
 import { isMove, dayStrip, flightCard, mapsBtn, head, pager } from "../ui.js";
 import { driverBtn } from "../features/driver.js";
+import { boardSectionHTML } from "../features/board.js";
 
 export default function ch05(){
   const d = DAYS[S.curDay], i=S.curDay;
@@ -49,6 +50,7 @@ export default function ch05(){
     <div class="card"><span class="tag">今日安排</span>${plan}${extra?`<div class="row" style="margin-top:10px">${extra}</div>`:''}</div>
     ${stayBlock}
     ${(d.flights||[]).map(k=>flightCard(FLIGHTS[k],false)).join("")}</div>
+  ${boardSectionHTML(i)}
   <div class="pager"><button class="btn ghost" data-go="05?d=${Math.max(0,i-1)}" ${i===0?'disabled':''}>← 前一天</button>
     <button class="btn" data-go="05?d=${Math.min(9,i+1)}" ${i===9?'disabled':''}>後一天 →</button></div>${pager("05")}`;
 }
