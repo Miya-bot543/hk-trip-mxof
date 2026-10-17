@@ -282,9 +282,62 @@ function settleHTML() {
     : groups.map(([L, conv, c]) => `<div class="ex-stcur"><div class="ex-dayh"><span>${esc(CUR_NAME[c] || c)}帳</span><span>${L.length} 筆</span></div>${settleBlockHTML(L, conv, c)}</div>`).join("");
   const how = ST.how === "pair" ? "逐人對帳：每兩個人之間互相抵完再列出" : "簡化轉帳：大家的帳一起抵銷，轉帳次數最少";
   const view = ST.view === "twd" ? "每筆用記帳當下存的匯率換成台幣" : "各幣別分開算、不換匯，適合在當地直接用日圓還錢";
-  return `${foldHead("settle", "⚖️ 結算")}${bar}${body}<p class="muted ex-hint">差額＋代表可收回，−代表要付出。${how}。${view}。</p>`;
+  const acts = `<div class="ex-acts"><button type="button" class="btn ghost" data-exreport>📋 複製結算報告</button><button type="button" class="btn ghost" data-excsv>⬇️ 匯出 CSV</button></div>`;
+  return `${foldHead("settle", "⚖️ 結算")}${bar}${body}<p class="muted ex-hint">差額＋代表可收回，−代表要付出。${how}。${view}。</p>${acts}`;
 }
 const refreshSettle = () => { const b = $("#ex-settle"); if (b) b.innerHTML = settleHTML(); };
+
+/* ---------- 報告與匯出 ---------- */
+const stamp = () => { const d = new Date(), p = n => String(n).padStart(2, "0"); return `${d.getFullYear()}/${p(d.getMonth() + 1)}/${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`; };
+// 純文字結算報告，照目前選的結算幣別和轉帳方式，方便貼到 LINE 群組
+function reportText() {
+  const all = ds.expenses(), out = ["🧾 北海道 10 日遊・記帳結算"];
+  const block = (list, conv, cur, head) => {
+    const sum = list.reduce((a, e) => { const sh = shareOf(e); return sh.r.ok ? a + conv(sh.total, e) : a; }, 0);
+    out.push("", `${head}共 ${list.length} 筆，合計 ${money(sum, cur)}`);
+    const tf = transfersOf(list, conv);
+    out.push(`💸 ${ST.how === "pair" ? "誰給誰" : "建議轉帳"}${tf.length ? `（${tf.length} 次）` : ""}`);
+    if (tf.length) tf.forEach(([a, b, u], i) => out.push(`${i + 1}. ${nameOf(a)} → ${nameOf(b)}　${money(u, cur)}`));
+    else out.push("✓ 大家都結清了");
+    const B = ledger(list, conv);
+    out.push("👥 每人");
+    ds.travelers().filter(t => B.has(t.id)).forEach(t => {
+      const o = B.get(t.id), d = o.paid - o.owe;
+      out.push(`${t.nickname}：已付 ${money(o.paid, cur)}，應付 ${money(o.owe, cur)}，${d > 0 ? `可收回 ${money(d, cur)}` : d < 0 ? `要付出 ${money(-d, cur)}` : "剛好結清"}`);
+    });
+  };
+  if (ST.view === "twd") block(all, toTwd, "TWD", "");
+  else [...new Set(all.map(e => e.currency))].sort((a, b) => a === "JPY" ? -1 : b === "JPY" ? 1 : a < b ? -1 : 1)
+    .forEach(c => block(all.filter(e => e.currency === c), u => u, c, `【${CUR_NAME[c] || c}帳】`));
+  out.push("", `（${ST.view === "twd" ? "台幣結算：每筆用記帳當下的匯率換算" : "依幣別結算：各幣別分開算，不換匯"}；${ST.how === "pair" ? "逐人對帳" : "簡化轉帳"}）`, `${stamp()} 整理`);
+  return out.join("\n");
+}
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; } catch {
+    try { const ta = document.createElement("textarea"); ta.value = t; ta.setAttribute("readonly", ""); ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select(); const ok = document.execCommand("copy"); ta.remove(); return ok; } catch { return false; }
+  }
+}
+// CSV：一筆一列，每位旅伴一欄寫他分攤的原幣別金額；開頭加 BOM，Excel 打開中文才不會亂碼
+function csvText() {
+  const T = ds.travelers(), cell = v => { const s = v == null ? "" : String(v); return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  const plain = (u, cur) => String(u / minor(cur));
+  const rows = [["日期", "項目", "類別", "金額", "幣別", "匯率（1 外幣＝台幣）", "台幣金額", "付款人", "分攤方式", ...T.map(t => `${t.nickname} 分攤`), "地點", "備註", "記錄者"]];
+  sorted().reverse().forEach(e => {
+    const sh = shareOf(e), cur = e.currency, place = e.place_id && ds.places().find(p => p.id === e.place_id);
+    rows.push([e.spent_on, e.title, catOf(e.category).replace(/^\S+\s/, ""), plain(sh.total, cur), cur, Number(e.rate_to_base), plain(toTwd(sh.total, e), "TWD"), nameOf(e.paid_by),
+      (MODES.find(m => m[0] === e.split_mode) || ["", e.split_mode])[1], ...T.map(t => { const u = sh.r.map.get(t.id) || 0; return u ? plain(u, cur) : ""; }),
+      place ? place.name : "", e.note || "", e.updated_by || e.created_by || ""]);
+  });
+  return "\uFEFF" + rows.map(r => r.map(cell).join(",")).join("\r\n");
+}
+function downloadCsv() {
+  const d = new Date(), name = `北海道記帳-${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}.csv`;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([csvText()], { type: "text/csv;charset=utf-8" }));
+  a.download = name; document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  toast(`已匯出 ${name}`);
+}
 
 // 修改：把這筆的內容帶回表單
 function startEdit(e) {
@@ -409,6 +462,8 @@ document.addEventListener("click", async e => {
   if (st) { ST.view = st.dataset.exst; refreshSettle(); return; }
   const hw = t.closest("[data-exhow]");
   if (hw) { ST.how = hw.dataset.exhow; refreshSettle(); return; }
+  if (t.closest("[data-exreport]")) { toast(await copyText(reportText()) ? "已複製結算報告，可以貼到 LINE 了" : "複製失敗，請再試一次"); return; }
+  if (t.closest("[data-excsv]")) { downloadCsv(); return; }
   const fd = t.closest("[data-exfold]");
   if (fd) { toggleFold(fd.dataset.exfold); return; }
   if (t.id === "exSave") { save(); return; }
