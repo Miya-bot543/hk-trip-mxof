@@ -1,7 +1,7 @@
-/* 08 記帳：新增一筆（需通關碼）。
+/* 08 記帳：新增、修改、刪除（需通關碼）和帳目清單（大家都看得到）。
    每筆存當下匯率（rate_to_base），之後改共用匯率不影響舊帳。
    金額一律換成最小單位的整數計算（日圓以元、其他幣別以分），除不盡的餘數算在付款人身上。 */
-import { $, esc, toast } from "../util.js";
+import { $, esc, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { ensureEditor, editorStatusHTML } from "./editor.js";
 import { pkError } from "./pocket.js";
@@ -41,7 +41,7 @@ export function splitUnits(total, cur, mode, splits, payer) {
 
 /* ---------- 表單狀態 ---------- */
 const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`; };
-const EX = { open: false, cat: "food", cur: "JPY", rate: "", rateTouched: false, payer: "", mode: "equal", sel: null, shares: {}, exact: {}, pending: false };
+const EX = { open: false, cat: "food", cur: "JPY", rate: "", rateTouched: false, payer: "", mode: "equal", sel: null, shares: {}, exact: {}, pending: false, editId: null };
 const nameOf = id => (ds.travelers().find(t => t.id === id) || {}).nickname || "?";
 const meId = () => { const me = String(ds.me() || "").trim(), t = activeTravelers().find(x => x.nickname === me); return t ? t.id : ""; };
 const currencies = () => [...new Set(["JPY", "TWD", ...ds.fx().map(r => r.currency), EX.cur])];
@@ -110,7 +110,8 @@ function formHTML() {
   if (!EX.open) return `<button type="button" class="btn ex-open" data-exopen>＋ 記一筆</button>`;
   syncState();
   const act = activeTravelers();
-  return `<div class="ex-form">
+  const ed = EX.editId && ds.expenses().find(e => e.id === EX.editId);
+  return `<div class="ex-form">${ed ? `<p class="ex-editing">✏️ 正在修改「${esc(ed.title)}」</p>` : ""}
     <div class="ex-grid">
       <label>日期<input type="date" id="exDate" value="${today()}"></label>
       <label class="ex-wide">項目<input type="text" id="exTitle" maxlength="80" placeholder="例如：午餐 味噌拉麵"></label>
@@ -128,14 +129,94 @@ function formHTML() {
       <label>備註（選填）<input type="text" id="exNote" maxlength="200" placeholder="例如：刷卡、含小費"></label>
     </div>
     <p class="ex-warn" id="exMsg" role="alert"></p>
-    <div class="row"><button type="button" class="btn ex-save" id="exSave">💾 儲存這筆</button><button type="button" class="btn ghost" data-exclose>收起來</button></div>
+    <div class="row"><button type="button" class="btn ex-save" id="exSave">${saveLabel()}</button><button type="button" class="btn ghost" data-exclose>${EX.editId ? "取消修改" : "收起來"}</button></div>
   </div>`;
 }
 
 export function expenseSectionHTML() {
   return `<div class="card pink" id="ex-card"><div class="htop"><span class="tag">🧾 記帳</span><span class="nights" id="ex-count"></span></div>
-    <div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div></div>`;
+    <div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-list">${listHTML()}</div></div>`;
 }
+
+/* ---------- 帳目清單 ---------- */
+const LS = { who: "", cat: "", open: new Set() };
+const WEEK = "日一二三四五六";
+const catOf = k => (EX_CATS.find(c => c[0] === k) || EX_CATS[EX_CATS.length - 1])[1];
+const dayLabel = d => { const x = new Date(d + "T00:00"); return `${d.slice(5).replace("-", "/")}（${WEEK[x.getDay()]}）`; };
+// 原幣別最小單位 → 台幣（分），用這筆自己存的匯率
+const toTwd = (units, e) => e.currency === "TWD" ? units : Math.round(units / minor(e.currency) * Number(e.rate_to_base) * 100);
+// 每筆的分攤結果（跟表單用同一套算法）
+function shareOf(e) {
+  const splits = ds.splits().filter(s => s.expense_id === e.id).map(s => ({ traveler_id: s.traveler_id, shares: s.shares, amount: s.amount }));
+  const total = toUnits(e.amount, e.currency);
+  return { total, splits, r: splitUnits(total, e.currency, e.split_mode, splits, e.paid_by) };
+}
+const involves = (e, id, sh) => e.paid_by === id || (sh.r.map.get(id) || 0) > 0;
+const sorted = () => ds.expenses().slice().sort((a, b) => a.spent_on < b.spent_on ? 1 : a.spent_on > b.spent_on ? -1 : a.created_at < b.created_at ? 1 : -1);
+
+function filterHTML() {
+  const T = ds.travelers().filter(t => t.active !== false || ds.expenses().some(e => involves(e, t.id, shareOf(e))));
+  const who = `<option value="">全部旅伴</option>` + T.map(t => `<option value="${t.id}"${t.id === LS.who ? " selected" : ""}>${esc(t.nickname)}${t.active === false ? "（已隱藏）" : ""}</option>`).join("");
+  const cat = `<option value="">全部類別</option>` + EX_CATS.map(([k, l]) => `<option value="${k}"${k === LS.cat ? " selected" : ""}>${l}</option>`).join("");
+  return `<div class="ex-filter"><select id="exFWho" aria-label="篩選旅伴">${who}</select><select id="exFCat" aria-label="篩選類別">${cat}</select></div>`;
+}
+
+function itemHTML(e, sh) {
+  const cur = e.currency, n = [...sh.r.map.values()].filter(u => u > 0).length;
+  const mode = `${n} 人${e.split_mode === "equal" ? "均分" : e.split_mode === "shares" ? "按份數" : "指定金額"}`;
+  const mu = LS.who ? sh.r.map.get(LS.who) || 0 : 0;
+  const mine = mu > 0 ? `・${esc(nameOf(LS.who))} 分 ${money(mu, cur)}` : "";
+  const open = LS.open.has(e.id);
+  const rows = sh.splits.filter(s => (sh.r.map.get(s.traveler_id) || 0) > 0).map(s => {
+    const u = sh.r.map.get(s.traveler_id), sub = e.split_mode === "shares" ? `<small>${Number(s.shares)} 份</small>` : "";
+    return `<li><span class="ex-who">${esc(nameOf(s.traveler_id))}${sub}</span><b>${money(u, cur)}</b>${cur !== "TWD" ? `<small>≈ ${money(toTwd(u, e), "TWD")}</small>` : ""}</li>`;
+  }).join("");
+  const place = e.place_id && ds.places().find(p => p.id === e.place_id);
+  const meta = [cur !== "TWD" ? `匯率 1 ${esc(CUR_NAME[cur] || cur)} ＝ ${Number(e.rate_to_base)} 台幣` : "", place ? `📍 ${esc(place.name)}` : "", e.note ? `📝 ${esc(e.note)}` : "", `記錄：${esc(e.updated_by || e.created_by || "旅伴")}`].filter(Boolean).join("<br>");
+  const btns = ds.mode === "live" ? `<div class="row"><button type="button" class="btn ghost" data-exedit="${e.id}">✏️ 修改</button><button type="button" class="btn ghost ex-del" data-exdel="${e.id}">🗑️ 刪除</button></div>` : "";
+  return `<li class="ex-item${open ? " open" : ""}"><button type="button" class="ex-row" data-exrow="${e.id}" aria-expanded="${open}">
+      <span class="ex-ic" aria-hidden="true">${[...catOf(e.category)][0]}</span>
+      <span class="ex-main"><b>${esc(e.title)}</b><small>${esc(nameOf(e.paid_by))} 付・${mode}${mine}</small></span>
+      <span class="ex-amt"><b>${money(sh.total, cur)}</b>${cur !== "TWD" ? `<small>≈ ${money(toTwd(sh.total, e), "TWD")}</small>` : ""}</span></button>
+    ${open ? `<div class="ex-more"><ul class="ex-detail">${rows}</ul>${sh.r.rem ? `<p class="muted ex-hint">除不盡的 ${money(sh.r.rem, cur)} 算在付款人身上</p>` : ""}<p class="muted ex-hint">${meta}</p>${btns}</div>` : ""}</li>`;
+}
+
+function listHTML() {
+  const all = sorted();
+  if (!all.length) return `<p class="muted ex-empty">還沒有任何記帳。</p>`;
+  const L = all.map(e => [e, shareOf(e)]).filter(([e, sh]) => (!LS.cat || e.category === LS.cat) && (!LS.who || involves(e, LS.who, sh)));
+  const twdSum = list => list.reduce((a, [e, sh]) => a + toTwd(sh.total, e), 0);
+  const mine = LS.who ? L.reduce((a, [e, sh]) => a + toTwd(sh.r.map.get(LS.who) || 0, e), 0) : 0;
+  const head = `<p class="ex-sum">${L.length} 筆・合計 ≈ <b>${money(twdSum(L), "TWD")}</b>${LS.who ? `<br>其中 ${esc(nameOf(LS.who))} 分攤 ≈ <b>${money(mine, "TWD")}</b>` : ""}</p>`;
+  const body = [...new Set(L.map(([e]) => e.spent_on))].map(d => {
+    const items = L.filter(([e]) => e.spent_on === d);
+    return `<div class="ex-day"><div class="ex-dayh"><span>${dayLabel(d)}</span><span>≈ ${money(twdSum(items), "TWD")}</span></div>
+      <ul class="ex-items">${items.map(([e, sh]) => itemHTML(e, sh)).join("")}</ul></div>`;
+  }).join("");
+  return `<div class="ex-sub ex-listh">📋 帳目清單</div>${filterHTML()}${L.length ? head + body : `<p class="muted ex-empty">沒有符合條件的帳。</p>`}
+    <p class="muted ex-hint">台幣金額用每筆記帳當下存的匯率換算。點一筆可以看分攤明細。</p>`;
+}
+const refreshList = () => { const b = $("#ex-list"); if (b) b.innerHTML = listHTML(); };
+
+// 修改：把這筆的內容帶回表單
+function startEdit(e) {
+  const sh = shareOf(e), ids = new Set(activeTravelers().map(t => t.id));
+  if (![e.paid_by, ...sh.splits.map(s => s.traveler_id)].every(id => ids.has(id))) { toast("這筆有已隱藏的成員，請先在「👥 旅行成員」恢復再修改"); return; }
+  Object.assign(EX, { open: true, editId: e.id, cat: e.category, cur: e.currency, rate: String(Number(e.rate_to_base)), rateTouched: true, payer: e.paid_by, mode: e.split_mode,
+    sel: new Set(sh.splits.map(s => s.traveler_id)), shares: Object.fromEntries(sh.splits.map(s => [s.traveler_id, String(Number(s.shares))])),
+    exact: e.split_mode === "exact" ? Object.fromEntries(sh.splits.map(s => [s.traveler_id, String(Number(s.amount || 0))])) : {} });
+  $("#ex-form").innerHTML = formHTML();
+  $("#exDate").value = e.spent_on; $("#exTitle").value = e.title; $("#exAmt").value = String(Number(e.amount));
+  $("#exPlace").value = e.place_id || ""; $("#exNote").value = e.note || "";
+  $("#exSplit").innerHTML = splitHTML(); refreshRate();
+  $("#ex-form").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+// 修改完或取消：表單回到新增用的預設值
+function endEdit(open) {
+  Object.assign(EX, { open: !!open, editId: null, rateTouched: false, sel: null, shares: {}, exact: {}, mode: "equal" });
+  $("#ex-form").innerHTML = formHTML();
+}
+const saveLabel = () => EX.editId ? "💾 儲存修改" : "💾 儲存這筆";
 
 /* ---------- 重畫 ---------- */
 const countText = () => { const n = ds.expenses().length; return n ? `共 ${n} 筆` : ""; };
@@ -143,6 +224,7 @@ function refresh() {
   const box = $("#ex-form"); if (!box) return;
   $("#ex-ed").innerHTML = statusHTML();
   $("#ex-count").textContent = countText();
+  refreshList();
   const live = ds.mode === "live", has = !!box.firstElementChild;
   if (live !== has) { box.innerHTML = formHTML(); return; }   // 切換即時／唯讀才整個重畫，避免清掉輸入中的內容
   if (!live || !EX.open) return;
@@ -181,15 +263,22 @@ async function save() {
   if (!await ensureEditor()) return;
   const p = { spent_on: $("#exDate").value, title, category: EX.cat, amount: total / minor(cur), currency: cur, rate_to_base: rate,
     paid_by: EX.payer, split_mode: EX.mode, place_id: $("#exPlace").value || null, note: $("#exNote").value.trim() || null, splits };
+  const editId = EX.editId;
+  if (editId) p.id = editId;
   const btn = $("#exSave"); btn.disabled = true; btn.textContent = "儲存中…";
   try {
     await ds.upsertExpense(p);
+    if (editId) {
+      toast(`已更新「${title}」`); endEdit(false); LS.open.add(editId); refreshList();
+      const r = document.querySelector(`[data-exrow="${editId}"]`); if (r) r.scrollIntoView({ behavior: "smooth", block: "center" });
+      return;
+    }
     toast(`已記下「${title}」${money(total, cur)}`);
     // 日期、幣別、匯率、付款人、分攤設定保留，方便連續記好幾筆
     ["#exTitle", "#exAmt", "#exNote"].forEach(s => { $(s).value = ""; });
     $("#exPlace").value = ""; EX.exact = {}; redrawDetail(); refreshRate(); $("#exTitle").focus();
   } catch (e) { pkError(e); }
-  btn.disabled = false; btn.textContent = "💾 儲存這筆";
+  btn.disabled = false; btn.textContent = saveLabel();
 }
 
 const refreshRate = () => { const b = $("#exRateBox"); if (b) b.innerHTML = rateHTML(); };
@@ -212,7 +301,22 @@ document.addEventListener("click", async e => {
   const t = e.target;
   if (!t.closest("#ex-card")) return;
   if (t.closest("[data-exopen]")) { if (!await ensureEditor()) return; EX.open = true; $("#ex-form").innerHTML = formHTML(); $("#exTitle").focus(); return; }
-  if (t.closest("[data-exclose]")) { EX.open = false; $("#ex-form").innerHTML = formHTML(); return; }
+  if (t.closest("[data-exclose]")) { if (EX.editId) endEdit(false); else { EX.open = false; $("#ex-form").innerHTML = formHTML(); } return; }
+  const row = t.closest("[data-exrow]");
+  if (row) { const id = row.dataset.exrow; LS.open.has(id) ? LS.open.delete(id) : LS.open.add(id); refreshList(); return; }
+  const ed = t.closest("[data-exedit]");
+  if (ed) { const x = ds.expenses().find(e => e.id === ed.dataset.exedit); if (!x || !await ensureEditor()) return; startEdit(x); return; }
+  const del = t.closest("[data-exdel]");
+  if (del) {
+    const x = ds.expenses().find(e => e.id === del.dataset.exdel); if (!x || !await ensureEditor()) return;
+    if (!confirm(`確定要刪除「${x.title}」${money(toUnits(x.amount, x.currency), x.currency)} 嗎？`)) return;
+    try {
+      await ds.deleteExpense(x.id);
+      if (EX.editId === x.id) endEdit(false);
+      toastAction(`已刪除「${x.title}」`, "復原", () => ds.restoreExpense(x.id).then(() => toast("已復原")).catch(pkError));
+    } catch (err) { pkError(err); }
+    return;
+  }
   if (t.id === "exSave") { save(); return; }
   const c = t.closest("[data-excat]");
   if (c) { EX.cat = c.dataset.excat; document.querySelectorAll("[data-excat]").forEach(b => b.setAttribute("aria-pressed", b === c)); return; }
@@ -248,6 +352,7 @@ function redrawDetailKeep() {
 document.addEventListener("change", e => {
   const t = e.target;
   if (t.id === "exPayer") { EX.payer = t.value; redrawDetail(); return; }
+  if (t.id === "exFWho" || t.id === "exFCat") { LS[t.id === "exFWho" ? "who" : "cat"] = t.value; refreshList(); return; }
   if (t.id === "exCur") {
     if (t.value !== "+") { setCur(t.value); return; }
     const c = String(prompt("輸入幣別代碼（3 個英文字母，例如 USD、KRW）", "") || "").trim().toUpperCase();

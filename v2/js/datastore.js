@@ -138,6 +138,18 @@ ds.upsertExpense = async p => {
     .concat(p.splits.map(s => ({ expense_id: row.id, trip_id: D.trip.id, traveler_id: s.traveler_id, shares: s.shares ?? 1, amount: s.amount ?? null })));
   saveLocal(); emit(); return row;
 };
+// 記帳刪除是軟刪除，分攤資料留著，復原時主檔和分攤一起重抓
+ds.deleteExpense = async id => {
+  const before = D.expenses;
+  D.expenses = D.expenses.filter(x => x.id !== id); emit();
+  try { await call("expense_delete", { p_id: id }); saveLocal(); }
+  catch (e) { D.expenses = before; emit(); throw e; }
+};
+ds.restoreExpense = async id => {
+  await call("expense_restore", { p_id: id });
+  [D.expenses, D.expense_splits] = await Promise.all([fetchTable("expenses"), fetchTable("expense_splits")]);
+  saveLocal(); emit();
+};
 
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
 const setData = (d, save) => {
