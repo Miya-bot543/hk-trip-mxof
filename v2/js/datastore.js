@@ -13,7 +13,7 @@ const TRIP_COLS = "id,slug,name,start_date,end_date,base_currency";
 
 const empty = () => Object.fromEntries(TABLES.map(t => [t, []]));
 let D = Object.assign({ trip: null }, empty());
-let sb = null, readyP = null;
+let sb = null, ch = null, readyP = null;
 const subs = new Set();
 
 export const ds = {
@@ -154,21 +154,35 @@ function subscribe() {
       setData(D, true); emit();
     } catch (e) { console.warn("重新讀取失敗", e); }
   };
-  const ch = sb.channel("trip-" + D.trip.id);
+  if (ch) sb.removeChannel(ch);   // 重新連線時先拿掉舊的頻道，避免重複收到通知
+  ch = sb.channel("trip-" + D.trip.id);
   TABLES.forEach(t => ch.on("postgres_changes", { event: "*", schema: "public", table: t, filter: `trip_id=eq.${D.trip.id}` },
     () => { pending.add(t); clearTimeout(timer); timer = setTimeout(flush, 300); }));
   ch.subscribe();
 }
 
-async function goLive() {
-  await withTimeout(loadScript(SB_SRC, SB_SRI), TIMEOUT);
-  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
-  const d = await withTimeout(fetchAll(), TIMEOUT);
-  setData(d, true);
-  ds.mode = "live";
-  subscribe();
-  emit();
+let connecting = null;
+function goLive() {
+  if (connecting) return connecting;
+  connecting = (async () => {
+    await withTimeout(loadScript(SB_SRC, SB_SRI), TIMEOUT);
+    if (!sb) sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, { auth: { persistSession: false, autoRefreshToken: false } });
+    const d = await withTimeout(fetchAll(), TIMEOUT);
+    setData(d, true);
+    ds.mode = "live";
+    subscribe();
+    emit();
+  })().finally(() => { connecting = null; });
+  return connecting;
 }
+const canLive = () => LIVE_ENABLED && SUPABASE_URL && SUPABASE_ANON_KEY && navigator.onLine !== false;
+const tryLive = () => goLive().catch(e => {
+  console.warn("無法連線資料庫，改用唯讀快照", e);
+  const m = navigator.onLine === false ? "offline" : "snapshot";
+  if (ds.mode !== m) { ds.mode = m; emit(); }
+});
+// 一開始沒連上（例如開飛航模式時打開網站）：網路恢復或切回網站時再試一次，不用關掉分頁重開
+const retryLive = () => { if (ds.mode !== "live" && canLive() && readyP) tryLive(); };
 
 function init() {
   readyP = (async () => {
@@ -182,9 +196,11 @@ function init() {
     else useFile(await fileP);
     ds.mode = navigator.onLine === false ? "offline" : "snapshot";
     // 2. 背景連 Supabase（不擋住畫面）
-    if (LIVE_ENABLED && SUPABASE_URL && SUPABASE_ANON_KEY && navigator.onLine !== false) {
-      goLive().catch(e => { console.warn("無法連線資料庫，改用唯讀快照", e); ds.mode = navigator.onLine === false ? "offline" : "snapshot"; emit(); });
-    }
+    if (canLive()) tryLive();
   })();
+  window.addEventListener("online", retryLive);
+  // 用到一半斷網：先切成離線唯讀，網路回來再自動連回去
+  window.addEventListener("offline", () => { if (ds.mode === "live") { ds.mode = "offline"; emit(); } });
+  document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") retryLive(); });
   return readyP;
 }
