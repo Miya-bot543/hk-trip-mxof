@@ -60,7 +60,7 @@ export function pkCardHTML(it){
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
     ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${v(x)}</dd>`).join("")}</dl>`:''}
     ${who&&PK.open.has(it.id)?`<p class="muted" style="margin:8px 0 0">由 ${esc(who)} 新增</p>`:''}
-    <div class="mapgo row"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
+    <div class="mapgo pk-acts"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
       <a class="btn" href="${gmaps(pkQuery(it))}" target="_blank" rel="noopener">🗺️ 地圖</a>
       ${live?`<button class="btn ghost" data-pkadd="${it.id}" aria-expanded="${PK.adding===it.id}">＋ 加入行程</button>`:''}
       ${live&&PK.open.has(it.id)?`<button class="btn ghost" data-editpk="${it.id}">✏️ 修改</button><button class="btn ghost" data-delpk="${it.id}">🗑️ 刪除</button>`:''}</div>
