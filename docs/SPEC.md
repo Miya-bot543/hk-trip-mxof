@@ -151,7 +151,7 @@ ds.exportJSON() / ds.importJSON(file)   // 匯入時逐筆呼叫 upsert，需通
 - 旅伴不預先建立，一開始為空，由家人在網站「旅行成員」區塊自行新增（輸入框「輸入成員名稱（最多8字）」＋「＋新增」按鈕）。
 - 名稱上限 8 字（前端限制；資料庫 `nickname` 限制 1～20 字）。
 - 分組選填：可從已有組別挑選、自行輸入新組別，或不分組（`group_label` 為空）。
-- 可改名、改分組、刪除。刪除時：已有記帳紀錄（付款或分攤）的成員改為 `active=false` 隱藏；沒有紀錄的直接刪除（需補 `traveler_delete` RPC，5.3 實作時加入 schema）。
+- 可改名、改分組、刪除。刪除時：已有記帳紀錄（付款或分攤）的成員改為 `active=false` 隱藏；沒有紀錄的直接刪除（`traveler_delete` RPC，6.2 第 1 步加入 schema）。
 - 新增、修改、刪除都需通關碼，走 `traveler_upsert`／`traveler_delete` RPC。
 - 頁尾或 09 章提供「更換身分／登出通關碼」。
 - **通關碼不可寫在任何檔案或 commit 裡**。
