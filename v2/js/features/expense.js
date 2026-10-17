@@ -142,10 +142,10 @@ function toggleFold(k) {
   if (k === "card") { const c = $("#ex-card"); c.classList.toggle("ex-shut", shut(k)); c.querySelector(".ex-top").setAttribute("aria-expanded", !shut(k)); }
   else if (k === "settle") refreshSettle(); else refreshList();
 }
-const foldHead = (k, title, note) => `<button type="button" class="ex-fold" data-exfold="${k}" aria-expanded="${!shut(k)}">${title}${note ? `<small>${note}</small>` : ""}<span class="fold-ar" aria-hidden="true">▾</span></button>`;
+const foldHead = (k, title, note) => `<button type="button" class="ex-fold" data-exfold="${k}" aria-expanded="${!shut(k)}">${title}${note ? `<small>${note}</small>` : ""}<span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></button>`;
 
 export function expenseSectionHTML() {
-  return `<div class="card pink${shut("card") ? " ex-shut" : ""}" id="ex-card"><button type="button" class="htop ex-top" data-exfold="card" aria-expanded="${!shut("card")}"><span class="tag">🧾 記帳</span><span class="ex-topr"><span class="nights" id="ex-count"></span><span class="fold-ar" aria-hidden="true">▾</span></span></button>
+  return `<div class="card pink${shut("card") ? " ex-shut" : ""}" id="ex-card"><button type="button" class="htop ex-top" data-exfold="card" aria-expanded="${!shut("card")}"><span class="tag">🧾 記帳</span><span class="ex-topr"><span class="nights" id="ex-count"></span><span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></span></button>
     <div class="ex-body"><div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-settle">${settleHTML()}</div><div id="ex-list">${listHTML()}</div></div></div>`;
 }
 
@@ -213,7 +213,7 @@ const refreshList = () => { const b = $("#ex-list"); if (b) b.innerHTML = listHT
 /* ---------- 結算 ---------- */
 // view　twd：每筆換成台幣一起算；cur：依幣別各自結算，不換匯
 // how　pair：逐人對帳，兩人之間互相抵完再列出；min：簡化轉帳，次數最少
-const ST = { view: "twd", how: "pair" };
+const ST = { view: "twd", how: "min" };
 const num = (u, cur) => money(u, cur).replace(/^(¥|NT\$|[A-Z]{3} )/, "");
 const UNIT = { JPY: "¥", TWD: "NT$" };
 // 每人已付、應付（最小單位整數）。conv 把原幣別換成結算幣別
@@ -277,7 +277,7 @@ function settleHTML() {
     return foldHead("settle", "⚖️ 結算", n ? `要轉 ${n} 次` : "大家都結清了");
   }
   const seg = (attr, cur, opts, label) => `<div class="ex-seg" role="group" aria-label="${label}">${opts.map(([k, l]) => `<button type="button" ${attr}="${k}" aria-pressed="${cur === k}">${l}</button>`).join("")}</div>`;
-  const bar = `<div class="ex-stbar">${seg("data-exst", ST.view, [["twd", "台幣結算"], ["cur", "依幣別"]], "結算幣別")}${seg("data-exhow", ST.how, [["pair", "逐人對帳"], ["min", "簡化轉帳"]], "轉帳方式")}</div>`;
+  const bar = `<div class="ex-stbar">${seg("data-exst", ST.view, [["twd", "台幣結算"], ["cur", "依幣別"]], "結算幣別")}${seg("data-exhow", ST.how, [["min", "簡化轉帳"], ["pair", "逐人對帳"]], "轉帳方式")}</div>`;
   const body = ST.view === "twd" ? settleBlockHTML(all, toTwd, "TWD")
     : groups.map(([L, conv, c]) => `<div class="ex-stcur"><div class="ex-dayh"><span>${esc(CUR_NAME[c] || c)}帳</span><span>${L.length} 筆</span></div>${settleBlockHTML(L, conv, c)}</div>`).join("");
   const how = ST.how === "pair" ? "逐人對帳：每兩個人之間互相抵完再列出" : "簡化轉帳：大家的帳一起抵銷，轉帳次數最少";

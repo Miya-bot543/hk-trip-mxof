@@ -544,7 +544,12 @@ table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;fon
 .ex-shut .ex-body{display:none}
 .ex-fold{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:baseline;gap:8px;margin:16px 0 0;padding:2px 0;font-size:14px;font-weight:800}
 .ex-fold small{font-size:12px;font-weight:600;color:var(--soft)}
-.ex-fold .fold-ar{margin-left:auto;color:var(--lilac-d)}
+.ex-fb{display:inline-flex;align-items:center;gap:4px;flex:none;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;line-height:1.4;color:var(--lilac-d);background:rgba(170,140,230,.14);border:1px solid rgba(170,140,230,.4)}
+.ex-fb::before{content:"收合"}
+[aria-expanded="false"]>.ex-fb::before,[aria-expanded="false"] .ex-fb::before{content:"展開"}
+.ex-fb .fold-ar{font-size:13px}
+.ex-fold .ex-fb{margin-left:auto;align-self:center}
+.ex-top:hover .ex-fb,.ex-fold:hover .ex-fb{background:rgba(170,140,230,.26)}
 .ex-fold+.ex-filter{margin-top:6px}
 /* 帳目清單：電腦版每天的帳兩欄排 */
 @media (min-width:900px){.ex-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
