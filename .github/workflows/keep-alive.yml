@@ -1,0 +1,32 @@
+# 每週二、五去連一下 Supabase，免得免費版太久沒人用被暫停。
+# 只跑到 END_DATE（台北時間）為止；之後網站改用唯讀快照，不再需要資料庫。
+# 用的是公開金鑰（publishable key），只讀一筆旅程 id，不寫入。
+name: keep-alive
+
+on:
+  schedule:
+    - cron: "0 1 * * 2,5"   # 每週二、五 09:00（台北時間）
+  workflow_dispatch:         # 也可以在 GitHub 網頁上手動按執行
+
+env:
+  END_DATE: "2027-01-31"
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 過了截止日就不連
+        id: check
+        run: |
+          today=$(TZ=Asia/Taipei date +%F)
+          if [[ "$today" > "$END_DATE" ]]; then
+            echo "今天 $today，已超過 $END_DATE，不再連資料庫"; echo "skip=1" >> "$GITHUB_OUTPUT"
+          fi
+      - name: 連一下資料庫
+        if: steps.check.outputs.skip != '1'
+        run: |
+          URL="https://ebebqnnzwmarxhopinsf.supabase.co"
+          KEY="sb_publishable_hz88ZWiWC0eDRK4-uhUnyg_fb4xnQ6S"
+          code=$(curl -s -o /tmp/r.json -w "%{http_code}" "$URL/rest/v1/trips?select=id&limit=1" -H "apikey: $KEY" -H "Authorization: Bearer $KEY")
+          echo "HTTP $code"; cat /tmp/r.json; echo
+          [ "$code" = "200" ]
