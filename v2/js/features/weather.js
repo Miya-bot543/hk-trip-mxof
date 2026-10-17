@@ -3,7 +3,7 @@ import { TODAY_PLACE, WX_PLACES } from "../../data/static.js";
 import { $, store } from "../util.js";
 import { todayIdx, inTrip } from "./today.js";
 
-/* ---------- ☁️ 天氣預報（Open-Meteo，免金鑰；Claude 版無法連線時改顯示連結） ---------- */
+/* ---------- ☁️ 天氣預報（Open-Meteo，免金鑰；無法連線時改顯示連結） ---------- */
 export const WX = {sel:null, data:store.get("hk-wx",{}), err:false, loading:false};
 export function wxIcon(c){
   if(c===0) return ["☀️","晴"]; if(c<=2) return ["🌤️","晴時多雲"]; if(c===3) return ["☁️","陰"];
@@ -32,7 +32,7 @@ export function wxInner(){
   const tabs=`<div class="row" role="group" aria-label="選擇地點">${WX_PLACES.map(x=>`<button class="chip" data-wx="${x.id}" ${x.id===sel?'aria-current="page"':''}>${x.name}</button>`).join("")}</div>`;
   if(!rec){
     const links=`<div class="row" style="margin-top:8px">${WX_PLACES.map(x=>`<a class="btn ghost" href="https://www.google.com/search?q=${encodeURIComponent(x.name.replace("溫泉","温泉")+" 天気")}" target="_blank" rel="noopener">${x.name}天氣 ↗</a>`).join("")}</div>`;
-    return tabs + (WX.err ? `<p class="muted" style="margin-top:10px">目前無法取得天氣資料（Claude 版無法連到外部天氣服務，GitHub 版可以正常顯示）。可以先用下面的連結查詢：</p>${links}`
+    return tabs + (WX.err ? `<p class="muted" style="margin-top:10px">目前無法取得天氣資料</p>${links}`
                           : `<p class="muted" style="margin-top:10px">天氣讀取中…</p>`);
   }
   const j=rec.j, d=j.daily, c=j.current; const [ci,ct]=wxIcon(c.weather_code);
