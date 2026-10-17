@@ -254,6 +254,9 @@ select{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(-
 .fx-quick b{color:var(--pink-d)}
 .fx-quick p{grid-column:1/-1}
 .fx-note{margin:4px 0 8px;line-height:1.55;font-size:13px}
+.fx-act{display:inline-block;margin:6px 0 2px;border:0;border-radius:999px;padding:5px 14px;font:inherit;font-size:13px;font-weight:800;color:#fff;cursor:pointer;
+  background:linear-gradient(135deg,#f08ab8,#9a7fd6);box-shadow:0 2px 8px rgba(154,127,214,.45)}
+.fx-act:hover{filter:brightness(1.08)}
 
 .imap{position:relative;border-radius:18px;overflow:hidden;line-height:0}
 .imap img{display:block;width:100%;height:auto}

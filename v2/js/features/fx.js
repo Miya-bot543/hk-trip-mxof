@@ -17,10 +17,10 @@ const when = iso => { const d = new Date(iso); return isNaN(d) ? "" : `${d.getMo
 
 function noteHTML(){
   const s = sharedRow();
-  if (shared()) return `👥 共用匯率：改了大家都看得到，記帳也會用這個匯率。<br>${s ? `最後更新：${esc(s.updated_by || "旅伴")} ${when(s.updated_at)}` : `還沒有人設定，填好後會自動存成共用匯率。${store.get("hk-rate", "") > 0 ? ` <button type="button" class="linkbtn" data-fxsave>把 ${esc(store.get("hk-rate", ""))} 存成共用匯率</button>` : ""}`}`;
+  if (shared()) return `👥 共用匯率：改了大家都看得到，記帳也會用這個匯率。<br>${s ? `最後更新：${esc(s.updated_by || "旅伴")} ${when(s.updated_at)}` : `還沒有人設定，填好後會自動存成共用匯率。${store.get("hk-rate", "") > 0 ? ` <button type="button" class="fx-act" data-fxsave>💾 把 ${esc(store.get("hk-rate", ""))} 存成共用匯率</button>` : ""}`}`;
   const tail = ds.mode === "live" ? `<br><button type="button" class="linkbtn" data-edlogin>🔑 輸入通關碼</button>後可修改共用匯率。` : "";
   if (s) {
-    const sr = Number(s.rate_to_base), use = Number(store.get("hk-rate", "")) !== sr ? ` <button type="button" class="linkbtn" data-fxuse>套用</button>` : "";
+    const sr = Number(s.rate_to_base), use = Number(store.get("hk-rate", "")) !== sr ? ` <button type="button" class="fx-act" data-fxuse>套用</button>` : "";
     return `📱 目前記在這支手機。共用匯率：1 日圓 ＝ ${esc(String(sr))} 台幣${use}${tail}`;
   }
   return `📱 匯率請依當天銀行或刷卡匯率自行填寫，會記在這支手機。${tail}`;
