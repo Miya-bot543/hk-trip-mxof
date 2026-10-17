@@ -360,6 +360,7 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .ed-form .row{margin-top:12px}
 .ed-msg{color:var(--pink-d);font-weight:700;min-height:1.2em;margin:8px 0 0;font-size:14px}
 .ed-bar{display:inline-flex;gap:8px;align-items:center;margin-left:6px;font-weight:700}
+.bd-ed{margin-left:8px;font-size:13px}
 .linkbtn{background:none;border:0;padding:0;color:var(--lilac-d);text-decoration:underline;font:inherit;font-size:13px;cursor:pointer}
 #toastA{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
   display:flex;gap:12px;align-items:center;background:var(--ink);color:var(--bg);padding:8px 10px 8px 16px;border-radius:999px;font-weight:700;font-size:14px;transition:.25s;z-index:51}
