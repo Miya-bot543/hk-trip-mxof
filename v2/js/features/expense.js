@@ -135,7 +135,7 @@ function formHTML() {
 
 export function expenseSectionHTML() {
   return `<div class="card pink" id="ex-card"><div class="htop"><span class="tag">🧾 記帳</span><span class="nights" id="ex-count"></span></div>
-    <div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-list">${listHTML()}</div></div>`;
+    <div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-settle">${settleHTML()}</div><div id="ex-list">${listHTML()}</div></div>`;
 }
 
 /* ---------- 帳目清單 ---------- */
@@ -198,6 +198,58 @@ function listHTML() {
 }
 const refreshList = () => { const b = $("#ex-list"); if (b) b.innerHTML = listHTML(); };
 
+/* ---------- 結算 ---------- */
+const ST = { view: "twd" };   // twd：每筆換成台幣一起算；cur：依幣別各自結算，不換匯
+// 每人已付、應付（最小單位整數）。conv 把原幣別換成結算幣別
+function ledger(list, conv) {
+  const B = new Map(), add = (id, k, u) => { const o = B.get(id) || { paid: 0, owe: 0 }; o[k] += u; B.set(id, o); };
+  list.forEach(e => {
+    const sh = shareOf(e); if (!sh.r.ok) return;
+    const tot = conv(sh.total, e); let used = 0;
+    sh.r.map.forEach((u, id) => { const c = conv(u, e); add(id, "owe", c); used += c; });
+    if (tot !== used) add(e.paid_by, "owe", tot - used);   // 換算後的零頭算在付款人身上，跟除不盡的規則一樣
+    add(e.paid_by, "paid", tot);
+  });
+  return B;
+}
+// 貪婪法：金額剛好相同的先配對，其餘每次拿欠最多的對應收最多的
+function transfers(B) {
+  const cr = [], db = [], out = [];
+  B.forEach((o, id) => { const d = o.paid - o.owe; if (d > 0) cr.push({ id, u: d }); else if (d < 0) db.push({ id, u: -d }); });
+  db.forEach(d => { const c = cr.find(x => x.u > 0 && x.u === d.u); if (c) { out.push([d.id, c.id, d.u]); c.u = 0; d.u = 0; } });
+  const top = L => L.filter(x => x.u > 0).sort((a, b) => b.u - a.u)[0];
+  for (let d = top(db), c = top(cr); d && c; d = top(db), c = top(cr)) { const u = Math.min(d.u, c.u); out.push([d.id, c.id, u]); d.u -= u; c.u -= u; }
+  return out;
+}
+function settleBlockHTML(B, cur) {
+  const T = ds.travelers().filter(t => t.active !== false || B.has(t.id));
+  const rows = T.map(t => {
+    const o = B.get(t.id) || { paid: 0, owe: 0 }, d = o.paid - o.owe;
+    const diff = d > 0 ? `<b class="ex-pos">+${money(d, cur)}</b><small>可收回</small>` : d < 0 ? `<b class="ex-neg">−${money(-d, cur)}</b><small>要付出</small>` : `<b>${money(0, cur)}</b><small>已結清</small>`;
+    return `<li><span class="ex-who"><span class="mb-dot" style="background:${esc(t.color || "#9a7fd6")}">${esc([...t.nickname][0] || "?")}</span>${esc(t.nickname)}${t.active === false ? `<small>已隱藏</small>` : ""}</span>
+      <span><small>已付</small>${money(o.paid, cur)}</span><span><small>應付</small>${money(o.owe, cur)}</span><span class="ex-diff"><small>差額</small>${diff}</span></li>`;
+  }).join("");
+  const tf = transfers(B);
+  const tfs = tf.length ? `<ol class="ex-tf">${tf.map(([a, b, u]) => `<li><span><b>${esc(nameOf(a))}</b> → <b>${esc(nameOf(b))}</b></span><b class="ex-tfamt">${money(u, cur)}</b></li>`).join("")}</ol>`
+    : `<p class="ex-ok">✓ 大家都結清了，不需要轉帳</p>`;
+  return `<ul class="ex-st">${rows}</ul><div class="ex-tfh">💸 建議轉帳${tf.length ? `（${tf.length} 次）` : ""}</div>${tfs}`;
+}
+function settleHTML() {
+  const all = ds.expenses();
+  if (!all.length) return "";
+  const seg = [["twd", "台幣結算"], ["cur", "依幣別結算"]].map(([k, l]) => `<button type="button" data-exst="${k}" aria-pressed="${ST.view === k}">${l}</button>`).join("");
+  let body;
+  if (ST.view === "twd") body = settleBlockHTML(ledger(all, toTwd), "TWD") + `<p class="muted ex-hint">每筆用記帳當下存的匯率換成台幣，再一起結算。</p>`;
+  else {
+    const curs = [...new Set(all.map(e => e.currency))].sort((a, b) => a === "JPY" ? -1 : b === "JPY" ? 1 : a < b ? -1 : 1);
+    body = curs.map(c => { const L = all.filter(e => e.currency === c);
+      return `<div class="ex-stcur"><div class="ex-dayh"><span>${esc(CUR_NAME[c] || c)}帳</span><span>${L.length} 筆</span></div>${settleBlockHTML(ledger(L, u => u), c)}</div>`; }).join("")
+      + `<p class="muted ex-hint">日圓帳用日圓加總，${curs.length > 1 ? "其他幣別的帳也各自用原幣別加總，" : ""}不換匯。適合在當地直接用日圓還錢。</p>`;
+  }
+  return `<div class="ex-sub ex-listh">⚖️ 結算</div><div class="ex-seg" role="group" aria-label="結算方式">${seg}</div>${body}`;
+}
+const refreshSettle = () => { const b = $("#ex-settle"); if (b) b.innerHTML = settleHTML(); };
+
 // 修改：把這筆的內容帶回表單
 function startEdit(e) {
   const sh = shareOf(e), ids = new Set(activeTravelers().map(t => t.id));
@@ -224,7 +276,7 @@ function refresh() {
   const box = $("#ex-form"); if (!box) return;
   $("#ex-ed").innerHTML = statusHTML();
   $("#ex-count").textContent = countText();
-  refreshList();
+  refreshSettle(); refreshList();
   const live = ds.mode === "live", has = !!box.firstElementChild;
   if (live !== has) { box.innerHTML = formHTML(); return; }   // 切換即時／唯讀才整個重畫，避免清掉輸入中的內容
   if (!live || !EX.open) return;
@@ -317,6 +369,8 @@ document.addEventListener("click", async e => {
     } catch (err) { pkError(err); }
     return;
   }
+  const st = t.closest("[data-exst]");
+  if (st) { ST.view = st.dataset.exst; refreshSettle(); return; }
   if (t.id === "exSave") { save(); return; }
   const c = t.closest("[data-excat]");
   if (c) { EX.cat = c.dataset.excat; document.querySelectorAll("[data-excat]").forEach(b => b.setAttribute("aria-pressed", b === c)); return; }

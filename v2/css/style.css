@@ -509,3 +509,21 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .ex-more .row{margin-top:8px}
 .ex-del{color:#d4537a}
 @media (max-width:640px){.ex-grid,.ex-grid:has(#exPlace){grid-template-columns:1fr}.ex-grid:has(#exAmt){grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ex-payer{grid-column:1/-1}.ex-detail,.ex-more .ex-detail{grid-template-columns:1fr}}
+.ex-st{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.ex-st li{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr));align-items:start;gap:8px;padding:8px 12px;border-radius:14px;background:color-mix(in srgb,var(--card) 72%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:14px}
+.ex-st li>span{display:flex;flex-direction:column;min-width:0}
+.ex-st li>span small{font-size:12px;color:var(--soft);font-weight:500}
+.ex-st .ex-who{flex-direction:row;align-items:center;align-self:center;gap:8px;font-weight:800}
+.ex-st .ex-who .mb-dot{width:26px;height:26px;font-size:12px;flex:none}
+.ex-st .ex-who small{margin-left:2px}
+.ex-st .ex-diff{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 6px}
+.ex-st .ex-diff small:first-child{flex-basis:100%}
+.ex-pos{color:#3f9e74} .ex-neg{color:#d4537a}
+:root[data-theme="dark"] .ex-pos{color:#7fd6ad}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ex-pos{color:#7fd6ad}}
+.ex-tfh{font-size:14px;font-weight:800;margin:14px 0 0}
+.ex-tf{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
+.ex-tf li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--lilac) 45%,transparent);border:1px solid color-mix(in srgb,var(--lilac-d) 50%,transparent)}
+.ex-tfamt{color:var(--pink-d);white-space:nowrap}
+.ex-stcur{margin-top:12px}
+@media (max-width:640px){.ex-st li{grid-template-columns:repeat(3,minmax(0,1fr))}.ex-st .ex-who{grid-column:1/-1}.ex-tf{grid-template-columns:1fr}}
