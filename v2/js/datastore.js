@@ -108,6 +108,19 @@ ds.restoreItem = async id => {
   D.itinerary_items = await fetchTable("itinerary_items"); saveLocal(); emit();
 };
 
+// 旅伴：新增、改名、改分組、隱藏後恢復都走 traveler_upsert
+ds.upsertTraveler = async p => {
+  const row = await call("traveler_upsert", { p });
+  D.travelers = D.travelers.filter(x => x.id !== row.id).concat(row);
+  saveLocal(); emit(); return row;
+};
+// 旅伴刪除：有記帳紀錄的改成隱藏（回傳 hidden），沒有的直接刪掉（回傳 deleted）
+ds.deleteTraveler = async id => {
+  const r = await call("traveler_delete", { p_id: id });
+  D.travelers = r === "hidden" ? D.travelers.map(x => x.id === id ? Object.assign({}, x, { active: false }) : x) : D.travelers.filter(x => x.id !== id);
+  saveLocal(); emit(); return r;
+};
+
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
 const setData = (d, save) => {
   D = Object.assign({ trip: null }, empty(), d);

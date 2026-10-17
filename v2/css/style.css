@@ -423,3 +423,23 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .today-bd{margin:8px 0 0;font-weight:700}
 .bd-warn{margin-top:6px;width:fit-content;background:var(--tbd-bg);color:var(--tbd-ink);border:1px dashed var(--tbd-line);border-radius:10px;padding:2px 8px;font-size:.85em}
 .bd-hint{margin:6px 0 0;font-size:13px}
+/* 08 章旅行成員 */
+.mb-grp{margin-top:12px}
+.mb-grp>b{display:block;font-size:14px;color:var(--ice-d)}
+.mb-list{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-wrap:wrap;align-items:flex-start;gap:8px}
+.mb-row{display:flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border-radius:999px;
+  background:color-mix(in srgb,var(--ice) 45%,var(--card));border:1px solid color-mix(in srgb,var(--ice-d) 35%,transparent)}
+.mb-dot{width:28px;height:28px;flex:none;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:900;font-size:14px}
+.mb-name{font-weight:700}
+.mb-me{margin-left:6px;background:var(--lilac);border-radius:999px;padding:0 7px;font-size:11px;vertical-align:1px}
+.mb-ops{display:flex;gap:8px;margin-left:4px}
+.mb-row.editing{flex-basis:100%;flex-wrap:wrap;border-radius:16px;padding:10px 12px}
+.mb-edit{display:grid;grid-template-columns:1fr 1fr;gap:10px;flex:1 1 100%;max-width:560px}
+.mb-edit label,.mb-add label{display:flex;flex-direction:column;gap:4px;font-size:14px;font-weight:700}
+.mb-btns{flex:1 1 100%}
+.mb-add{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:14px;padding-top:12px;border-top:1px dashed var(--ice-d)}
+.mb-msg{margin:6px 0 0;min-height:1em}
+.mb-msg:empty{display:none}
+.mb-hidden,.mb-empty{margin:10px 0 0}
+@media (max-width:640px){.mb-add{grid-template-columns:1fr 1fr}.mb-add .btn{grid-column:1/-1}.mb-edit{grid-template-columns:1fr}}
+#mb-count:empty{display:none}
