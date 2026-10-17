@@ -130,6 +130,15 @@ ds.setFx = async (cur, rate) => {
   catch (e) { D.fx_rates = before; emit(); throw e; }
 };
 
+// 記帳：主檔和分攤一起送，資料庫在同一個交易裡寫入（RPC 只回傳主檔，分攤用送出去的內容補上）
+ds.upsertExpense = async p => {
+  const row = await call("expense_upsert", { p });
+  D.expenses = D.expenses.filter(x => x.id !== row.id).concat(row);
+  D.expense_splits = D.expense_splits.filter(s => s.expense_id !== row.id)
+    .concat(p.splits.map(s => ({ expense_id: row.id, trip_id: D.trip.id, traveler_id: s.traveler_id, shares: s.shares ?? 1, amount: s.amount ?? null })));
+  saveLocal(); emit(); return row;
+};
+
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
 const setData = (d, save) => {
   D = Object.assign({ trip: null }, empty(), d);

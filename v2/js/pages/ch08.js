@@ -3,6 +3,7 @@ import { HOTELS, RENTAL, BUDGET } from "../../data/static.js";
 import { esc, v, store } from "../util.js";
 import { head, pager } from "../ui.js";
 import { membersSectionHTML } from "../features/members.js";
+import { expenseSectionHTML } from "../features/expense.js";
 
 export default function ch08(){
   const s=store.get("hk-split",{total:"",people:""});
@@ -18,6 +19,7 @@ export default function ch08(){
   ];
   return `${head("08")}
   ${membersSectionHTML()}
+  <div style="margin-top:14px">${expenseSectionHTML()}</div>
   <h3 style="margin-top:20px">💴 已知費用</h3>
   <div class="tbl stack"><table><thead><tr><th>項目</th><th>人數</th><th>整筆費用</th><th>每位費用</th></tr></thead><tbody>
   ${row("✈️ 機票・中華航空（CI2130／CI2131）","4 人",T(b.flights[0].total),T(b.flights[0].per))}
