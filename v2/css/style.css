@@ -419,4 +419,4 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .today-bd{margin:8px 0 0;font-weight:700}
 .bd-warn{margin-top:6px;width:fit-content;background:var(--tbd-bg);color:var(--tbd-ink);border:1px dashed var(--tbd-line);border-radius:10px;padding:2px 8px;font-size:.85em}
 .bd-grp.pin{background:var(--pink)}
-.bd-rt{margin-top:8px}.bd-rt ol{margin:4px 0 0;padding-left:1.4em}
+.bd-hint{margin:6px 0 0;font-size:13px}

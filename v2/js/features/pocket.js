@@ -22,7 +22,7 @@ export const PK_VENUES = [["室內","🏠 室內"],["戶外","🌲 戶外"],["�
 export const PK_WHEN = ["住宿札幌期間（12/28～01/03）", ...DAYS.map(d=>`${d.md}（${d.wd}）`)];
 export const pkWritable = () => ds.canEdit();
 export const pkCatName = k => (PK_CATS.find(c=>c[0]===k)||PK_CATS[0])[1];
-const PK_SLOTS = [["allday","整日"],["morning","上午"],["afternoon","下午"],["evening","晚上"]];
+const PK_SLOTS = [["allday","待排入"],["morning","上午"],["afternoon","下午"],["evening","晚上"]];
 // 第 i 天（0 起算）對應的日期，跟 05 章規劃板一樣從 12/25 開始
 const pkDay = i => new Date(Date.UTC(2026, 11, 25) + i*86400000).toISOString().slice(0,10);
 
@@ -74,7 +74,7 @@ function pkAddHTML(it){
   return `<div class="pk-add">
     <div class="pk-form">
       <label class="full">哪一天<select data-pkaddday>${DAYS.map((d,i)=>`<option value="${i}" ${i===cur?'selected':''}>${d.md}（${d.wd}）</option>`).join("")}</select></label>
-      <label>時段<select data-pkaddslot>${PK_SLOTS.map(([k,t])=>`<option value="${k}" ${k==="morning"?'selected':''}>${t}</option>`).join("")}</select></label>
+      <label>時段<select data-pkaddslot>${PK_SLOTS.map(([k,t])=>`<option value="${k}" ${k==="allday"?'selected':''}>${t}</option>`).join("")}</select></label>
       <label>必去／備案<select data-pkaddstatus><option value="must">必去</option><option value="maybe">備案</option></select></label>
     </div>
     ${days.length?`<p class="muted" style="margin:8px 0 0">✓ 已排在 ${days.join("、")}</p>`:''}
