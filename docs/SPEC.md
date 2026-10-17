@@ -246,7 +246,7 @@ ds.exportJSON() / ds.importJSON(file)   // 匯入時逐筆呼叫 upsert，需通
 
 ### 5.4 匯出與快照
 - 09 章新增「資料備份」卡：匯出 JSON（全部資料表）。（使用者決定不做匯入，避免舊備份蓋掉新資料）
-- `scripts/make-snapshot`＋`.github/workflows/snapshot.yml`：用 anon key 透過 REST 讀所有資料表，寫成 `data/snapshot.json`，有變更才 commit。排程：旅行期間每天一次、平常每週一次，另可手動執行（workflow_dispatch）。
+- `scripts/make-snapshot`＋`.github/workflows/snapshot.yml`：用 anon key 透過 REST 讀所有資料表，寫成 `data/snapshot.json`，有變更才 commit。排程：旅行期間（12/24～01/04）每天一次、平常每週一一次，另可手動執行（workflow_dispatch），只跑到 2027/01/31（台北時間）。
 - `.github/workflows/keep-alive.yml`：每週二、五各一次 GET `/rest/v1/trips?select=id&limit=1`（帶 anon key），只跑到 2027/01/31（台北時間），之後封存成唯讀快照網站（見 SETUP_GUIDE G 段）。
 - Actions 需要的 secrets（`SUPABASE_URL`、`SUPABASE_ANON_KEY`）用 `gh secret set` 設定。
 

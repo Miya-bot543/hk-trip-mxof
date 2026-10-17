@@ -1,0 +1,51 @@
+# 自動快照：把 Supabase 目前的資料存成 v2/data/snapshot.json，有變更才 commit。
+# 旅行期間（12/24～01/04）每天一次，平常每週一一次，也可以在 GitHub 網頁上手動執行。
+# 只跑到 END_DATE（台北時間）為止；之後網站封存成唯讀快照。只用公開金鑰讀取，不寫入資料庫。
+name: snapshot
+
+on:
+  schedule:
+    - cron: "0 19 * * *"   # 每天 03:00（台北時間），下面再判斷今天要不要跑
+  workflow_dispatch:
+
+env:
+  END_DATE: "2027-01-31"
+
+permissions:
+  contents: write
+
+concurrency: snapshot
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 判斷今天要不要跑
+        id: check
+        run: |
+          today=$(TZ=Asia/Taipei date +%F); wd=$(TZ=Asia/Taipei date +%u)
+          run=0
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then run=1
+          elif [[ "$today" > "$END_DATE" ]]; then echo "已超過 $END_DATE，不再快照"
+          elif [[ ! "$today" < "2026-12-24" && ! "$today" > "2027-01-04" ]]; then run=1   # 旅行期間每天
+          elif [[ "$wd" == "1" ]]; then run=1                                              # 平常每週一
+          fi
+          echo "今天 $today（週 $wd），run=$run"; echo "run=$run" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.run == '1'
+      - uses: actions/setup-node@v4
+        if: steps.check.outputs.run == '1'
+        with:
+          node-version: "22"
+      - name: 讀資料庫存成快照
+        if: steps.check.outputs.run == '1'
+        run: node scripts/snapshot.mjs
+      - name: 有變更才 commit
+        if: steps.check.outputs.run == '1'
+        run: |
+          if git diff --quiet v2/data/snapshot.json; then echo "快照沒有變更"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add v2/data/snapshot.json
+          git commit -m "自動快照 $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')"
+          git push
