@@ -179,6 +179,19 @@ async function applyRoute(btn){
 }
 const renderForm = () => { const w=$("#bd-formwrap"); if(w) w.innerHTML=formHTML(); };
 
+// 有開始時間的行程照時間放：排到同時段第一個比它晚的有時間行程前面，後面都沒有就放最後。
+// 沒填時間的不動；目前位置本來就符合時間順序也不動
+async function placeByTime(row){
+  const t=hm(row.start_time); if(!t) return;
+  const list=ds.items(row.day).filter(x=>!x.locked && x.slot===row.slot).sort(byOrder), at=list.findIndex(x=>x.id===row.id);
+  const tm=x=>hm(x.start_time), ok=list.every((x,k)=>!tm(x) || x.id===row.id || (k<at ? tm(x)<=t : tm(x)>=t));
+  if(ok) return;
+  const rest=list.filter(x=>x.id!==row.id), k=rest.findIndex(x=>tm(x) && tm(x)>t);
+  rest.splice(k<0 ? rest.length : k, 0, row);
+  const patch=rest.map((x,n)=>({id:x.id, slot:row.slot, position:n+1})).filter(p=>itemOf(p.id).position!==p.position);
+  if(patch.length) await ds.reorderItems(patch);
+}
+
 async function saveItem(){
   const title=$("#bdTitle").value.trim(), msg=$("#bdMsg");
   if(!title){ msg.textContent="請先填寫名稱"; $("#bdTitle").focus(); return; }
@@ -192,8 +205,9 @@ async function saveItem(){
   if(address) snap.address=address; else delete snap.address;
   const btn=$("#bdSave"); btn.disabled=true; msg.textContent="儲存中…";
   try{
-    await ds.upsertItem(Object.assign({ kind:"visit" }, old, { day, slot, position:pos, title, place_snapshot:snap, status:$("#bdStatus").value,
+    const row = await ds.upsertItem(Object.assign({ kind:"visit" }, old, { day, slot, position:pos, title, place_snapshot:snap, status:$("#bdStatus").value,
       start_time:$("#bdStart").value||null, note:$("#bdNote").value.trim()||null }));
+    await placeByTime(row);
     const moved = di!==S.curDay ? `，排在 ${DAYS[di].md} ${SLOTS.find(x=>x[0]===slot)[1]}` : "";
     toast((old?"已儲存修改":"已加入行程")+moved); BD.formOpen=false; BD.editing=null; BD.menu=null; renderForm(); refreshBoard();
   }catch(e){ msg.textContent=""; btn.disabled=false; pkError(e); }
