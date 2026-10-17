@@ -359,7 +359,17 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .ed-form input{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:8px 10px}
 .ed-form .row{margin-top:12px}
 .ed-msg{color:var(--pink-d);font-weight:700;min-height:1.2em;margin:8px 0 0;font-size:14px}
-.ed-line{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:6px}
+/* 通關碼狀態列：玻璃感，電腦版一行（說明在左、狀態在右），手機自動換成兩行 */
+.ed-status{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-top:10px;padding:10px 14px;
+  border-radius:16px;font-size:14px;font-weight:700;
+  background:linear-gradient(135deg,color-mix(in srgb,var(--lilac) 45%,transparent),color-mix(in srgb,var(--ice) 45%,transparent));
+  border:1px solid color-mix(in srgb,var(--card) 70%,transparent);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,#fff 55%,transparent),0 4px 14px color-mix(in srgb,var(--lilac-d) 14%,transparent);
+  -webkit-backdrop-filter:blur(10px) saturate(1.3);backdrop-filter:blur(10px) saturate(1.3)}
+.ed-desc{flex:1 1 240px;color:var(--soft)}
+.ed-line{display:flex;flex-wrap:wrap;gap:10px;align-items:center;flex:none}
+.ed-who{background:color-mix(in srgb,var(--card) 75%,transparent);border:1px solid color-mix(in srgb,var(--lilac-d) 35%,transparent);border-radius:999px;padding:3px 12px}
+.ed-who.off{color:var(--soft)}
 .ed-login{padding:4px 12px;font-size:13px}
 .linkbtn{background:none;border:0;padding:0;color:var(--lilac-d);text-decoration:underline;font:inherit;font-size:13px;cursor:pointer}
 #toastA{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;

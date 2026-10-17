@@ -46,8 +46,8 @@ export function ensureEditor(){
 /* 共用狀態列：沒輸入通關碼時有「輸入通關碼」按鈕，輸入後顯示暱稱、換人、登出 */
 export function editorStatusHTML(guest, member){
   if(ds.mode!=="live") return "";
-  if(!ds.canEdit()) return `<div class="caution">👥 ${guest}<div class="ed-line"><span>🔒 尚未輸入通關碼</span><button type="button" class="btn ed-login" data-edlogin>🔑 輸入通關碼</button></div></div>`;
-  return `<div class="caution">👥 ${member}<div class="ed-line"><span>✍️ 目前是 ${esc(ds.me()||"旅伴")}</span><button type="button" class="linkbtn" data-edswitch>換人</button><button type="button" class="linkbtn" data-edlogout>登出通關碼</button></div></div>`;
+  if(!ds.canEdit()) return `<div class="ed-status"><span class="ed-desc">👥 ${guest}</span><span class="ed-line"><span class="ed-who off">🔒 尚未輸入通關碼</span><button type="button" class="btn ed-login" data-edlogin>🔑 輸入通關碼</button></span></div>`;
+  return `<div class="ed-status on"><span class="ed-desc">👥 ${member}</span><span class="ed-line"><span class="ed-who">✍️ ${esc(ds.me()||"旅伴")}</span><button type="button" class="linkbtn" data-edswitch>換人</button><button type="button" class="linkbtn" data-edlogout>登出</button></span></div>`;
 }
 document.addEventListener("click",async e=>{
   if(e.target.closest("[data-edlogin]")){ await ensureEditor(); return; }
