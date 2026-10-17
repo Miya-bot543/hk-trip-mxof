@@ -121,6 +121,15 @@ ds.deleteTraveler = async id => {
   saveLocal(); emit(); return r;
 };
 
+// 匯率：旅程共用（1 外幣 = ? 台幣），記帳時會把當下匯率存進每一筆
+ds.rate = cur => { const r = D.fx_rates.find(x => x.currency === cur); return r ? Number(r.rate_to_base) : 0; };
+ds.setFx = async (cur, rate) => {
+  const before = D.fx_rates, row = { trip_id: D.trip.id, currency: cur, rate_to_base: rate, updated_by: (ds.me() || "旅伴").slice(0, 20), updated_at: new Date().toISOString() };
+  D.fx_rates = D.fx_rates.filter(x => x.currency !== cur).concat(row); emit();
+  try { await call("fx_set", { p_currency: cur, p_rate: rate }); saveLocal(); }
+  catch (e) { D.fx_rates = before; emit(); throw e; }
+};
+
 const emit = () => subs.forEach(fn => { try { fn(ds.mode); } catch (e) { console.error(e); } });
 const setData = (d, save) => {
   D = Object.assign({ trip: null }, empty(), d);
