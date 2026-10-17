@@ -133,9 +133,20 @@ function formHTML() {
   </div>`;
 }
 
+/* ---------- 收合：整張記帳卡、結算、帳目清單各自可以收起來，記在這台手機裡 ---------- */
+const FD = (() => { try { return new Set(JSON.parse(localStorage.getItem("hk-exfold")) || []); } catch { return new Set(); } })();
+const shut = k => FD.has(k);
+function toggleFold(k) {
+  shut(k) ? FD.delete(k) : FD.add(k);
+  try { localStorage.setItem("hk-exfold", JSON.stringify([...FD])); } catch {}
+  if (k === "card") { const c = $("#ex-card"); c.classList.toggle("ex-shut", shut(k)); c.querySelector(".ex-top").setAttribute("aria-expanded", !shut(k)); }
+  else if (k === "settle") refreshSettle(); else refreshList();
+}
+const foldHead = (k, title, note) => `<button type="button" class="ex-fold" data-exfold="${k}" aria-expanded="${!shut(k)}">${title}${note ? `<small>${note}</small>` : ""}<span class="fold-ar" aria-hidden="true">▾</span></button>`;
+
 export function expenseSectionHTML() {
-  return `<div class="card pink" id="ex-card"><div class="htop"><span class="tag">🧾 記帳</span><span class="nights" id="ex-count"></span></div>
-    <div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-settle">${settleHTML()}</div><div id="ex-list">${listHTML()}</div></div>`;
+  return `<div class="card pink${shut("card") ? " ex-shut" : ""}" id="ex-card"><button type="button" class="htop ex-top" data-exfold="card" aria-expanded="${!shut("card")}"><span class="tag">🧾 記帳</span><span class="ex-topr"><span class="nights" id="ex-count"></span><span class="fold-ar" aria-hidden="true">▾</span></span></button>
+    <div class="ex-body"><div id="ex-ed">${statusHTML()}</div><div id="ex-form">${formHTML()}</div><div id="ex-settle">${settleHTML()}</div><div id="ex-list">${listHTML()}</div></div></div>`;
 }
 
 /* ---------- 帳目清單 ---------- */
@@ -184,6 +195,7 @@ function itemHTML(e, sh) {
 function listHTML() {
   const all = sorted();
   if (!all.length) return `<p class="muted ex-empty">還沒有任何記帳。</p>`;
+  if (shut("list")) return foldHead("list", "📋 帳目清單", `${all.length} 筆`);
   const L = all.map(e => [e, shareOf(e)]).filter(([e, sh]) => (!LS.cat || e.category === LS.cat) && (!LS.who || involves(e, LS.who, sh)));
   const twdSum = list => list.reduce((a, [e, sh]) => a + toTwd(sh.total, e), 0);
   const mine = LS.who ? L.reduce((a, [e, sh]) => a + toTwd(sh.r.map.get(LS.who) || 0, e), 0) : 0;
@@ -193,13 +205,17 @@ function listHTML() {
     return `<div class="ex-day"><div class="ex-dayh"><span>${dayLabel(d)}</span><span>≈ ${money(twdSum(items), "TWD")}</span></div>
       <ul class="ex-items">${items.map(([e, sh]) => itemHTML(e, sh)).join("")}</ul></div>`;
   }).join("");
-  return `<div class="ex-sub ex-listh">📋 帳目清單</div>${filterHTML()}${L.length ? head + body : `<p class="muted ex-empty">沒有符合條件的帳。</p>`}
+  return `${foldHead("list", "📋 帳目清單", `${all.length} 筆`)}${filterHTML()}${L.length ? head + body : `<p class="muted ex-empty">沒有符合條件的帳。</p>`}
     <p class="muted ex-hint">台幣金額用每筆記帳當下存的匯率換算。點一筆可以看分攤明細。</p>`;
 }
 const refreshList = () => { const b = $("#ex-list"); if (b) b.innerHTML = listHTML(); };
 
 /* ---------- 結算 ---------- */
-const ST = { view: "twd" };   // twd：每筆換成台幣一起算；cur：依幣別各自結算，不換匯
+// view　twd：每筆換成台幣一起算；cur：依幣別各自結算，不換匯
+// how　pair：逐人對帳，兩人之間互相抵完再列出；min：簡化轉帳，次數最少
+const ST = { view: "twd", how: "pair" };
+const num = (u, cur) => money(u, cur).replace(/^(¥|NT\$|[A-Z]{3} )/, "");
+const UNIT = { JPY: "¥", TWD: "NT$" };
 // 每人已付、應付（最小單位整數）。conv 把原幣別換成結算幣別
 function ledger(list, conv) {
   const B = new Map(), add = (id, k, u) => { const o = B.get(id) || { paid: 0, owe: 0 }; o[k] += u; B.set(id, o); };
@@ -221,32 +237,52 @@ function transfers(B) {
   for (let d = top(db), c = top(cr); d && c; d = top(db), c = top(cr)) { const u = Math.min(d.u, c.u); out.push([d.id, c.id, u]); d.u -= u; c.u -= u; }
   return out;
 }
-function settleBlockHTML(B, cur) {
-  const T = ds.travelers().filter(t => t.active !== false || B.has(t.id));
+// 逐人對帳：每筆帳裡，分攤者欠付款人自己那一份；同一對人之間互相抵完，只留一個方向
+function pairs(list, conv) {
+  const D = new Map();   // "a|b"（a < b）→ a 欠 b 的金額，負數代表 b 欠 a
+  list.forEach(e => {
+    const sh = shareOf(e); if (!sh.r.ok) return;
+    sh.r.map.forEach((u, id) => {
+      if (id === e.paid_by || !u) return;
+      const c = conv(u, e), lo = id < e.paid_by, k = lo ? `${id}|${e.paid_by}` : `${e.paid_by}|${id}`;
+      D.set(k, (D.get(k) || 0) + (lo ? c : -c));
+    });
+  });
+  const out = [];
+  D.forEach((u, k) => { const [a, b] = k.split("|"); if (u > 0) out.push([a, b, u]); else if (u < 0) out.push([b, a, -u]); });
+  return out.sort((x, y) => y[2] - x[2]);
+}
+const transfersOf = (list, conv) => ST.how === "pair" ? pairs(list, conv) : transfers(ledger(list, conv));
+function settleBlockHTML(list, conv, cur) {
+  const B = ledger(list, conv), T = ds.travelers().filter(t => t.active !== false || B.has(t.id));
   const rows = T.map(t => {
     const o = B.get(t.id) || { paid: 0, owe: 0 }, d = o.paid - o.owe;
-    const diff = d > 0 ? `<b class="ex-pos">+${money(d, cur)}</b><small>可收回</small>` : d < 0 ? `<b class="ex-neg">−${money(-d, cur)}</b><small>要付出</small>` : `<b>${money(0, cur)}</b><small>已結清</small>`;
-    return `<li><span class="ex-who"><span class="mb-dot" style="background:${esc(t.color || "#9a7fd6")}">${esc([...t.nickname][0] || "?")}</span>${esc(t.nickname)}${t.active === false ? `<small>已隱藏</small>` : ""}</span>
-      <span><small>已付</small>${money(o.paid, cur)}</span><span><small>應付</small>${money(o.owe, cur)}</span><span class="ex-diff"><small>差額</small>${diff}</span></li>`;
+    const diff = d > 0 ? `<td class="ex-pos">+${num(d, cur)}</td>` : d < 0 ? `<td class="ex-neg">−${num(-d, cur)}</td>` : `<td class="ex-zero">0</td>`;
+    return `<tr><th scope="row"><span class="ex-who"><span class="mb-dot" style="background:${esc(t.color || "#9a7fd6")}">${esc([...t.nickname][0] || "?")}</span>${esc(t.nickname)}${t.active === false ? `<small>已隱藏</small>` : ""}</span></th>
+      <td>${num(o.paid, cur)}</td><td>${num(o.owe, cur)}</td>${diff}</tr>`;
   }).join("");
-  const tf = transfers(B);
+  const tf = transfersOf(list, conv);
   const tfs = tf.length ? `<ol class="ex-tf">${tf.map(([a, b, u]) => `<li><span><b>${esc(nameOf(a))}</b> → <b>${esc(nameOf(b))}</b></span><b class="ex-tfamt">${money(u, cur)}</b></li>`).join("")}</ol>`
-    : `<p class="ex-ok">✓ 大家都結清了，不需要轉帳</p>`;
-  return `<ul class="ex-st">${rows}</ul><div class="ex-tfh">💸 建議轉帳${tf.length ? `（${tf.length} 次）` : ""}</div>${tfs}`;
+    : `<p class="ex-ok">✓ 大家都結清了</p>`;
+  return `<div class="ex-stbox"><table class="ex-st"><thead><tr><th scope="col">單位 ${esc(UNIT[cur] || cur)}</th><th scope="col">已付</th><th scope="col">應付</th><th scope="col">差額</th></tr></thead><tbody>${rows}</tbody></table>
+    <div class="ex-tfbox"><div class="ex-tfh">💸 ${ST.how === "pair" ? "誰給誰" : "建議轉帳"}${tf.length ? `（${tf.length} 次）` : ""}</div>${tfs}</div></div>`;
 }
 function settleHTML() {
   const all = ds.expenses();
   if (!all.length) return "";
-  const seg = [["twd", "台幣結算"], ["cur", "依幣別結算"]].map(([k, l]) => `<button type="button" data-exst="${k}" aria-pressed="${ST.view === k}">${l}</button>`).join("");
-  let body;
-  if (ST.view === "twd") body = settleBlockHTML(ledger(all, toTwd), "TWD") + `<p class="muted ex-hint">每筆用記帳當下存的匯率換成台幣，再一起結算。</p>`;
-  else {
-    const curs = [...new Set(all.map(e => e.currency))].sort((a, b) => a === "JPY" ? -1 : b === "JPY" ? 1 : a < b ? -1 : 1);
-    body = curs.map(c => { const L = all.filter(e => e.currency === c);
-      return `<div class="ex-stcur"><div class="ex-dayh"><span>${esc(CUR_NAME[c] || c)}帳</span><span>${L.length} 筆</span></div>${settleBlockHTML(ledger(L, u => u), c)}</div>`; }).join("")
-      + `<p class="muted ex-hint">日圓帳用日圓加總，${curs.length > 1 ? "其他幣別的帳也各自用原幣別加總，" : ""}不換匯。適合在當地直接用日圓還錢。</p>`;
+  const curs = [...new Set(all.map(e => e.currency))].sort((a, b) => a === "JPY" ? -1 : b === "JPY" ? 1 : a < b ? -1 : 1);
+  const groups = ST.view === "twd" ? [[all, toTwd, "TWD"]] : curs.map(c => [all.filter(e => e.currency === c), u => u, c]);
+  if (shut("settle")) {
+    const n = groups.reduce((a, [L, conv]) => a + transfersOf(L, conv).length, 0);
+    return foldHead("settle", "⚖️ 結算", n ? `要轉 ${n} 次` : "大家都結清了");
   }
-  return `<div class="ex-sub ex-listh">⚖️ 結算</div><div class="ex-seg" role="group" aria-label="結算方式">${seg}</div>${body}`;
+  const seg = (attr, cur, opts, label) => `<div class="ex-seg" role="group" aria-label="${label}">${opts.map(([k, l]) => `<button type="button" ${attr}="${k}" aria-pressed="${cur === k}">${l}</button>`).join("")}</div>`;
+  const bar = `<div class="ex-stbar">${seg("data-exst", ST.view, [["twd", "台幣結算"], ["cur", "依幣別"]], "結算幣別")}${seg("data-exhow", ST.how, [["pair", "逐人對帳"], ["min", "簡化轉帳"]], "轉帳方式")}</div>`;
+  const body = ST.view === "twd" ? settleBlockHTML(all, toTwd, "TWD")
+    : groups.map(([L, conv, c]) => `<div class="ex-stcur"><div class="ex-dayh"><span>${esc(CUR_NAME[c] || c)}帳</span><span>${L.length} 筆</span></div>${settleBlockHTML(L, conv, c)}</div>`).join("");
+  const how = ST.how === "pair" ? "逐人對帳：每兩個人之間互相抵完再列出" : "簡化轉帳：大家的帳一起抵銷，轉帳次數最少";
+  const view = ST.view === "twd" ? "每筆用記帳當下存的匯率換成台幣" : "各幣別分開算、不換匯，適合在當地直接用日圓還錢";
+  return `${foldHead("settle", "⚖️ 結算")}${bar}${body}<p class="muted ex-hint">差額＋代表可收回，−代表要付出。${how}。${view}。</p>`;
 }
 const refreshSettle = () => { const b = $("#ex-settle"); if (b) b.innerHTML = settleHTML(); };
 
@@ -351,7 +387,7 @@ function setCur(c) {
 
 document.addEventListener("click", async e => {
   const t = e.target;
-  if (!t.closest("#ex-card")) return;
+  if (!t.closest || !t.closest("#ex-card")) return;
   if (t.closest("[data-exopen]")) { if (!await ensureEditor()) return; EX.open = true; $("#ex-form").innerHTML = formHTML(); $("#exTitle").focus(); return; }
   if (t.closest("[data-exclose]")) { if (EX.editId) endEdit(false); else { EX.open = false; $("#ex-form").innerHTML = formHTML(); } return; }
   const row = t.closest("[data-exrow]");
@@ -371,6 +407,10 @@ document.addEventListener("click", async e => {
   }
   const st = t.closest("[data-exst]");
   if (st) { ST.view = st.dataset.exst; refreshSettle(); return; }
+  const hw = t.closest("[data-exhow]");
+  if (hw) { ST.how = hw.dataset.exhow; refreshSettle(); return; }
+  const fd = t.closest("[data-exfold]");
+  if (fd) { toggleFold(fd.dataset.exfold); return; }
   if (t.id === "exSave") { save(); return; }
   const c = t.closest("[data-excat]");
   if (c) { EX.cat = c.dataset.excat; document.querySelectorAll("[data-excat]").forEach(b => b.setAttribute("aria-pressed", b === c)); return; }

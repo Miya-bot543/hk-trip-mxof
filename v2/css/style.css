@@ -495,7 +495,7 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .ex-items{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
 .ex-item{border-radius:14px;background:color-mix(in srgb,var(--card) 72%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 .ex-item.open{border-color:color-mix(in srgb,var(--pink-d) 50%,transparent)}
-.ex-row{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:10px;padding:8px 12px}
+.ex-row{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:center;gap:10px;padding:6px 12px}
 .ex-row:focus-visible{outline:2px solid var(--lilac-d);border-radius:14px}
 .ex-ic{font-size:20px;flex:none}
 .ex-main{flex:1;min-width:0;display:flex;flex-direction:column}
@@ -509,21 +509,42 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .ex-more .row{margin-top:8px}
 .ex-del{color:#d4537a}
 @media (max-width:640px){.ex-grid,.ex-grid:has(#exPlace){grid-template-columns:1fr}.ex-grid:has(#exAmt){grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.ex-payer{grid-column:1/-1}.ex-detail,.ex-more .ex-detail{grid-template-columns:1fr}}
-.ex-st{list-style:none;margin:10px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
-.ex-st li{display:grid;grid-template-columns:minmax(0,1.3fr) repeat(3,minmax(0,1fr));align-items:start;gap:8px;padding:8px 12px;border-radius:14px;background:color-mix(in srgb,var(--card) 72%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);font-size:14px}
-.ex-st li>span{display:flex;flex-direction:column;min-width:0}
-.ex-st li>span small{font-size:12px;color:var(--soft);font-weight:500}
-.ex-st .ex-who{flex-direction:row;align-items:center;align-self:center;gap:8px;font-weight:800}
-.ex-st .ex-who .mb-dot{width:26px;height:26px;font-size:12px;flex:none}
-.ex-st .ex-who small{margin-left:2px}
-.ex-st .ex-diff{flex-direction:row;flex-wrap:wrap;align-items:baseline;gap:0 6px}
-.ex-st .ex-diff small:first-child{flex-basis:100%}
+/* 結算：電腦版表格和轉帳左右並排，手機版上下排；表格每人一行 */
+.ex-stbar{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.ex-stbar .ex-seg{margin-top:0}
+.ex-stbar .ex-seg button{font-size:13px;padding:3px 10px}
+.ex-stbox{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:10px 16px;align-items:start;margin-top:10px}
+table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;font-size:14px;border-radius:14px;overflow:hidden;background:color-mix(in srgb,var(--card) 72%,transparent);border:1px solid var(--line);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.ex-st th,.ex-st td{padding:5px 10px;text-align:right;white-space:nowrap;vertical-align:middle;border-bottom:1px solid color-mix(in srgb,var(--line) 70%,transparent);background:none;font-variant-numeric:tabular-nums}
+.ex-st tr:last-child>*{border-bottom:0}
+.ex-st thead th{font-size:12px;font-weight:600;color:var(--soft);padding-top:6px;padding-bottom:4px}
+.ex-st th:first-child{text-align:left}
+.ex-st td:last-child{font-weight:800}
+.ex-st .ex-who{display:flex;align-items:center;gap:6px;font-weight:800}
+.ex-st .ex-who .mb-dot{width:20px;height:20px;font-size:11px}
+.ex-st .ex-who small{font-size:11px;font-weight:500;color:var(--soft)}
+.ex-zero{color:var(--soft)}
 .ex-pos{color:#3f9e74} .ex-neg{color:#d4537a}
 :root[data-theme="dark"] .ex-pos{color:#7fd6ad}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .ex-pos{color:#7fd6ad}}
-.ex-tfh{font-size:14px;font-weight:800;margin:14px 0 0}
-.ex-tf{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:6px}
-.ex-tf li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 14px;border-radius:999px;background:color-mix(in srgb,var(--lilac) 45%,transparent);border:1px solid color-mix(in srgb,var(--lilac-d) 50%,transparent)}
+.ex-tfh{font-size:14px;font-weight:800}
+.ex-tf{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px}
+.ex-tf li{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 12px;border-radius:999px;font-size:14px;background:color-mix(in srgb,var(--lilac) 45%,transparent);border:1px solid color-mix(in srgb,var(--lilac-d) 50%,transparent)}
+.ex-tf li>span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .ex-tfamt{color:var(--pink-d);white-space:nowrap}
+.ex-tfbox .ex-ok{margin-top:4px}
 .ex-stcur{margin-top:12px}
-@media (max-width:640px){.ex-st li{grid-template-columns:repeat(3,minmax(0,1fr))}.ex-st .ex-who{grid-column:1/-1}.ex-tf{grid-template-columns:1fr}}
+@media (max-width:640px){.ex-stbox{grid-template-columns:1fr}.ex-st th,.ex-st td{padding:5px 7px}.ex-tf{grid-template-columns:1fr}}
+/* 收合：整張卡片、結算、帳目清單 */
+.ex-top{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ex-top:focus-visible,.ex-fold:focus-visible{outline:2px solid var(--lilac-d);border-radius:12px}
+.ex-topr{display:flex;align-items:center;gap:8px}
+.ex-top .fold-ar,.ex-fold .fold-ar{display:inline-block;transition:transform .2s}
+.ex-top[aria-expanded="true"] .fold-ar,.ex-fold[aria-expanded="true"] .fold-ar{transform:rotate(180deg)}
+.ex-shut .ex-body{display:none}
+.ex-fold{all:unset;box-sizing:border-box;width:100%;cursor:pointer;display:flex;align-items:baseline;gap:8px;margin:16px 0 0;padding:2px 0;font-size:14px;font-weight:800}
+.ex-fold small{font-size:12px;font-weight:600;color:var(--soft)}
+.ex-fold .fold-ar{margin-left:auto;color:var(--lilac-d)}
+.ex-fold+.ex-filter{margin-top:6px}
+/* 帳目清單：電腦版每天的帳兩欄排 */
+@media (min-width:900px){.ex-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
