@@ -2,7 +2,7 @@
 import { DAYS } from "../../data/static.js";
 import { $, esc, v, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
-import { ensureEditor, editorBarHTML } from "./editor.js";
+import { ensureEditor, editorStatusHTML } from "./editor.js";
 import { S } from "../state.js";
 
 /* ---------- 07 共用口袋名單（新增・修改・刪除走 datastore，需通關碼） ---------- */
@@ -105,8 +105,7 @@ export function pocketListHTML(){
 export function pkStatusHTML(){
   if(ds.mode==="offline") return `<div class="caution">📴 目前沒有網路，顯示最後一次讀到的清單，連上網路後才能修改。</div>`;
   if(ds.mode!=="live") return `<div class="caution">📌 目前為唯讀模式，暫時無法新增或修改。</div>`;
-  if(!pkWritable()) return `<div class="caution">👥 共用清單：按「＋ 新增地點」或卡片裡的「修改」，輸入通關碼就能編輯。</div>`;
-  return `<div class="caution">👥 共用中：新增、修改、刪除，打開網站都看得到。${editorBarHTML()}</div>`;
+  return editorStatusHTML("共用清單：輸入通關碼後，就能新增或修改地點。","共用中：新增、修改、刪除，打開網站都看得到。");
 }
 
 /* ---------- 表單 ---------- */

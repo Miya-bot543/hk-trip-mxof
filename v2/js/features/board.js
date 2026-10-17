@@ -4,7 +4,7 @@ import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { S } from "../state.js";
 import { DAYS } from "../../data/static.js";
-import { ensureEditor, editorBarHTML } from "./editor.js";
+import { ensureEditor, editorStatusHTML } from "./editor.js";
 import { pkError, pkList, PK_CATS, pkCatName } from "./pocket.js";
 import { routeSort } from "../lib/route-sort.js";
 
@@ -234,7 +234,7 @@ document.addEventListener("click",async e=>{
 
 export function boardSectionHTML(i){
   BD.formOpen=false; BD.editing=null; BD.menu=null; BD.pick=false; BD.route=false;
-  return `<div class="card" style="margin-top:14px"><span class="tag lilac">行程規劃板</span><span id="bd-ed" class="bd-ed">${edStatusHTML()}</span>
+  return `<div class="card" style="margin-top:14px"><span class="tag lilac">行程規劃板</span><div id="bd-ed">${edStatusHTML()}</div>
     <div id="bd-area" class="bd">${boardHTML(i)}</div><div id="bd-formwrap">${formHTML()}</div></div>`;
 }
 
@@ -288,11 +288,8 @@ function endDrag(){
 document.addEventListener("pointerup", endDrag);
 document.addEventListener("pointercancel", endDrag);
 
-// 規劃板標題旁顯示目前是不是已輸入通關碼
-function edStatusHTML(){
-  if(ds.mode!=="live") return "";
-  return ds.canEdit() ? editorBarHTML() : `<span class="muted">🔒 尚未輸入通關碼</span>`;
-}
+// 規劃板上方顯示目前是不是已輸入通關碼
+const edStatusHTML = () => editorStatusHTML("共用規劃板：輸入通關碼後，就能新增或調整行程。","共用中：新增、修改、刪除，打開網站都看得到。");
 function refreshBoard(){
   const e=$("#bd-ed"); if(e) e.innerHTML=edStatusHTML();
   const a=$("#bd-area"); if(a && !drag) a.innerHTML=boardHTML(S.curDay);   // 拖曳中不重畫，放開後會再刷新
