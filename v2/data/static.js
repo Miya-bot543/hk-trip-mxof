@@ -37,7 +37,7 @@ export const HOTELS = [
    inDate:"2026/12/25（五）", outDate:"2026/12/28（一）", nights:3, inTime:"下午 2:00 後", outTime:"上午 10:00 前",
    total:"TWD 24,012", totalNum:24012, per:"TWD 6,003", perNum:6003,
    extra:{inDate:"2026/12/26（六）", outDate:"2026/12/28（一）", nights:2, inTime:"下午 2:00 後", outTime:"上午 10:00 前",
-          total:"TWD 14,066", totalNum:14066, people:3, per:"TWD 4,688.667"},
+          total:"TWD 14,066", totalNum:14066, people:3, per:"TWD 4,688.67"},
    perks:["巨無霸溫泉免費泡：免費無限使用對面「第一瀧本館」的溫泉大浴場"], issue:null},
   {n:2, name:"APA 札幌薄野站前飯店", area:"札幌", address:"〒064-0804 北海道札幌市中央区南4条西2丁目2-5", people:7,
    inDate:"2026/12/28（一）", outDate:"2026/12/31（四）", nights:3, inTime:"下午 3:00 後", outTime:"上午 10:00 前",

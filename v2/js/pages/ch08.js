@@ -7,7 +7,7 @@ import { expenseSectionHTML } from "../features/expense.js";
 
 export default function ch08(){
   const s=store.get("hk-split",{total:"",people:""});
-  const T=n=>"TWD "+n.toLocaleString("en-US",{maximumFractionDigits:3});
+  const T=n=>"TWD "+(Math.ceil(Math.round(n*1e4)/100)/100).toLocaleString("en-US",{maximumFractionDigits:2});
   const Y=n=>"¥"+n.toLocaleString("en-US");
   const b=BUDGET, H=HOTELS, R=RENTAL.orders;
   const twdTotal=b.flights.reduce((a,f)=>a+f.total,0)+H.reduce((a,h)=>a+h.totalNum+(h.extra?h.extra.totalNum:0),0)+b.asahi.per*b.asahi.people;
@@ -15,7 +15,7 @@ export default function ch08(){
   const row=(item,ppl,tot,per,cls)=>`<tr${cls?` class="${cls}"`:''}><td>${item}</td><td>${ppl}</td><td>${tot}</td><td>${per}</td></tr>`;
   const groups=[
     {title:"中華航空組", people:4, color:"pink", items:[["機票 CI2130／CI2131",b.flights[0].per],["住宿 1 adex inn（3 晚）",H[0].perNum],["住宿 2 APA（3 晚）",H[1].perNum],["住宿 3 札幌民宿（2 晚）",H[2].perNum],["住宿 4 Vessel（1 晚）",H[3].perNum],["旭川一日遊",b.asahi.per]], car:["租車 第 1 台",b.cars[0].per]},
-    {title:"星宇航空組", people:3, color:"ice", items:[["機票 JX318／JX319",b.flights[1].per],["住宿 1 adex inn・第 2 筆（2 晚）",4688.667],["住宿 2 APA（3 晚）",H[1].perNum],["住宿 3 札幌民宿（2 晚）",H[2].perNum],["旭川一日遊",b.asahi.per]], car:["租車 第 2 台",b.cars[1].per]}
+    {title:"星宇航空組", people:3, color:"ice", items:[["機票 JX318／JX319",b.flights[1].per],["住宿 1 adex inn・第 2 筆（2 晚）",4688.67],["住宿 2 APA（3 晚）",H[1].perNum],["住宿 3 札幌民宿（2 晚）",H[2].perNum],["旭川一日遊",b.asahi.per]], car:["租車 第 2 台",b.cars[1].per]}
   ];
   return `${head("08")}
   ${membersSectionHTML()}
