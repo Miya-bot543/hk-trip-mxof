@@ -14,14 +14,14 @@ export function dayStrip(activeIdx, linkTo){
 
 // 地名後半段（航廈）不拆開，避免「（CTS）」單獨掉到下一行
 const placeNW=s=>{ const i=s.indexOf(" "); return i<0?esc(s):`${esc(s.slice(0,i))} <span class="nw">${esc(s.slice(i+1))}</span>`; };
-export function flightCard(f, full){
+export function flightCard(f, full, bag=true){
   const g=groupOf(FLIGHTS.indexOf(f));
   return `<div class="card ${f.dir==="去程"?'pink':'ice'}">
     <div class="htop"><span class="tag ${f.dir==="去程"?'':'ice'}">${f.dir==="去程"?'✈️ 去程':'🏠 回程'}</span><span class="nights">👥 ${g.people} 位</span></div>
     <div class="big" style="margin-top:6px">${f.date}　${esc(f.no)}</div>
     <dl class="kv"><dt>出發</dt><dd>${esc(f.depTime)}｜${placeNW(f.from)}</dd><dt>抵達</dt><dd>${esc(f.arrTime)}｜${placeNW(f.to)}</dd>
-    <dt>航空公司</dt><dd>${v(f.airline)}</dd><dt>手提行李</dt><dd>${v(f.carryOn)}</dd>
-    <dt>託運行李</dt><dd>${esc(f.checked)}</dd></dl></div>`;
+    <dt>航空公司</dt><dd>${v(f.airline)}</dd>${bag?`<dt>手提行李</dt><dd>${v(f.carryOn)}</dd>
+    <dt>託運行李</dt><dd>${esc(f.checked)}</dd>`:''}</dl></div>`;
 }
 export function mapsBtn(addr){
   return addr ? `<a class="btn" href="${gmaps(addr)}" target="_blank" rel="noopener">🗺️ 在 Google Maps 開啟</a>`
