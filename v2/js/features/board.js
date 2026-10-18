@@ -65,14 +65,14 @@ function itemHTML(it){
     (stay?`<span class="bd-grp area">⏱️ 約 ${stayTxt(stay)}</span>`:'') +
     (it.locked?'<span class="bd-grp lock">🔒 固定</span>':'') +
     (it.group_label?`<span class="bd-grp">${esc(it.group_label)}</span>`:'') +
-    (it.status==="maybe"?'<span class="bd-grp">備案</span>':'');
+    (it.status==="maybe"?'<span class="bd-grp">備案</span>':'') +
+    (addrOf(it)?`<a class="bd-grp bd-map" href="${gmaps(mapQ(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:'');
   const edit = ds.mode==="live" && !it.locked;
   return `<li class="bd-item${it.locked?' locked':''}" data-id="${it.id}">
     <div class="bd-head">${time?`<span class="bd-time">${time}</span>`:''}<span class="bd-name">${esc(name)}</span>${edit
       ?`<button type="button" class="bd-drag" data-bddrag="${it.id}" aria-label="按住拖曳調整順序" title="按住拖曳">⇅</button><button type="button" class="bd-more" data-bdmenu="${it.id}" aria-label="更多動作" aria-expanded="${BD.menu===it.id}">⋯</button>`:''}</div>
     ${meta?`<div class="bd-meta">${meta}</div>`:''}
     ${alertsOf(it, pl).map(a=>`<div class="bd-warn">⚠️ ${esc(a)}</div>`).join("")}
-    ${addrOf(it)?`<a class="bd-map" href="${gmaps(mapQ(it))}" target="_blank" rel="noopener">🗺️ ${esc(addrOf(it))}</a>`:''}
     ${it.note?`<div class="muted bd-note">${esc(it.note)}</div>`:''}
     ${edit&&BD.menu===it.id?`<div class="row bd-acts"><button class="btn ghost" data-bdedit="${it.id}">✏️ 修改</button><button class="btn ghost" data-bddel="${it.id}">🗑️ 刪除</button></div>`:''}</li>`;
 }

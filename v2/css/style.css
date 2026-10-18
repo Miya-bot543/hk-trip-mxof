@@ -472,7 +472,9 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .pl-meta{margin-left:calc(4.6em + 8px)}
 .bd-more{margin-left:auto;background:none;border:0;padding:0 6px;font-size:20px;line-height:1;color:var(--lilac-d);cursor:pointer}
 .bd-acts{margin-top:8px}
-.bd-map{display:inline-block;margin-top:4px;font-size:14px;color:var(--lilac-d);text-decoration:underline;word-break:break-all}
+/* 地點跟地區、停留時間一樣用膠囊，太長就省略號，點了開 Google Maps */
+.bd-map{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:1px solid var(--lilac);color:var(--lilac-d);text-decoration:none}
+.bd-map:hover{border-color:var(--lilac-d)}
 .bd-drag{margin-left:auto;margin-right:2px;background:var(--lilac);border:0;border-radius:8px;width:32px;height:28px;padding:0;font-size:17px;font-weight:700;line-height:1;color:var(--lilac-d);cursor:grab;touch-action:none}
 .bd-drag+.bd-more{margin-left:0}
 .bd-list:empty{display:none}
@@ -494,6 +496,21 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .today-bd{margin:8px 0 0;font-weight:700}
 .bd-warn{margin-top:6px;width:fit-content;background:var(--tbd-bg);color:var(--tbd-ink);border:1px dashed var(--tbd-line);border-radius:10px;padding:2px 8px;font-size:.85em}
 .bd-hint{margin:6px 0 0;font-size:13px}
+@media (max-width:600px){.bd-head{gap:4px}.bd-drag{width:26px;height:24px;font-size:15px;margin-right:0}.bd-more{padding:0 0 0 2px;font-size:18px}.bd-time{margin-right:2px}}
+/* 05 章：住宿卡按鈕兩顆等寬並排置底；電腦版今晚住宿與航班卡各半 */
+.hbtns>.btn:only-child{grid-column:1/-1}
+.d5>.card{display:flex;flex-direction:column}
+.d5>.card>.hbtns{margin-top:auto;padding-top:12px}
+.d5 .swap>.card{display:flex;flex-direction:column}
+.d5 .swap>.card>.hbtns{margin-top:auto;padding-top:10px}
+@media (min-width:861px){.grid2.d5{grid-template-columns:repeat(2,1fr)}}
+/* 05 章頁尾：前一天／後一天按鈕，中間放前後章小文字連結 */
+.d5pg{align-items:center}
+.d5pg>.btn{flex:0 0 auto;white-space:nowrap}
+@media (max-width:600px){.d5pg{gap:6px}.d5pg>.btn{padding-left:12px;padding-right:12px}.pg-ch{font-size:12px}}
+.pg-ch{display:flex;gap:4px 14px;flex-wrap:wrap;justify-content:center;font-size:13px}
+.pg-ch button{background:none;border:0;padding:2px 0;color:var(--lilac-d);cursor:pointer;white-space:nowrap}
+.pg-ch button:hover{text-decoration:underline}
 /* 08 章旅行成員 */
 .mb-grp{margin-top:12px}
 .mb-grp>b{display:block;font-size:14px;color:var(--ice-d)}
