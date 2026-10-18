@@ -124,7 +124,7 @@ details.fold:has(>summary:active){animation:jellyS .45s ease}
 @media (prefers-reduced-motion:reduce){.toc button,details.fold{animation:none!important;transform:none!important}}
 .grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))}
 .grid2{display:grid;gap:14px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-dl.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0 0}
+dl.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:8px 0 0;align-items:baseline}
 dl.kv dt{color:var(--soft);font-size:14px;white-space:nowrap}
 dl.kv dd{margin:0;font-weight:700;min-width:0;overflow-wrap:anywhere}
 .big{font-size:20px;font-weight:900}
@@ -339,7 +339,7 @@ footer{padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
   .tbl.stack thead{display:none}
   .tbl.stack tr{display:block;padding:10px 12px;border-bottom:1px dashed var(--line)}
   .tbl.stack tr:last-child{border-bottom:0}
-  .tbl.stack td,.tbl.stack tbody th{display:flex;gap:10px;padding:2px 0;border:0;background:none;text-align:left;white-space:normal}
+  .tbl.stack td,.tbl.stack tbody th{display:flex;align-items:baseline;gap:10px;padding:2px 0;border:0;background:none;text-align:left;white-space:normal}
   .tbl.stack td::before,.tbl.stack tbody th::before{content:attr(data-label);flex:none;width:72px;color:var(--soft);font-size:13px;font-weight:500}
   .tbl.stack td:first-child,.tbl.stack tbody th:first-child{font-weight:900;font-size:15px;padding-bottom:4px}
   .tbl.stack td:first-child::before,.tbl.stack tbody th:first-child::before{display:none}

@@ -12,12 +12,14 @@ export function dayStrip(activeIdx, linkTo){
     <div class="legend"><span><i style="background:var(--pink)"></i>更換住宿日（12/28、12/31、01/02）</span><span>點日期看當天安排</span></div>`;
 }
 
+// 地名後半段（航廈）不拆開，避免「（CTS）」單獨掉到下一行
+const placeNW=s=>{ const i=s.indexOf(" "); return i<0?esc(s):`${esc(s.slice(0,i))} <span class="nw">${esc(s.slice(i+1))}</span>`; };
 export function flightCard(f, full){
   const g=groupOf(FLIGHTS.indexOf(f));
   return `<div class="card ${f.dir==="去程"?'pink':'ice'}">
     <div class="htop"><span class="tag ${f.dir==="去程"?'':'ice'}">${f.dir==="去程"?'✈️ 去程':'🏠 回程'}</span><span class="nights">👥 ${g.people} 位</span></div>
     <div class="big" style="margin-top:6px">${f.date}　${esc(f.no)}</div>
-    <dl class="kv"><dt>出發</dt><dd>${esc(f.depTime)}｜${esc(f.from)}</dd><dt>抵達</dt><dd>${esc(f.arrTime)}｜${esc(f.to)}</dd>
+    <dl class="kv"><dt>出發</dt><dd>${esc(f.depTime)}｜${placeNW(f.from)}</dd><dt>抵達</dt><dd>${esc(f.arrTime)}｜${placeNW(f.to)}</dd>
     <dt>航空公司</dt><dd>${v(f.airline)}</dd><dt>手提行李</dt><dd>${v(f.carryOn)}</dd>
     <dt>託運行李</dt><dd>${esc(f.checked)}</dd></dl></div>`;
 }
