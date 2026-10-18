@@ -652,6 +652,8 @@ dl.kv a[href^="tel:"]{text-decoration:none}
 .pk-ctl{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-top:16px}
 .pk-ctl>.pk-cats{flex:0 0 100%}
 .pk-ctl>.pk-areas{flex:1 1 0;min-width:0}
+.pk-sm{display:none}
+@media (max-width:600px){.pk-areas .pk-lg{display:none}.pk-areas .pk-sm{display:inline}}
 @media (min-width:861px){
   .pk-ctl{gap:10px 14px}
   .pk-ctl>.pk-cats{flex:none}

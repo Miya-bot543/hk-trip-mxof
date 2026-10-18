@@ -162,7 +162,7 @@ export function pocketSectionHTML(){
       <div class="row pk-cats" role="group" aria-label="篩選分類">
       ${[["all","全部"],...PK_CATS].map(([k,t])=>`<button class="chip" data-pkf="${k}" ${PK.filter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
       <div class="row pk-areas" role="group" aria-label="篩選地區">
-      ${[["all","📍 全部地區"],["札幌","札幌"],["登別","登別"],["其他","小樽・富良野・其他"]].map(([k,t])=>`<button class="chip" data-pka="${k}" ${PK.afilter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
+      ${[["all","📍 全部地區","📍 全部"],["札幌","札幌"],["登別","登別"],["其他","小樽・富良野・其他","其他"]].map(([k,t,s])=>`<button class="chip" data-pka="${k}" ${PK.afilter===k?'aria-current="page"':''}>${s?`<span class="pk-lg">${t}</span><span class="pk-sm">${s}</span>`:t}</button>`).join("")}</div>
       ${pkAllBtnHTML()}</div>
     <div id="pk-area">${pocketListHTML()}</div>`;
 }
