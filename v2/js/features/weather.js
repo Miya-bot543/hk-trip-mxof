@@ -29,7 +29,7 @@ export async function wxFetch(force){
 export function wxInner(){
   const ti=todayIdx(); const def = inTrip(ti) ? ({nob:"nob",spk:"spk",asa:"asa",ski:"ski",cts:"spk"}[TODAY_PLACE[ti]]||"spk") : "spk";
   const sel = WX.sel || def, p=WX_PLACES.find(x=>x.id===sel), rec=WX.data[sel];
-  const tabs=`<div class="row" role="group" aria-label="選擇地點">${WX_PLACES.map(x=>`<button class="chip" data-wx="${x.id}" ${x.id===sel?'aria-current="page"':''}>${x.name}</button>`).join("")}</div>`;
+  const tabs=`<div class="row wx-tabs" role="group" aria-label="選擇地點">${WX_PLACES.map(x=>`<button class="chip" data-wx="${x.id}" ${x.id===sel?'aria-current="page"':''}>${x.name}</button>`).join("")}</div>`;
   if(!rec){
     const links=`<div class="row" style="margin-top:8px">${WX_PLACES.map(x=>`<a class="btn ghost" href="https://www.google.com/search?q=${encodeURIComponent(x.name.replace("溫泉","温泉")+" 天気")}" target="_blank" rel="noopener">${x.name}天氣 ↗</a>`).join("")}</div>`;
     return tabs + (WX.err ? `<p class="muted" style="margin-top:10px">目前無法取得天氣資料</p>${links}`
