@@ -261,6 +261,10 @@ textarea{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var
   .hw-books{grid-template-columns:1fr;grid-auto-rows:1fr}
   .hw-books .tix{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);column-gap:10px;align-content:center}
   .hw-books .tix .lb{grid-column:1/-1}.hw-books .tix .stats{margin-top:10px}}
+/* 04 租車卡：金額格撐滿整列、LINE 區塊填滿左欄下方 */
+.stats.rent-st{grid-template-columns:1fr 1fr}
+.stats .sub{display:block;font-style:normal;font-size:11px;color:var(--soft);font-weight:700}
+@media (min-width:861px){.rent>div:first-child .line-box{flex:1;flex-direction:column;align-items:center;justify-content:center;text-align:center;margin-top:12px}.hw-books .tix .rent-st{grid-column:1/-1}}
 
 #toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);opacity:0;pointer-events:none;
   background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-weight:700;font-size:14px;transition:.25s;z-index:50}

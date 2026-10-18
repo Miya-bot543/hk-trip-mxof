@@ -6,14 +6,17 @@ import { driverListHTML } from "../features/driver.js";
 
 export default function ch04(){
   const R=RENTAL, o=R.office, moves = DAYS.filter(isMove);
+  /* 飯店名稱結尾綁在一起，規則同 03 */
+  const nw=s=>`<span class="nw">${esc(s)}</span>`;
+  const hname=s=>{const j=s.indexOf("（"), i=j>0?j:s.lastIndexOf(" ")+1; return i>0?esc(s.slice(0,i))+nw(s.slice(i)):esc(s);};
   const order=(x,k)=>`<div class="tix ${k?'b2':''}"><div class="lb">${k?'🚙':'🚗'} 第 ${k+1} 台</div>
     <dl class="kv"><dt>車型</dt><dd>${esc(x.car)}</dd>    <dt>備註航班</dt><dd>${x.flight}</dd><dt>加購</dt><dd>${esc(x.hep)}</dd></dl>
     <div class="hdates"><div><small>取車</small><b>${x.from.slice(5)}</b><span>新千歲空港營業所</span></div><span class="ar">→</span>
       <div><small>還車</small><b>${x.to.slice(5)}</b><span>新千歲空港營業所</span></div></div>
-    <div class="stats" style="grid-template-columns:1fr 1fr"><div><small>租金（含全險、NOC、JAF）</small><b>${x.fee}</b></div>
+    <div class="stats rent-st"><div><small>租金</small><b>${x.fee}</b><em class="sub">含全險、NOC、JAF</em></div>
       <div><small>合計金額（含稅）</small><b style="color:var(--pink-d)">${x.total}</b></div></div></div>`;
   return `${head("04")}
-  <article class="card pink hwide">
+  <article class="card pink hwide rent">
     <div><div class="htop"><span class="tag">🚗 租車公司</span><span class="nights">12/25～12/28・2 台</span></div>
       <h3 style="margin-top:8px;font-size:20px">${esc(R.company)}</h3>
       <dl class="kv"><dt>負責人</dt><dd>${R.staff}</dd><dt>電話</dt><dd><a href="tel:+81123408887">${R.tel}</a></dd><dt>傳真</dt><dd>${R.fax}</dd></dl>
@@ -47,8 +50,8 @@ export default function ch04(){
    <div class="card ice"><span class="tag ice">② 加油</span>
     <ul class="clean"><li>滿油租、滿油還，油種 <b>REGULAR レギュラー（紅色）</b></li><li>在千歲市內加油站或營業所加油，<b>保留收據</b>給營業所</li>
     <li>最後加油處不在千歲市內，需在營業所補滿，價格略高</li></ul>
-    <dl class="kv" style="margin-top:8px"><dt>コスモ千歳空港SS</dt><dd>24 小時・<a href="tel:+81123232324">0123-23-2324</a>・到營業所約 10 分</dd>
-    <dt>ENEOS SS</dt><dd>8:00～17:30・<a href="tel:+81123452345">0123-45-2345</a>・到營業所約 10 分</dd></dl></div>
+    <dl class="kv" style="margin-top:8px"><dt>コスモ千歳空港SS</dt><dd>24 小時・<a class="nw" href="tel:+81123232324">0123-23-2324</a>・<span class="nw">到營業所約 10 分</span></dd>
+    <dt>ENEOS SS</dt><dd>8:00～17:30・<a class="nw" href="tel:+81123452345">0123-45-2345</a>・<span class="nw">到營業所約 10 分</span></dd></dl></div>
    <div class="card lilac"><span class="tag lilac">③ 還車</span>
     <ol class="plan"><li>導航輸入 Map Code <b>${o.mapcode}</b> 到新千歲空港營業所</li><li>營業時間內（${o.hours}）歸還，計日制</li>
     <li>交回租車時拿到的書面資料與車鑰匙</li><li>還車處常擁擠，請先整理好行李，避免遺忘物品</li><li>搭接駁巴士到機場（末班 19:00）</li></ol></div>
@@ -72,7 +75,7 @@ export default function ch04(){
   ${driverListHTML()}
   <h3 style="margin-top:18px">換宿日的移動</h3>
   <div class="tbl stack"><table><thead><tr><th>日期</th><th>退房</th><th>入住</th><th>交通方式</th></tr></thead><tbody>
-  ${moves.map(d=>`<tr><td>${d.md}（${d.wd}）</td><td>${esc(HOTELS[d.checkout].name)}</td><td>${esc(HOTELS[d.stay].name)}</td><td>${v(d.transport)}</td></tr>`).join("")}
+  ${moves.map(d=>`<tr><td><div>${nw(`${d.md}（${d.wd}）`)}</div></td><td><div>${hname(HOTELS[d.checkout].name)}</div></td><td><div>${hname(HOTELS[d.stay].name)}</div></td><td>${v(d.transport)}</td></tr>`).join("")}
   </tbody></table></div>
   <div class="note" style="margin-top:14px"><b>冬季開車提醒</b>
    <ul class="clean"><li>北海道冬季路面常結冰、天黑得早，請預留寬鬆時間。</li><li>本網站不提供即時車程，請出發前用導航查詢。</li></ul></div>${pager("04")}`;
