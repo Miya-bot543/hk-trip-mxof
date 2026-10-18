@@ -158,10 +158,10 @@ export function pkRenderForm(){ const w=$("#pk-formwrap"); if(w) w.innerHTML=pkF
 export function pocketSectionHTML(){
   PK.draftExtra=null;
   return `<div id="pk-status">${pkStatusHTML()}</div><div id="pk-formwrap">${pkFormHTML()}</div>
-    <div class="row" style="margin-top:16px" role="group" aria-label="篩選分類">
+    <div class="pk-ctl">
+      <div class="row pk-cats" role="group" aria-label="篩選分類">
       ${[["all","全部"],...PK_CATS].map(([k,t])=>`<button class="chip" data-pkf="${k}" ${PK.filter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
-    <div class="row pk-arow" style="margin-top:8px">
-      <div class="row" role="group" aria-label="篩選地區">
+      <div class="row pk-areas" role="group" aria-label="篩選地區">
       ${[["all","📍 全部地區"],["札幌","札幌"],["登別","登別"],["其他","小樽・富良野・其他"]].map(([k,t])=>`<button class="chip" data-pka="${k}" ${PK.afilter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
       ${pkAllBtnHTML()}</div>
     <div id="pk-area">${pocketListHTML()}</div>`;
