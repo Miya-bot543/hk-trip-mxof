@@ -383,8 +383,15 @@ details.fold>summary{list-style:none;cursor:pointer;padding:14px 18px;font-weigh
 details.fold>summary::-webkit-details-marker{display:none}
 .fold-ar{color:var(--lilac-d);transition:transform .2s}
 details.fold[open] .fold-ar{transform:rotate(180deg)}
+.fold-fb .fold-ar{display:inline-block}
+details.fold:not([open])>summary .fold-fb::before{content:"展開"}
+details.fold>summary:hover .fold-fb{background:rgba(170,140,230,.26)}
 details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .fold-body{padding:14px}
+/* 04 交通：大眾交通卡電腦版每列 3 張；移動建議卡按鈕置底 */
+.grid2.rt>.card{display:flex;flex-direction:column}
+.rt-go{margin-top:auto;padding-top:10px}
+@media (min-width:861px){.grid.tr3{grid-template-columns:repeat(3,1fr)}}
 
 .drv-btn{background:var(--pink);border-color:var(--pink-d)}
 #drvOverlay{position:fixed;inset:0;z-index:100;background:#fffdf8;display:flex;align-items:center;justify-content:center;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(20px + env(safe-area-inset-bottom,0px));overflow:auto}

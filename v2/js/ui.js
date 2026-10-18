@@ -35,7 +35,7 @@ export function hotelMini(h){
     ${h.extra?`<p class="muted" style="margin:6px 0 0">➕ 第 2 筆：${h.extra.inDate.slice(5,10)}～${h.extra.outDate.slice(5,10)}，${h.extra.people} 人，${h.extra.total}（每位 ${h.extra.per}）</p>`:''}</div>`;
 }
 export const FOLD = new Set();
-export const fold=(id,title,inner)=>`<details class="fold" data-fold="${id}" ${FOLD.has(id)?'open':''}><summary>${title}<span class="fold-ar">▾</span></summary><div class="fold-body">${inner}</div></details>`;
+export const fold=(id,title,inner)=>`<details class="fold" data-fold="${id}" ${FOLD.has(id)?'open':''}><summary>${title}<span class="ex-fb fold-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></summary><div class="fold-body">${inner}</div></details>`;
 document.addEventListener("toggle",e=>{ const d=e.target; if(d.dataset&&d.dataset.fold){ d.open?FOLD.add(d.dataset.fold):FOLD.delete(d.dataset.fold); } },true);
 document.addEventListener("click",e=>{ const b=e.target.closest("[data-foldall]"); if(!b) return; const op=b.dataset.foldall==="open"; document.querySelectorAll("details.fold").forEach(d=>d.open=op); });
 export function head(no){ const c=CHAPTERS.find(x=>x[0]===no); return `<h2 class="sec"><img class="sec-ic" src="${CH_ICON[+no-1]}" alt=""><span class="no">${no}</span>${c[2]}</h2>`; }

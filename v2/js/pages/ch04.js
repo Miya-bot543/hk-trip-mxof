@@ -58,15 +58,15 @@ export default function ch04(){
   </div>`)}
 
   ${fold("f-tr","🚇 札幌大眾交通指南（還車後使用）",`<p class="muted" style="margin-top:0">12/28 還車後就沒有車了，以下整理常用的交通工具。時間與票價是 2026 年公開資料，實際以官方時刻表為準。</p>
-  <div class="grid">${TRANSIT.map(t=>`<div class="card"><div class="htop"><b style="font-size:17px">${t.ico} ${esc(t.name)}</b></div>
+  <div class="grid tr3">${TRANSIT.map(t=>`<div class="card"><div class="htop"><b style="font-size:17px">${t.ico} ${esc(t.name)}</b></div>
     <dl class="kv"><dt>適合</dt><dd>${esc(t.use)}</dd><dt>時間</dt><dd>${esc(t.time)}</dd><dt>票價</dt><dd>${esc(t.fare)}</dd><dt>營運</dt><dd>${esc(t.hours)}</dd></dl>
     <p class="muted" style="margin:8px 0 0">${esc(t.note)}</p></div>`).join("")}</div>
   <div class="note" style="margin-top:12px">💳 <b>交通 IC 卡</b>：Suica、Kitaca 等交通 IC 卡，大多可以搭 JR、地下鐵、市電和主要巴士，少數路線以現場標示為準。</div>
   <h3 style="margin-top:20px">🧭 依日期的移動建議</h3>
-  <div class="grid2">${TRIP_ROUTES.map(r=>`<div class="card ice"><div class="htop"><span class="tag ice">${r.d}</span><span class="nights">👥 ${r.who}</span></div>
+  <div class="grid2 rt">${TRIP_ROUTES.map(r=>`<div class="card ice"><div class="htop"><span class="tag ice">${r.d}</span><span class="nights">👥 ${r.who}</span></div>
     <p style="margin:8px 0 4px;font-weight:700">${esc(r.from)} → ${esc(r.to)}</p>
     <p class="muted" style="margin:0">${esc(r.tip)}</p>
-    <div style="margin-top:10px"><a class="btn" href="${transitLink(r)}" target="_blank" rel="noopener">🗺️ 用 Google Maps 查大眾運輸路線</a></div></div>`).join("")}</div>
+    <div class="rt-go"><a class="btn" href="${transitLink(r)}" target="_blank" rel="noopener">🗺️ 用 Google Maps 查大眾運輸路線</a></div></div>`).join("")}</div>
   <div class="row" style="margin-top:12px">
     <a class="btn ghost" href="https://www.jrhokkaido.co.jp/" target="_blank" rel="noopener">JR 北海道官網 ↗</a>
     <a class="btn ghost" href="https://www.city.sapporo.jp/st/" target="_blank" rel="noopener">札幌市交通局（地下鐵・市電）↗</a></div>
