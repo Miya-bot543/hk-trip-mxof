@@ -666,3 +666,19 @@ dl.kv a[href^="tel:"]{text-decoration:none}
 .pk-allfb:hover .ex-fb{background:rgba(170,140,230,.26)}
 @media (min-width:601px){.pk-grid dl.kv{grid-template-columns:1fr;gap:0}.pk-grid dl.kv dt{font-size:13px;margin-top:8px}.pk-grid dl.kv dt:first-child{margin-top:0}}
 @media (max-width:600px){.pk-acts.pk-live{grid-template-columns:repeat(6,minmax(0,1fr))}.pk-acts.pk-live .btn{grid-column:span 2;padding:7px 4px;font-size:14px}.pk-acts.pk-live [data-editpk],.pk-acts.pk-live [data-delpk]{grid-column:span 3}}
+/* 08 預算 */
+.d8g>.card{display:flex;flex-direction:column}
+.d8g .d8-sum{margin-top:auto;padding-top:12px}
+.grid.d8s{grid-template-columns:1fr 1fr}
+@media (min-width:601px){.d8t td:nth-child(n+3),.d8t th:nth-child(n+3){text-align:right;font-variant-numeric:tabular-nums}}
+@media (max-width:600px){
+  #mb-ed .ed-pre,#ex-ed .ed-pre{display:none}
+  .tbl.stack.d8t tbody tr:not(:has(th)){display:grid;grid-template-columns:3em 1fr 1fr;gap:4px 12px}
+  .tbl.stack.d8t tbody tr:not(:has(th)) td:first-child{grid-column:1/-1}
+  .tbl.stack.d8t tbody tr:not(:has(th)) td{display:block;font-variant-numeric:tabular-nums}
+  .tbl.stack.d8t tbody tr:not(:has(th)) td:not(:first-child)::before{display:block;width:auto;font-size:12px;margin-bottom:1px}
+  .tbl.stack.d8t tbody tr:has(th){display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+  .tbl.stack.d8t tbody th::before{display:none}
+  .tbl.stack.d8t tbody th:first-child{padding-bottom:2px}
+  .tbl.stack.d8t .d8-dash{display:none}
+}

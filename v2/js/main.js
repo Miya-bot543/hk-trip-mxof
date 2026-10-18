@@ -46,7 +46,8 @@ function bindSplit(){
   const t=$("#sTotal"),p=$("#sPeople"),o=$("#sOut");
   const calc=()=>{const T=parseFloat(t.value),P=parseInt(p.value);
     store.set("hk-split",{total:t.value,people:p.value});
-    o.textContent = (T>0&&P>0) ? `每人約 ${(Math.round(T/P*100)/100).toLocaleString()}` : "輸入金額和人數後會自動計算";};
+    const ok=T>0&&P>0; o.className = ok ? "big" : "muted";
+    o.textContent = ok ? `每人約 ${(Math.round(T/P*100)/100).toLocaleString()}` : "輸入金額和人數後會自動計算";};
   t.oninput=p.oninput=calc; calc();
 }
 document.addEventListener("click",e=>{
