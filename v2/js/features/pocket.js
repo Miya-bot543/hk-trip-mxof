@@ -54,13 +54,13 @@ export function pkCardHTML(it){
     ...PK_FIELDS[cat].map(([k,l])=>[l, info[k]&&info[k]!=="待確認"?info[k]:null]),
     ...((it.extra||[]).filter(x=>x&&x.k).map(x=>[x.k, x.v||null]))];
   return `<div class="card ${color} hcard">
-    <div class="htop"><span class="tag ${color==='pink'?'':color}">${pkCatName(cat)}</span><span class="nights">📍 ${esc(areaLabel)}</span></div>
+    <div class="htop"><span class="nights">📍 ${esc(areaLabel)}</span></div>
     <h3 style="margin-top:6px">${esc(it.name)}</h3>
     <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'<span class="pk-venue">室內／戶外待確認</span>';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
     ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${v(x)}</dd>`).join("")}</dl>`:''}
     ${who&&PK.open.has(it.id)?`<p class="muted" style="margin:8px 0 0">由 ${esc(who)} 新增</p>`:''}
-    <div class="mapgo pk-acts"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
+    <div class="mapgo pk-acts${live?' pk-live':''}"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
       <a class="btn" href="${gmaps(pkQuery(it))}" target="_blank" rel="noopener">🗺️ 地圖</a>
       ${live?`<button class="btn ghost" data-pkadd="${it.id}" aria-expanded="${PK.adding===it.id}">＋ 加入行程</button>`:''}
       ${live&&PK.open.has(it.id)?`<button class="btn ghost" data-editpk="${it.id}">✏️ 修改</button><button class="btn ghost" data-delpk="${it.id}">🗑️ 刪除</button>`:''}</div>
@@ -160,11 +160,15 @@ export function pocketSectionHTML(){
   return `<div id="pk-status">${pkStatusHTML()}</div><div id="pk-formwrap">${pkFormHTML()}</div>
     <div class="row" style="margin-top:16px" role="group" aria-label="篩選分類">
       ${[["all","全部"],...PK_CATS].map(([k,t])=>`<button class="chip" data-pkf="${k}" ${PK.filter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
-    <div class="row" style="margin-top:8px" role="group" aria-label="篩選地區">
+    <div class="row pk-arow" style="margin-top:8px">
+      <div class="row" role="group" aria-label="篩選地區">
       ${[["all","📍 全部地區"],["札幌","札幌"],["登別","登別"],["其他","小樽・富良野・其他"]].map(([k,t])=>`<button class="chip" data-pka="${k}" ${PK.afilter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
-    <div class="row" style="margin-top:8px"><button class="btn ghost" data-pkall="open">全部展開</button><button class="btn ghost" data-pkall="close">全部收合</button></div>
+      ${pkAllBtnHTML()}</div>
     <div id="pk-area">${pocketListHTML()}</div>`;
 }
+// 全部展開／收合合成一顆：清單裡每張都打開了才顯示「收合」
+const pkAllOpen = () => { const L=pkList(); return L.length>0 && L.every(i=>PK.open.has(i.id)); };
+const pkAllBtnHTML = () => `<button type="button" class="pk-allfb" data-pkall aria-expanded="${pkAllOpen()}" aria-label="全部展開或收合"><span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></button>`;
 
 export function refreshPocket(full){
   const area=$("#pk-area"); if(!area) return;
@@ -172,6 +176,7 @@ export function refreshPocket(full){
   if(ae && (ae.tagName==="TEXTAREA"||ae.tagName==="SELECT"||(ae.tagName==="INPUT"&&ae.type==="text")) && ae.closest("#pk-area")){ PK.pending=true; return; }
   if(full){ $("#pk-status").innerHTML=pkStatusHTML(); const n=$("#pkName"); if(!n || (!n.value && !PK.editing)){ PK.draftExtra=null; pkRenderForm(); } }
   area.innerHTML=pocketListHTML(); PK.pending=false;
+  const ab=document.querySelector("[data-pkall]"); if(ab) ab.setAttribute("aria-expanded", pkAllOpen());
 }
 ds.ready().then(()=>refreshPocket());
 ds.on("change",()=>refreshPocket(true));
@@ -212,7 +217,7 @@ document.addEventListener("click",async e=>{
   if(t.closest("[data-pkaddno]")){ PK.adding=null; refreshPocket(); return; }
   const go=t.closest("[data-pkaddgo]"); if(go){ pkAddToDay(go.dataset.pkaddgo, go); return; }
   const po=t.closest("[data-pkopen]"); if(po){ const id=po.dataset.pkopen; PK.open.has(id)?PK.open.delete(id):PK.open.add(id); refreshPocket(); return; }
-  const pa=t.closest("[data-pkall]"); if(pa){ if(pa.dataset.pkall==="open") pkList().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
+  const pa=t.closest("[data-pkall]"); if(pa){ if(!pkAllOpen()) pkList().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
   const fa=t.closest("[data-pka]"); if(fa){ PK.afilter=fa.dataset.pka; document.querySelectorAll("[data-pka]").forEach(b=>b.toggleAttribute("aria-current",b===fa)); refreshPocket(); return; }
   const f=t.closest("[data-pkf]"); if(f){ PK.filter=f.dataset.pkf; document.querySelectorAll("[data-pkf]").forEach(b=>b.toggleAttribute("aria-current",b===f)); refreshPocket(); return; }
   const ed=t.closest("[data-editpk]");

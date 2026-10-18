@@ -648,3 +648,13 @@ table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;fon
 @media (max-width:600px){.hbtns.b3{grid-template-columns:1fr 1fr}.hbtns.b3>:last-child{grid-column:1/-1}}
 .d6-perk{margin-top:14px;padding:10px 16px}
 dl.kv a[href^="tel:"]{text-decoration:none}
+/* 07 口袋名單：地區篩選那排右邊放一顆展開／收合膠囊；電腦版展開資料改上下排；手機版三顆按鈕一排 */
+.pk-arow{flex-wrap:nowrap;align-items:center;justify-content:space-between}
+.pk-arow>.row{flex:1;min-width:0}
+.pk-allfb{flex:none;background:none;border:0;padding:0;cursor:pointer}
+.pk-allfb .ex-fb{font-size:13px;padding:4px 12px}
+.pk-allfb .fold-ar{display:inline-block;transition:transform .2s}
+.pk-allfb[aria-expanded="true"] .fold-ar{transform:rotate(180deg)}
+.pk-allfb:hover .ex-fb{background:rgba(170,140,230,.26)}
+@media (min-width:601px){.pk-grid dl.kv{grid-template-columns:1fr;gap:0}.pk-grid dl.kv dt{font-size:13px;margin-top:8px}.pk-grid dl.kv dt:first-child{margin-top:0}}
+@media (max-width:600px){.pk-acts.pk-live{grid-template-columns:repeat(6,minmax(0,1fr))}.pk-acts.pk-live .btn{grid-column:span 2;padding:7px 4px;font-size:14px}.pk-acts.pk-live [data-editpk],.pk-acts.pk-live [data-delpk]{grid-column:span 3}}
