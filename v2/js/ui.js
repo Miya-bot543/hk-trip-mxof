@@ -23,8 +23,8 @@ export function flightCard(f, full, bag=true){
     <dt>航空公司</dt><dd>${v(f.airline)}</dd>${bag?`<dt>手提行李</dt><dd>${v(f.carryOn)}</dd>
     <dt>託運行李</dt><dd>${esc(f.checked)}</dd>`:''}</dl></div>`;
 }
-export function mapsBtn(addr){
-  return addr ? `<a class="btn" href="${gmaps(addr)}" target="_blank" rel="noopener">🗺️ 在 Google Maps 開啟</a>`
+export function mapsBtn(addr, label="🗺️ 在 Google Maps 開啟"){
+  return addr ? `<a class="btn" href="${gmaps(addr)}" target="_blank" rel="noopener">${label}</a>`
               : `<button class="btn" disabled>🗺️ Google Maps（地址待確認）</button>`;
 }
 export function hotelMini(h){
