@@ -385,6 +385,8 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .wx-day{flex:none;min-width:86px;background:var(--bg);border:2px solid var(--line);border-radius:16px;padding:8px;text-align:center;display:flex;flex-direction:column;gap:2px;font-size:13px}
 .wx-ic{font-size:26px}
 .nw{white-space:nowrap}
+.pax{font-weight:700;display:grid;gap:2px}
+@media (min-width:601px){.ttl{white-space:nowrap}}
 @media (min-width:700px){.daybtn,.wx-day{flex:1 0 0;min-width:max-content}}
 @media (max-width:420px){.wx-tabs{gap:6px;flex-wrap:nowrap}.wx-tabs .chip{padding:4px 9px;font-size:13px}}
 .wx-t .hi{color:#e05a7a;font-weight:900} .wx-t .lo{color:var(--ice-d);font-weight:900}
