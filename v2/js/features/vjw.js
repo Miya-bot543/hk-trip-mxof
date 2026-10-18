@@ -25,9 +25,9 @@ export function vjwHTML(){
     <h3 style="margin-top:14px">② 入境預定資料</h3>
     <p class="muted" style="margin:0 0 6px">旅行名称：自行填寫，例如「北海道冬季旅行」</p>
     <div class="grid2">${[["✈️ 中華組（4 位）","pink",1],["✈️ 星宇組（3 位）","ice",2]].map(([t,c,col])=>`<div class="card ${c}" style="padding:12px 14px"><b>${t}</b>
-      <dl class="kv vjw-kv">${V.slice(1).map(r=>`<dt>${r[0]}</dt><dd>${esc(r[col])} ${cp(r[col].replace(/（.*）/,""))}</dd>`).join("")}</dl></div>`).join("")}</div>
+      <dl class="kv vjw-kv vjw-f">${V.slice(1).map(r=>`<dt>${r[0]}</dt><dd>${esc(r[col])} ${cp(r[col].replace(/（.*）/,""))}</dd>`).join("")}</dl></div>`).join("")}</div>
     <h3 style="margin-top:14px">③ 在日本的联络处（填第一間住宿：登別 adex inn）</h3>
-    <div class="card" style="padding:12px 14px"><dl class="kv vjw-kv">
+    <div class="card" style="padding:12px 14px"><dl class="kv vjw-kv vjw-c">
       ${C.map(([k,a,b])=>`<dt>${k}</dt><dd>${esc(a)} ${cp(a)}${b!=="—"?`<div class="split">${esc(b)}</div>`:''}</dd>`).join("")}
     </dl></div>
     <div class="note" style="margin-top:12px"><b>小提醒</b><ul class="clean">

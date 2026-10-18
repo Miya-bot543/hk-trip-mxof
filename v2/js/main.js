@@ -68,6 +68,8 @@ document.addEventListener("change",e=>{
     const st=store.get("hk-check",{}); st[t.dataset.ck]=t.checked; store.set("hk-check",st);
     t.closest(".check").classList.toggle("done",t.checked);
     const d=CHECKLIST.filter((_,i)=>st[i]).length; $("#cDone").textContent=d; $("#cBar").style.width=d/CHECKLIST.length*100+"%";
+    const card=t.closest(".ck-card"), n=card&&card.querySelector("[data-ckg]");
+    if(n){ const ins=[...card.querySelectorAll("[data-ck]")]; n.textContent=`${ins.filter(x=>x.checked).length} / ${ins.length}`; }
   }
 });
 window.addEventListener("hashchange",route);

@@ -682,3 +682,29 @@ dl.kv a[href^="tel:"]{text-decoration:none}
   .tbl.stack.d8t tbody th:first-child{padding-bottom:2px}
   .tbl.stack.d8t .d8-dash{display:none}
 }
+/* 09 出發前 */
+@media (min-width:861px){dl.kv.vjw-c{grid-template-columns:auto 1fr auto 1fr;column-gap:14px}}
+@media (max-width:600px){dl.kv.vjw-f{grid-template-columns:1fr;gap:0}dl.kv.vjw-f dt{font-size:13px;color:var(--soft);margin-top:8px;padding-top:0}dl.kv.vjw-f dt:first-child{margin-top:0}}
+.ck-prog{display:flex;align-items:center;gap:12px}
+.ck-prog .bar{flex:1;min-width:60px}
+.ck-prog .btn{flex:none}
+.check:last-child{border-bottom:0}
+.check input{appearance:none;-webkit-appearance:none;border:2px solid var(--lilac-d);border-radius:6px;background:var(--card);cursor:pointer;transition:background .15s}
+.check input:checked{border-color:transparent;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3.5 8.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/14px no-repeat,linear-gradient(135deg,var(--pink-d),var(--lilac-d))}
+:root[data-theme="dark"] .check input:not(:checked){background:rgba(196,173,245,.14)}
+.check input:focus-visible{outline:2px solid var(--lilac-d);outline-offset:2px}
+.ck-top{display:flex;align-items:center;gap:8px;width:100%;background:none;border:0;padding:0;text-align:left;pointer-events:none}
+.ck-grid{margin-top:14px}
+.ck-top .fold-ar{display:inline-block;transition:transform .2s}
+.ck-top[aria-expanded="true"] .fold-ar{transform:rotate(180deg)}
+.ck-n{font-size:13px;font-weight:800;color:var(--soft)}
+.ck-top .ex-fb,.ck-ctl{display:none}
+@media (max-width:600px){
+  .ck-top{pointer-events:auto;cursor:pointer}
+  .ck-top .ex-fb{display:inline-flex;margin-left:auto}
+  .ck-top:hover .ex-fb{background:rgba(170,140,230,.26)}
+  .ck-shut .check{display:none}
+  .ck-ctl{display:flex;justify-content:flex-end;margin-top:12px}
+  .ck-grid{margin-top:8px}
+  .ck-prog{gap:10px}
+}
