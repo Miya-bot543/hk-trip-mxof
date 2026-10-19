@@ -177,7 +177,7 @@ th{background:var(--lilac);font-weight:900;white-space:nowrap}
 tr:last-child td{border-bottom:0}
 
 /* forms */
-input[type=number],input[type=text]{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px;width:100%}
+input[type=number],input[type=text],input[type=tel]{font:inherit;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:6px 10px;width:100%}
 .btn{border:2px solid var(--lilac-d);background:var(--lilac);border-radius:999px;padding:6px 16px;font-weight:700}
 .btn[disabled]{opacity:.55;cursor:not-allowed}
 .btn.ghost{background:var(--card)}

@@ -34,7 +34,7 @@ export function pkError(e){
 }
 
 /* 資料庫的地點轉成卡片用的格式。id 沿用舊版代號（legacy_id） */
-const fromPlace = p => ({ id:p.legacy_id||p.id, uuid:p.id, name:p.name, cat:p.category, area:p.area, venue:p.venue, address:p.address||"",
+const fromPlace = p => ({ id:p.legacy_id||p.id, uuid:p.id, name:p.name, cat:p.category, area:p.area, venue:p.venue, address:p.address||"", phone:p.phone||"",
   transport:p.transport||[], tags:p.tags||[], info:p.info||{}, extra:p.extra||[], note:p.note||"", stay:p.stay_minutes, lat:p.lat, lng:p.lng, createdAt:p.created_at, by:p.created_by });
 export function pkList(){
   return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace);
@@ -50,9 +50,11 @@ export function pkCardHTML(it){
   const areaRaw=it.area||"其他", areaLabel=areaRaw.replace(/（(.+)）/,"・$1");
   const tags=(it.tags||[]).filter(t=>t && !areaRaw.includes(t));
   const who = it.by && it.by!=="匯入" ? it.by : "";
-  const rows = [["地址", it.address||null],["交通方式",(it.transport&&it.transport.length)?it.transport.join("、"):null],
+  // 舊卡片的電話放在自訂欄位：電話欄空著就只顯示自訂欄位那行；號碼一樣時也不重複顯示
+  const xPhone=(it.extra||[]).some(x=>x&&x.k==="電話");
+  const rows = [["地址", it.address||null],...(it.phone||!xPhone?[["電話", it.phone||null]]:[]),["交通方式",(it.transport&&it.transport.length)?it.transport.join("、"):null],
     ...PK_FIELDS[cat].map(([k,l])=>[l, info[k]&&info[k]!=="待確認"?info[k]:null]),
-    ...((it.extra||[]).filter(x=>x&&x.k).map(x=>[x.k, x.v||null]))];
+    ...((it.extra||[]).filter(x=>x&&x.k&&!(x.k==="電話"&&it.phone&&x.v===it.phone)).map(x=>[x.k, x.v||null]))];
   return `<div class="card ${color} hcard">
     <div class="htop"><span class="nights">📍 ${esc(areaLabel)}</span></div>
     <h3 style="margin-top:6px">${esc(it.name)}</h3>
@@ -125,6 +127,10 @@ export function pkFormHTML(){
   const it = PK.editing ? (pkList().find(i=>i.id===PK.editing)||{}) : {};
   const cat = PK_FIELDS[it.cat]?it.cat:"food";
   if(PK.draftExtra===null) PK.draftExtra = JSON.parse(JSON.stringify(it.extra||[]));
+  // 舊卡片的電話寫在自訂欄位：修改時搬到電話欄，存檔後就改存在電話欄
+  let phone=it.phone||"";
+  const xi=PK.draftExtra.findIndex(x=>x&&x.k==="電話"&&(!phone||x.v===phone));
+  if(xi>=0){ if(!phone) phone=PK.draftExtra[xi].v||""; PK.draftExtra.splice(xi,1); }
   const tr=it.transport||[];
   return `<div class="card lilac" id="pkFormCard" style="margin-top:14px">
     <div class="htop"><span class="tag lilac">${PK.editing?'✏️ 修改地點':'＋ 新增地點'}</span>${PK.editing?`<span class="nights">修改中：${esc(it.name||"")}</span>`:''}</div>
@@ -134,6 +140,7 @@ export function pkFormHTML(){
       <label>地區<select id="pkArea">${PK_AREAS.map(a=>`<option ${it.area===a?'selected':''}>${a}</option>`).join("")}</select></label>
       <label>室內／戶外<select id="pkVenue"><option value="">待確認</option>${PK_VENUES.map(([k,t])=>`<option value="${k}" ${it.venue===k?'selected':''}>${t}</option>`).join("")}</select></label>
       <label class="full">地址（建議填寫，地圖會更準確）<input type="text" id="pkAddr" maxlength="150" placeholder="例如：北海道札幌市中央区南5条西4丁目" value="${esc(it.address||"")}"></label>
+      <label>電話<input type="tel" id="pkPhone" maxlength="30" placeholder="例如：011-123-4567" value="${esc(phone)}"></label>
       <label>預估停留（分鐘，排行程用）<input type="number" id="pkStay" min="5" max="720" step="5" inputmode="numeric" value="${it.stay||""}"></label>
       <fieldset class="full pk-tr"><legend>交通方式（可複選）</legend>
         ${PK_TRANSPORT.map(t=>`<label><input type="checkbox" data-tr value="${t}" ${tr.includes(t)?'checked':''}>${t}</label>`).join("")}</fieldset>
@@ -189,8 +196,8 @@ export async function pkSave(){
   const cat=$("#pkCat").value, old=PK.editing ? (placeOf(pkList().find(i=>i.id===PK.editing)||{})||{}) : {};
   const info=Object.assign({}, old.info&&old.info.when?{when:old.info.when}:{});
   document.querySelectorAll("#pkCatFields [data-info]").forEach(el=>{ info[el.dataset.info]=el.value.trim().slice(0,120); });
-  const address=$("#pkAddr").value.trim(), stay=parseInt($("#pkStay").value,10);
-  const data=Object.assign({}, old, { name, category:cat, area:$("#pkArea").value, venue:$("#pkVenue").value||null, address:address||null,
+  const address=$("#pkAddr").value.trim(), phone=$("#pkPhone").value.trim().slice(0,30), stay=parseInt($("#pkStay").value,10);
+  const data=Object.assign({}, old, { name, category:cat, area:$("#pkArea").value, venue:$("#pkVenue").value||null, address:address||null, phone:phone||null,
     transport:[...document.querySelectorAll("#pkFormCard [data-tr]:checked")].map(x=>x.value),
     tags:$("#pkTags").value.split(/[,，、]/).map(t=>t.trim()).filter(Boolean).slice(0,8),
     info, extra:pkReadExtra().filter(x=>x.k||x.v).slice(0,20), note:$("#pkNote").value.trim()||null,
