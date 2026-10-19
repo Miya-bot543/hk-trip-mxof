@@ -639,8 +639,8 @@ table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;fon
 .ex-fold+.ex-filter{margin-top:6px}
 /* 帳目清單：電腦版每天的帳兩欄排 */
 @media (min-width:900px){.ex-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}}
-/* 05 規劃板通關碼提示：手機版省略「共用規劃板：」前綴，維持一行 */
-@media (max-width:600px){#bd-ed .ed-pre{display:none}}
+/* 05 規劃板、07 口袋名單通關碼提示：手機版省略「共用規劃板：」「共用清單：」等前綴，維持一行 */
+@media (max-width:600px){#bd-ed .ed-pre,#pk-status .ed-pre{display:none}}
 /* 06 章：兩張卡按鈕置底對齊；滑雪場小檔案移到卡片下方整列；kv 裡的電話不加底線 */
 .d6>.card{display:flex;flex-direction:column}
 .d6>.card>.hbtns{margin-top:auto;padding-top:12px}
