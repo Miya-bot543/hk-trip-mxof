@@ -455,7 +455,7 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 /* 05 章行程規劃板 */
 .bd{display:grid;gap:12px;margin-top:10px}
 .bd-slot>b{display:block;font-size:15px;color:var(--lilac-d);border-bottom:2px dashed var(--lilac);padding-bottom:2px}
-.bd-list{list-style:none;margin:6px 0 0;padding:0;display:grid;gap:6px}
+.bd-list{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:minmax(0,1fr);gap:6px}
 .bd-item{padding:8px 10px;border-radius:12px;background:var(--cream);border:1px solid var(--lilac)}
 .bd-head{display:flex;gap:8px;align-items:baseline}
 .bd-meta{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
