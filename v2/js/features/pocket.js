@@ -1,6 +1,6 @@
 /* 07 口袋名單：資料來自 datastore（places 裡 is_wishlist=true 的景點、購物、美食）。 */
 import { DAYS } from "../../data/static.js";
-import { $, esc, v, gmaps, toast, toastAction } from "../util.js";
+import { $, esc, gmaps, toast, toastAction } from "../util.js";
 import { ds } from "../datastore.js";
 import { ensureEditor, editorStatusHTML } from "./editor.js";
 import { S } from "../state.js";
@@ -16,7 +16,7 @@ export const PK_FIELDS = {
   spot:[["hours","開放時間"],["fee","門票／費用"],["stay","建議停留時間"],["tips","注意事項"]],
   shop:[["hours","營業時間"],["closed","公休日"],["buy","想買的東西"]],
   food:[["branch","分店"],["hours","營業時間"],["closed","公休日"],["dish","招牌／想點的"],
-        ["reserve","預約",["待確認","需要預約","不用預約","不接受預約","已預約"]],["queue","候位資訊"],["budget","預算（每人）"]]
+        ["reserve","預約",["","需要預約","不用預約","不接受預約","已預約"]],["queue","候位資訊"],["budget","預算（每人）"]]
 };
 export const PK_VENUES = [["室內","🏠 室內"],["戶外","🌲 戶外"],["園區","🎡 園區（室內＋戶外）"]];
 export const PK_WHEN = ["住宿札幌期間（12/28～01/03）", ...DAYS.map(d=>`${d.md}（${d.wd}）`)];
@@ -58,9 +58,9 @@ export function pkCardHTML(it){
   return `<div class="card ${color} hcard">
     <div class="htop"><span class="nights">📍 ${esc(areaLabel)}</span></div>
     <h3 style="margin-top:6px">${esc(it.name)}</h3>
-    <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'<span class="pk-venue">室內／戶外待確認</span>';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
+    <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
-    ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${v(x)}</dd>`).join("")}</dl>`:''}
+    ${PK.open.has(it.id)?`<dl class="kv">${rows.map(([k,x])=>`<dt>${esc(k)}</dt><dd>${x==null||x===""?"":esc(x)}</dd>`).join("")}</dl>`:''}
     ${who&&PK.open.has(it.id)?`<p class="muted" style="margin:8px 0 0">由 ${esc(who)} 新增</p>`:''}
     <div class="mapgo pk-acts${live?' pk-live':''}"><button class="btn ghost pk-more" data-pkopen="${it.id}" aria-expanded="${PK.open.has(it.id)}">${PK.open.has(it.id)?'收合 ▴':'看詳細 ▾'}</button>
       <a class="btn" href="${gmaps(pkQuery(it))}" target="_blank" rel="noopener">🗺️ 地圖</a>
@@ -138,7 +138,7 @@ export function pkFormHTML(){
       <label class="full">名稱 *<input type="text" id="pkName" maxlength="60" placeholder="例如：湯咖哩 Suage+" value="${esc(it.name||"")}"></label>
       <label>分類<select id="pkCat">${PK_CATS.map(([k,t])=>`<option value="${k}" ${k===cat?'selected':''}>${t}</option>`).join("")}</select></label>
       <label>地區<select id="pkArea">${PK_AREAS.map(a=>`<option ${it.area===a?'selected':''}>${a}</option>`).join("")}</select></label>
-      <label>室內／戶外<select id="pkVenue"><option value="">待確認</option>${PK_VENUES.map(([k,t])=>`<option value="${k}" ${it.venue===k?'selected':''}>${t}</option>`).join("")}</select></label>
+      <label>室內／戶外<select id="pkVenue"><option value=""></option>${PK_VENUES.map(([k,t])=>`<option value="${k}" ${it.venue===k?'selected':''}>${t}</option>`).join("")}</select></label>
       <label class="full">地址（建議填寫，地圖會更準確）<input type="text" id="pkAddr" maxlength="150" placeholder="例如：北海道札幌市中央区南5条西4丁目" value="${esc(it.address||"")}"></label>
       <label>電話<input type="tel" id="pkPhone" maxlength="30" placeholder="例如：011-123-4567" value="${esc(phone)}"></label>
       <label>預估停留（分鐘，排行程用）<input type="number" id="pkStay" min="5" max="720" step="5" inputmode="numeric" value="${it.stay||""}"></label>
