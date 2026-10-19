@@ -43,7 +43,7 @@ export const HOTELS = [
    inDate:"2026/12/25（五）", outDate:"2026/12/28（一）", nights:3, inTime:"下午 2:00 後", outTime:"上午 10:00 前",
    total:"TWD 24,012", totalNum:24012, per:"TWD 6,003", perNum:6003,
    extra:{inDate:"2026/12/26（六）", outDate:"2026/12/28（一）", nights:2, inTime:"下午 2:00 後", outTime:"上午 10:00 前",
-          total:"TWD 14,066", totalNum:14066, people:3, per:"TWD 4,688.67"},
+          total:"TWD 14,066", totalNum:14066, people:3, per:"TWD 4,688.67", perNum:4688.67},
    perks:["巨無霸溫泉免費泡：免費無限使用對面「第一瀧本館」的溫泉大浴場"], issue:null},
   {n:2, name:"APA 札幌薄野站前飯店", area:"札幌", address:"〒064-0804 北海道札幌市中央区南4条西2丁目2-5", people:7,
    inDate:"2026/12/28（一）", outDate:"2026/12/31（四）", nights:3, inTime:"下午 3:00 後", outTime:"上午 10:00 前",
@@ -140,6 +140,24 @@ export const BUDGET = {
   flights:[{total:111196, per:27799, people:4},{total:87732, per:29244, people:3}],
   asahi:{per:1710, people:7},
   cars:[{total:53220, people:4, per:13305},{total:26640, people:3, per:8880}]
+};
+/* 08 已知費用表與每人試算的文字；試算項目的 src：flight／hotel／hotelExtra（第 2 筆訂房）／asahi，後面的數字是第幾筆 */
+export const BUDGET_INFO = {
+  flightLabels:["✈️ 機票・中華航空（CI2130／CI2131）","✈️ 機票・星宇航空（JX318／JX319）"],
+  asahiLabel:"🎫 旭川一日遊套裝（12/29）", asahiCalc:"1,710 × 7 計算",
+  currencyNote:"機票、住宿、旭川一日遊是台幣；租車是日圓，兩種幣別分開加總，不換算。",
+  groups:[
+    {title:"中華航空組", people:4, color:"pink", items:[["機票 CI2130／CI2131","flight",0],["住宿 1 adex inn（3 晚）","hotel",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["住宿 4 Vessel（1 晚）","hotel",3],["旭川一日遊","asahi"]], car:["租車 第 1 台",0]},
+    {title:"星宇航空組", people:3, color:"ice", items:[["機票 JX318／JX319","flight",1],["住宿 1 adex inn・第 2 筆（2 晚）","hotelExtra",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["旭川一日遊","asahi"]], car:["租車 第 2 台",1]}
+  ],
+  groupNote:"試算只包含目前已知的費用（不含滑雪、餐飲、交通、購物）。各筆每位費用有小數，所以「每人小計 × 人數」與整筆合計可能差幾分錢。",
+  splitNote:"試算工具，數字只存在你這台裝置。",
+  tool:{title:"🧾 旅行分帳小幫手", badge:"外部工具", intro:"旅行中誰先付錢、誰該還誰，用這個工具記帳和結算：",
+    points:["可記錄消費名稱、類別、日期、金額、誰先墊付和參與分帳的人，可以一鍵均分",
+      "兩種模式：「單機使用」資料只存在自己手機；「雲端共用」可以建立旅程代碼，分享給旅伴一起記帳",
+      "結算時會算出每個人應付／應收和建議轉帳方式，還能複製報告貼到 LINE 群組",
+      "可以「加入主畫面」，像 App 一樣快速開啟"],
+    url:"https://keen-kulfi-7d676b.netlify.app/", button:"開啟旅行分帳小幫手 ↗"}
 };
 
 /* 札幌大眾交通（2026 年公開資料整理；班次、票價以官方為準） */
