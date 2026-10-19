@@ -1,4 +1,4 @@
-# 自動快照：把 Supabase 目前的資料存成 v2/data/snapshot.json，有變更才 commit。
+# 自動快照：把 Supabase 目前的資料存成 data/snapshot.json，有變更才 commit。
 # 旅行期間（12/24～01/04）每天一次，平常每週一一次，也可以在 GitHub 網頁上手動執行。
 # 只跑到 END_DATE（台北時間）為止；之後網站封存成唯讀快照。只用公開金鑰讀取，不寫入資料庫。
 name: snapshot
@@ -43,9 +43,9 @@ jobs:
       - name: 有變更才 commit
         if: steps.check.outputs.run == '1'
         run: |
-          if git diff --quiet v2/data/snapshot.json; then echo "快照沒有變更"; exit 0; fi
+          if git diff --quiet data/snapshot.json; then echo "快照沒有變更"; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add v2/data/snapshot.json
+          git add data/snapshot.json
           git commit -m "自動快照 $(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M')"
           git push

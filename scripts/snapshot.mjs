@@ -1,11 +1,11 @@
-// 把 Supabase 目前的資料存成 v2/data/snapshot.json（唯讀快照）。只用公開金鑰讀取，不寫入。
+// 把 Supabase 目前的資料存成 data/snapshot.json（唯讀快照）。只用公開金鑰讀取，不寫入。
 // 用法：node scripts/snapshot.mjs（之後由 GitHub Actions 定期執行）
 import fs from "node:fs";
-import { SUPABASE_URL, SUPABASE_ANON_KEY, TRIP_SLUG } from "../v2/js/config.js";
+import { SUPABASE_URL, SUPABASE_ANON_KEY, TRIP_SLUG } from "../js/config.js";
 
 const URL_ = process.env.SUPABASE_URL || SUPABASE_URL;
 const KEY = process.env.SUPABASE_ANON_KEY || SUPABASE_ANON_KEY;
-const OUT = new URL("../v2/data/snapshot.json", import.meta.url);
+const OUT = new URL("../data/snapshot.json", import.meta.url);
 const get = async path => {
   const r = await fetch(`${URL_}/rest/v1/${path}`, { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` } });
   if (!r.ok) throw new Error(`${path} → ${r.status} ${await r.text()}`);
