@@ -503,6 +503,7 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .d5>.card>.hbtns{margin-top:auto;padding-top:12px}
 .d5 .swap>.card{display:flex;flex-direction:column}
 .d5 .swap>.card>.hbtns{margin-top:auto;padding-top:10px}
+.d5>.card>.tag,.d5 .swap>.card>.tag{align-self:flex-start}   /* 標題膠囊不要被 flex 拉成整排長 */
 @media (min-width:861px){.grid2.d5{grid-template-columns:repeat(2,1fr)}}
 /* 05 章頁尾：前一天／後一天按鈕，中間放前後章小文字連結 */
 .d5pg{align-items:center}
