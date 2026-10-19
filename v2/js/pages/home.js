@@ -28,7 +28,7 @@ export default function home(){
   </div>
 
   <h2 class="sec"><span class="no">✎</span>CONTENTS</h2>
-  <div class="toc">${CHAPTERS.map(([n,e,t])=>`<button data-go="${n}"><img class="toc-ic" src="${CH_ICON[+n-1]}" alt=""><span class="n">${n}</span><span class="t">${t}</span></button>`).join("")}</div>
+  <div class="toc">${CHAPTERS.map(([n,e,t])=>`<button data-go="${n}"><img class="toc-ic" src="${CH_ICON[+n-1]}" alt="" loading="lazy"><span class="n">${n}</span><span class="t">${t}</span></button>`).join("")}</div>
 
   <h2 class="sec"><span class="no">♡</span>10 日行程</h2>${dayStrip(-1,true)}
   <h2 class="sec"><span class="no">❄</span>行程示意地圖</h2>${mapHTML()}

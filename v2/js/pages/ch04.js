@@ -21,7 +21,7 @@ export default function ch04(){
     <div><div class="htop"><span class="tag">🚗 租車公司</span><span class="nights">${esc(I.span)}</span></div>
       <h3 style="margin-top:8px;font-size:20px">${esc(R.company)}</h3>
       <dl class="kv"><dt>負責人</dt><dd>${R.staff}</dd><dt>電話</dt><dd><a href="${I.telHref}">${R.tel}</a></dd><dt>傳真</dt><dd>${R.fax}</dd></dl>
-      <div class="perk line-box"><img class="line-qr" src="${LINE_QR}" alt="${esc(I.line.qrAlt)}" title="點一下放大">
+      <div class="perk line-box"><img class="line-qr" src="${LINE_QR}" alt="${esc(I.line.qrAlt)}" title="點一下放大" width="400" height="400" loading="lazy">
         <div><b>💬 中文 LINE 客服</b><br>${esc(I.line.desc)}
         <div style="margin-top:8px"><a class="btn" href="${I.line.url}" target="_blank" rel="noopener">💬 直接加入 LINE 好友</a></div></div></div></div>
     <div class="hw-books">${R.orders.map(order).join("")}</div>

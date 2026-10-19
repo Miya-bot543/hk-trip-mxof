@@ -27,7 +27,7 @@ export function mapHTML(){
   return `<div class="mapbox">
     <div class="card map lilac" style="padding:10px">
       <div class="imap">
-        <img src="${MAP_IMG}" alt="北海道冬季立體插畫地圖：札幌、手稻滑雪場、旭川、新千歲機場、登別" width="1448" height="1086">
+        <img src="${MAP_IMG}" alt="北海道冬季立體插畫地圖：札幌、手稻滑雪場、旭川、新千歲機場、登別" width="1448" height="1086" loading="lazy">
         <svg viewBox="0 0 1448 1086" role="img" aria-label="可點選的行程地點與路線">
           <defs><marker id="arr2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse">
             <path d="M0 0 L10 5 L0 10z" fill="#9a7fd6"/></marker></defs>

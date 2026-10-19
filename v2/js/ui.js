@@ -29,7 +29,7 @@ export function mapsBtn(addr, label="🗺️ 在 Google Maps 開啟"){
 }
 export function hotelMini(h){
   return `<div class="card"><span class="tag lilac">住宿 ${h.n}・${h.area}</span>
-    <div class="h-head"><img class="hotel-pic sm" src="${HOTEL_IMG[h.n-1]}" alt=""><h3 style="margin:0">${esc(h.name)}</h3></div>
+    <div class="h-head"><img class="hotel-pic sm" src="${HOTEL_IMG[h.n-1]}" alt="" loading="lazy"><h3 style="margin:0">${esc(h.name)}</h3></div>
     <dl class="kv"><dt>日期</dt><dd><span class="nw">${h.inDate.slice(5)}</span> → <span class="nw">${h.outDate.slice(5)}</span><span class="nw">（${h.nights} 晚）</span></dd>
     <dt>整筆費用</dt><dd>${h.total}</dd><dt>人數</dt><dd>${h.people} 人</dd><dt>每位費用</dt><dd>${h.per}</dd></dl>
     ${h.extra?`<p class="muted" style="margin:6px 0 0">➕ 第 2 筆：${h.extra.inDate.slice(5,10)}～${h.extra.outDate.slice(5,10)}，${h.extra.people} 人，${h.extra.total}（每位 ${h.extra.per}）</p>`:''}</div>`;

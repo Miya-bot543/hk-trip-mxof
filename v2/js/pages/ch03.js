@@ -24,7 +24,7 @@ export default function ch03(){
   const h=HOTELS[0], x=h.extra;
   const first=`<article class="card pink hwide" id="hotel-1">
     <div><div class="htop"><span class="tag">住宿 1・${h.area}</span><span class="nights">${h.nights} 晚・2 筆訂房</span></div>
-      <div class="h-head"><img class="hotel-pic big" src="${HOTEL_IMG[0]}" alt="${esc(HOTEL1_ALT)}"><h3 style="margin:0;font-size:22px">${hname(h.name)}</h3></div>
+      <div class="h-head"><img class="hotel-pic big" src="${HOTEL_IMG[0]}" alt="${esc(HOTEL1_ALT)}" loading="lazy"><h3 style="margin:0;font-size:22px">${hname(h.name)}</h3></div>
       <p class="addr">📍 ${addr(h.address)}</p>${perks(h)}
       ${btns(h.address,"h1")}</div>
     <div class="hw-books">
@@ -35,7 +35,7 @@ export default function ch03(){
     </div></article>`;
   const rest=HOTELS.slice(1).map((h,k)=>{const i=k+1; return `<article class="card ${C[i]} hcard" id="hotel-${h.n}">
     <div class="htop"><span class="tag ${T[i]}">住宿 ${h.n}・${h.area}</span><span class="nights">${h.nights} 晚</span></div>
-    <div class="h-head"><img class="hotel-pic" src="${HOTEL_IMG[h.n-1]}" alt="${esc(h.name)} 插圖"><h3 style="margin:0">${hname(h.name)}</h3></div>
+    <div class="h-head"><img class="hotel-pic" src="${HOTEL_IMG[h.n-1]}" alt="${esc(h.name)} 插圖" loading="lazy"><h3 style="margin:0">${hname(h.name)}</h3></div>
     ${dates(h.inDate,h.inTime,h.outDate,h.outTime)}${stats(h.total,h.people,h.per)}
     <p class="addr">📍 ${addr(h.address)}</p>${perks(h)}
     ${h.issue?`<div class="warn">⚠️ ${esc(h.issue)}</div>`:''}
