@@ -1,6 +1,6 @@
 /* 第 09 章 */
-import { CHECKLIST } from "../../data/static.js";
-import { store } from "../util.js";
+import { CHECKLIST, CHECKLIST_NOTE, INSTALL_INFO } from "../../data/static.js";
+import { esc, store } from "../util.js";
 import { head, pager } from "../ui.js";
 import { vjwHTML } from "../features/vjw.js";
 import { backupHTML } from "../features/backup.js";
@@ -10,11 +10,9 @@ export default function ch09(){
   const groups=[...new Set(CHECKLIST.map(c=>c[0]))]; const op=store.get("hk-ckfold",[]);
   return `${head("09")}
   ${vjwHTML()}
-  <div class="card ice" style="margin-top:14px"><span class="tag ice">📲 安裝到手機・離線也能看</span>
-    <p style="margin:8px 0 0">用 GitHub 網址打開過一次後，之後在日本沒有網路也能開啟整個網站（天氣會顯示上次更新的資料）。</p>
-    <ul class="clean"><li><b>iPhone（Safari）</b>：點下方「分享」按鈕 →「加入主畫面」</li>
-      <li><b>Android（Chrome）</b>：點右上角「⋮」→「安裝應用程式」或「加到主畫面」</li>
-      <li>出發前請每個人都先打開一次，讓手機把網站存起來。</li></ul></div>
+  <div class="card ice" style="margin-top:14px"><span class="tag ice">${esc(INSTALL_INFO.title)}</span>
+    <p style="margin:8px 0 0">${esc(INSTALL_INFO.intro)}</p>
+    <ul class="clean">${INSTALL_INFO.steps.map(x=>`<li>${x}</li>`).join("\n      ")}</ul></div>
   <div class="card pink ck-prog" style="margin-top:14px"><b class="nw">完成 <span id="cDone">${done}</span> / ${CHECKLIST.length}</b>
     <div class="bar"><i id="cBar" style="width:${done/CHECKLIST.length*100}%"></i></div>
     <button class="btn ghost" id="cReset">全部重設</button></div>
@@ -22,7 +20,7 @@ export default function ch09(){
   <div class="grid ck-grid">${groups.map((g,gi)=>{const items=CHECKLIST.map((c,i)=>[c,i]).filter(([c])=>c[0]===g); const isOp=op.includes(gi);
     return `<div class="card ck-card${isOp?'':' ck-shut'}"><button type="button" class="ck-top" data-ckfold="${gi}" aria-expanded="${isOp}"><span class="tag ice">${g}</span><span class="ck-n" data-ckg="${gi}">${items.filter(([,i])=>st[i]).length} / ${items.length}</span><span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></button>
     ${items.map(([c,i])=>`<label class="check ${st[i]?'done':''}"><input type="checkbox" data-ck="${i}" ${st[i]?'checked':''}><span>${c[1]}</span></label>`).join("")}</div>`;}).join("")}</div>
-  <p class="muted">勾選狀態記在你這台裝置的瀏覽器裡。</p>
+  <p class="muted">${esc(CHECKLIST_NOTE)}</p>
   ${backupHTML()}${pager("09")}`;
 }
 
