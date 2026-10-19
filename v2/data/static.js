@@ -76,6 +76,33 @@ export const STAY_TL = {
 };
 export const HOTEL1_ALT = "登別溫泉旅館插圖";
 
+/* 06 活動：rows 每一組是畫面上的一行；dd 是 HTML 片段，null = 未定（tbd 是顯示字，沒寫就是「待確認」），split 是下方小字 */
+export const ACTIVITIES = [
+  {cls:"pink", tag:"旭川一日遊", alt:"旭川一日遊插圖", rows:[
+    [{dt:"日期", dd:"12/29（二）"},{dt:"出發地", dd:"札幌（住 APA 札幌薄野站前飯店）"}],
+    [{dt:"每位費用", dd:"TWD 1,710"},{dt:"整筆費用", dd:"TWD 11,970（1,710 × 7 位）"}],
+    [{dt:"方案", dd:'套裝行程（一日遊）<span class="ok">已購買</span>'},{dt:"交通", dd:"依套裝行程安排"},{dt:"集合時間地點", dd:null},{dt:"行程景點", dd:null}]],
+   go:{to:"05?d=4", label:"看 12/29 每日行程"}},
+  {cls:"ice", tag:"⛷️ 滑雪", alt:"滑雪插圖", rows:[
+    [{dt:"日期", dd:"01/01（五）元旦"},{dt:"出發地", dd:"札幌（住札幌民宿）"}],
+    [{dt:"滑雪場", dd:'札幌手稻滑雪場<span class="nw">（サッポロテイネ）<span class="ok">預定</span></span>'}],
+    [{dt:"地址", dd:'〒006-0029 北海道札幌市手稲区<span class="nw">手稲本町593番地3</span>'},{dt:"電話", dd:'<a href="tel:+81116826000">011-682-6000</a>'}],
+    [{dt:"交通", dd:null, tbd:"待決定", split:"可選：JR＋巴士、雪場「ビッグランズ號」巴士套票（市區主要飯店直達，含纜車券）、計程車套票"}],
+    [{dt:"雪具租借", dd:null, tbd:"待決定", split:"雪場有出租，可網路預約（價格請看官網「レンタル」）"},{dt:"教練課程", dd:null, tbd:"待決定"}],
+    [{dt:"纜車 1 日券", dd:'大人 ¥9,800（窗口）／<span class="nw">¥8,800（網路預購）</span><div class="split">2026–27 季 12/19～3/7 價格；<span class="nw">5 小時券 ¥7,600／¥6,600</span></div>'}],
+    [{dt:"整筆費用", dd:null},{dt:"每位費用", dd:null}]],
+   maps:{q:"北海道札幌市手稲区手稲本町593-3", label:"🗺️ Google Maps"}, links:[{name:"官網票價 ↗", url:"https://sapporo-teine.com/snow/lift-time"}],
+   go:{to:"05?d=7", label:"看 01/01 每日行程"}}
+];
+export const SKI_INFO = {
+  title:"⛷️ 滑雪場小檔案",
+  facts:["分為上層「テイネハイランド」與中層「テイネオリンピア」兩個區域",
+    "下層以緩坡、中級坡為主，適合家庭；另有可玩雪橇、雪上甜甜圈的「スノーランド」",
+    "大眾交通：JR 手稻站轉搭巴士約 16～20 分鐘；開車從札幌市中心約 40 分鐘",
+    "元旦特別：山頂纜車「サミットエクスプレス」1/1 預定清晨 6:30 起運行（新年日出）",
+    "窗口可用 Suica、Kitaca 等交通 IC 卡和信用卡付款"],
+  note:"滑雪場為「預定」。票價為官網公布的 2026–27 季價格，網路預購較便宜；交通方式、雪具租借與課程確定後告訴我。"
+};
 
 /* 租車（依 World Net Rent-A-Car 報價單） */
 export const RENTAL = {
