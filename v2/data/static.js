@@ -35,6 +35,8 @@ export const FLIGHTS = [
 /* 航班分組：中華航空 4 位（桃園），星宇航空 3 位（台中直飛） */
 export const FGROUPS = [{title:"中華航空・桃園出發", people:4, idx:[0,1]},{title:"星宇航空・台中直飛", people:3, idx:[2,3]}];
 export const groupOf = k => FGROUPS.find(g=>g.idx.includes(k));
+export const BAGGAGE = { label:"行李（中華、星宇相同）", rows:[["託運行李","checked"],["手提行李","carryOn"]],
+  tips:["行動電源、備用鋰電池只能隨身帶上機，不能託運。","回程買伴手禮，託運每件 23 公斤、手提 7 公斤以內。"] };
 
 export const HOTELS = [
   {n:1, name:"登別 adex inn（登別温泉）", area:"登別", address:"北海道登別市登別温泉町76-2", people:4,
