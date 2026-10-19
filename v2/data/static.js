@@ -12,7 +12,11 @@ export const MAP_IMG = "images/map.jpg";
 /* =====================================================
    旅遊資料（null = 待確認，畫面會自動標示）
    ===================================================== */
-export const TRIP = { travelers:"12/25：4 人｜12/26～01/02：7 人｜01/02～01/03：4 人（依住宿人數）" };
+export const TRIP = {
+  dateFrom:"2026/12/25（五）", dateTo:"2027/01/03（日）", length:"10 天 9 夜",
+  stays:"4 間・9 晚", stayNote:"登別 3 晚、札幌 6 晚；換宿日 12/28、12/31、01/02",
+  travelers:"12/25：4 人｜12/26～01/02：7 人｜01/02～01/03：4 人（依住宿人數）"
+};
 
 export const FLIGHTS = [
   {dir:"去程", date:"2026/12/25（五）", airline:"中華航空（CI）", no:"CI2130",
@@ -129,7 +133,7 @@ export const DAYS = [
   {md:"01/01", wd:"五", title:"滑雪・元旦", area:"札幌手稻滑雪場（預定）", transport:null,
    plan:["從札幌民宿出發前往札幌手稻滑雪場（預定）","滑雪（雪具、課程待確認）","返回札幌民宿"], stay:2, checkout:null, link:"06"},
   {md:"01/02", wd:"六", title:"札幌市區活動・換宿", area:"札幌", transport:"換宿：計程車或市電",
-   plan:["10:00 前退房札幌民宿（7 位）","3 位：前往新千歲機場，16:00 搭 JX319 返回台中（19:55 抵達）","4 位：札幌市區活動","4 位：14:00 後入住 Vessel Hotel Campana Susukino"], stay:3, checkout:2, pocket:true, flights:[3], split:["🏠 星宇 3 位：札幌 → 新千歲機場 → 台中（JX319 16:00 起飛）","🏨 中華 4 位：留在札幌，入住 Vessel Hotel"],
+   plan:["10:00 前退房札幌民宿（7 位）","3 位：前往新千歲機場，16:00 搭 JX319 返回台中（19:55 抵達）","4 位：札幌市區活動","4 位：14:00 後入住 Vessel Hotel Campana Susukino"], stay:3, stayNote:"（中華 4 位）", checkout:2, pocket:true, flights:[3], split:["🏠 星宇 3 位：札幌 → 新千歲機場 → 台中（JX319 16:00 起飛）","🏨 中華 4 位：留在札幌，入住 Vessel Hotel"],
    alerts:["3 位搭 16:00 班機，前往新千歲機場的交通與出發時間待確認"]},
   {md:"01/03", wd:"日", title:"前往新千歲機場・返台", area:"札幌 → 新千歲機場 → 桃園", transport:null,
    plan:["退房 Vessel Hotel（期限 11:00 前）","前往新千歲機場","4 位：10:40 新千歲機場國際線航廈出發（CI2131）","14:15 抵達桃園機場第 2 航站"],
