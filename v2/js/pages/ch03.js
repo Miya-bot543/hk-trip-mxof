@@ -1,5 +1,5 @@
 /* 第 03 章 */
-import { HOTEL_IMG, HOTELS, HOTEL_DRIVER } from "../../data/static.js";
+import { HOTEL_IMG, HOTELS, HOTEL_DRIVER, STAY_TL, HOTEL1_ALT } from "../../data/static.js";
 import { esc, v } from "../util.js";
 import { mapsBtn, head, pager } from "../ui.js";
 import { driverBtn } from "../features/driver.js";
@@ -17,19 +17,14 @@ export default function ch03(){
   const addr=s=>{if(!s) return v(s); const m=/(?:\S{1,2}丁目)?[\d-]+(?:\s\S{1,8})?$/.exec(s); return tail(s, m?m.index:-1);};
   const btns=(a,id)=>`<div class="hbtns">${mapsBtn(a,"🗺️ Google Maps")}${driverBtn(id)}</div>`;
   const perks=h=>`<div class="perk"><b>✨ 住宿亮點</b><ul>${h.perks.map(p=>`<li>${esc(p)}</li>`).join("")}</ul></div>`;
-  const nightsLbl=["12/25","12/26","12/27","12/28","12/29","12/30","12/31","01/01","01/02"];
   const tl=`<div class="stay-tl"><div class="tl">
-    <button class="c1" style="grid-column:1/4" data-scroll="hotel-1">住宿 1・登別<br>3 晚・4 人</button>
-    <button class="c2" style="grid-column:4/7" data-scroll="hotel-2">住宿 2・札幌<br>3 晚・7 人</button>
-    <button class="c3" style="grid-column:7/9" data-scroll="hotel-3">住宿 3・札幌<br>2 晚・7 人</button>
-    <button class="c4" style="grid-column:9/10" data-scroll="hotel-4">住宿 4<br>1 晚・4 人</button>
-    <button class="x" style="grid-column:2/4" data-scroll="hotel-1">＋ 第 2 筆・3 人<span class="xb">（12/26 起）</span></button>
-    ${nightsLbl.map((d,i)=>`<small style="grid-column:${i+1}/${i+2};grid-row:3">${d}</small>`).join("")}
-  </div><p class="muted" style="margin:4px 0 0">每格代表一晚，點色塊可跳到該住宿（手機可左右滑動）</p></div>`;
+    ${STAY_TL.bars.map(b=>`<button class="${b.c}" style="grid-column:${b.col}" data-scroll="${b.to}">${b.lines.map(esc).join("<br>")}${b.sub?`<span class="xb">${esc(b.sub)}</span>`:""}</button>`).join("\n    ")}
+    ${STAY_TL.nights.map((d,i)=>`<small style="grid-column:${i+1}/${i+2};grid-row:3">${d}</small>`).join("")}
+  </div><p class="muted" style="margin:4px 0 0">${esc(STAY_TL.hint)}</p></div>`;
   const h=HOTELS[0], x=h.extra;
   const first=`<article class="card pink hwide" id="hotel-1">
     <div><div class="htop"><span class="tag">住宿 1・${h.area}</span><span class="nights">${h.nights} 晚・2 筆訂房</span></div>
-      <div class="h-head"><img class="hotel-pic big" src="${HOTEL_IMG[0]}" alt="登別溫泉旅館插圖"><h3 style="margin:0;font-size:22px">${hname(h.name)}</h3></div>
+      <div class="h-head"><img class="hotel-pic big" src="${HOTEL_IMG[0]}" alt="${esc(HOTEL1_ALT)}"><h3 style="margin:0;font-size:22px">${hname(h.name)}</h3></div>
       <p class="addr">📍 ${addr(h.address)}</p>${perks(h)}
       ${btns(h.address,"h1")}</div>
     <div class="hw-books">

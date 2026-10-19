@@ -62,6 +62,20 @@ export const HOTELS = [
    issue:null, caution:"回程班機 10:40 起飛，實際需比退房期限（11:00）更早出發前往機場。"}
 ];
 
+/* 03 住宿時間軸：每格一晚，to 是點擊後跳到的住宿卡 */
+export const STAY_TL = {
+  nights:["12/25","12/26","12/27","12/28","12/29","12/30","12/31","01/01","01/02"],
+  bars:[
+    {c:"c1", col:"1/4", to:"hotel-1", lines:["住宿 1・登別","3 晚・4 人"]},
+    {c:"c2", col:"4/7", to:"hotel-2", lines:["住宿 2・札幌","3 晚・7 人"]},
+    {c:"c3", col:"7/9", to:"hotel-3", lines:["住宿 3・札幌","2 晚・7 人"]},
+    {c:"c4", col:"9/10", to:"hotel-4", lines:["住宿 4","1 晚・4 人"]},
+    {c:"x", col:"2/4", to:"hotel-1", lines:["＋ 第 2 筆・3 人"], sub:"（12/26 起）"}
+  ],
+  hint:"每格代表一晚，點色塊可跳到該住宿（手機可左右滑動）"
+};
+export const HOTEL1_ALT = "登別溫泉旅館插圖";
+
 
 /* 租車（依 World Net Rent-A-Car 報價單） */
 export const RENTAL = {
