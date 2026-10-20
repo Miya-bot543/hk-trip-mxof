@@ -252,7 +252,7 @@ ds.exportJSON() / ds.importJSON(file)   // 匯入時逐筆呼叫 upsert，需通
 - [x] ~~一鍵順路排序~~：不做，已移除（改成有時間的行程照時間排）。
 - [x] 把 `LIVE_ENABLED` 改成 false 或拔網路：網站以唯讀快照完整顯示，沒有錯誤。
 - [x] 離線（飛航模式）可開啟並看到最後一次資料。
-- [ ] keep-alive 與 snapshot 兩個 Actions 執行成功。
+- [x] keep-alive 與 snapshot 兩個 Actions 執行成功。（2026-10-20 確認：keep-alive 首次排程、snapshot 排程皆成功）
 
 ---
 
