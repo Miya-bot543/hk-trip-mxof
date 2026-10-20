@@ -6,7 +6,7 @@ import { ds } from "../datastore.js";
 import { S } from "../state.js";
 import { DAYS } from "../../data/static.js";
 import { ensureEditor, editorStatusHTML } from "./editor.js";
-import { pkError, pkList, PK_CATS, pkCatName } from "./pocket.js";
+import { pkError, pkList, pkPlanned, PK_CATS, pkCatName } from "./pocket.js";
 
 const SLOTS = [["allday","待排入"],["morning","上午"],["afternoon","下午"],["evening","晚上"]];
 const START = new Date(Date.UTC(2026, 11, 25));
@@ -115,10 +115,12 @@ function formHTML(){
 }
 /* ---------- 從口袋名單挑：選好時段，點地點就加進今天 ---------- */
 function pickHTML(){
-  const today=new Set(ds.items(dayDate(S.curDay)).map(x=>x.place_id).filter(Boolean)), list=pkList();
+  const planned=pkPlanned(), list=pkList();
+  // 已排過的標出排在哪幾天（同一天排兩次只寫一次）
+  const daysOf = id => planned.has(id) ? [...new Set(planned.get(id).map(x=>x.md))].join("、") : "";
   const groups=PK_CATS.map(([k])=>{ const L=list.filter(x=>x.cat===k); if(!L.length) return "";
     return `<div class="bd-pickgrp"><b>${pkCatName(k)}</b><div class="bd-picks">${L.map(x=>`<button type="button" class="bd-pick" data-bdpick="${x.uuid}">
-      <span>${esc(x.name)}</span><small class="muted">📍 ${esc((x.area||"其他").replace(/（(.+)）/,"・$1"))}${today.has(x.uuid)?' ・✓ 今天已排':''}</small></button>`).join("")}</div></div>`; }).join("");
+      <span>${esc(x.name)}</span><small class="muted">📍 ${esc((x.area||"其他").replace(/（(.+)）/,"・$1"))}${daysOf(x.uuid)?` ・✓ 已排 ${daysOf(x.uuid)}`:''}</small></button>`).join("")}</div></div>`; }).join("");
   return `<div class="card lilac" id="bdPickCard" style="margin-top:12px"><span class="tag lilac">＋ 從口袋名單挑</span>
     <div class="pk-form">
       <label>時段<select id="bdPickSlot">${SLOTS.map(([k,t])=>`<option value="${k}" ${k==="allday"?'selected':''}>${t}</option>`).join("")}</select></label>

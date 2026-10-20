@@ -659,7 +659,12 @@ dl.kv a[href^="tel:"]{text-decoration:none}
   .pk-ctl{gap:10px 14px}
   .pk-ctl>.pk-cats{flex:none}
   .pk-ctl>.pk-areas{border-left:1px solid var(--line);padding-left:14px}
+  .pk-ctl>.pk-done{order:0;flex:none}
 }
+/* 已排入膠囊：手機、平板自己一排放最下面（不擠地區那排）；電腦版接在地區後面 */
+.pk-done{order:3;flex:0 0 100%}
+.pk-done .chip{white-space:nowrap}
+.pk-planned{font-size:13px;font-weight:700;color:var(--lilac-d);background:rgba(170,140,230,.16);border-radius:999px;padding:2px 10px}
 .pk-allfb{flex:none;background:none;border:0;padding:0;cursor:pointer}
 .pk-allfb .ex-fb{font-size:13px;padding:4px 12px}
 .pk-allfb .fold-ar{display:inline-block;transition:transform .2s}

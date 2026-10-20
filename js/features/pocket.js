@@ -6,7 +6,7 @@ import { ensureEditor, editorStatusHTML } from "./editor.js";
 import { S } from "../state.js";
 
 /* ---------- 07 共用口袋名單（新增・修改・刪除走 datastore，需通關碼） ---------- */
-export const PK = {pending:false, filter:"all", afilter:"all", open:new Set(), adding:null, editing:null, formOpen:false, draftExtra:null};
+export const PK = {pending:false, filter:"all", afilter:"all", done:false, open:new Set(), adding:null, editing:null, formOpen:false, draftExtra:null};
 export const PK_CATS = [["spot","⛩️ 景點・散步"],["shop","🛍️ 購物"],["food","🍜 美食"]];
 export const PK_COLOR = {spot:"ice", shop:"lilac", food:"pink"};
 export const PK_AREAS = ["札幌（薄野）","札幌（大通）","札幌（札幌站周邊）","札幌（中島公園）","札幌（圓山）","札幌（市區其他）",
@@ -39,11 +39,19 @@ const fromPlace = p => ({ id:p.legacy_id||p.id, uuid:p.id, name:p.name, cat:p.ca
 export function pkList(){
   return ds.places().filter(p=>p.is_wishlist && PK_FIELDS[p.category]).map(fromPlace);
 }
+// 已排進 05 規劃板的地點：uuid → 排在哪幾天哪個時段（例如「12/25 下午」）
+export function pkPlanned(){
+  const m=new Map();
+  DAYS.forEach((d,i)=>ds.items(pkDay(i)).forEach(x=>{ if(!x.place_id) return;
+    const slot=(PK_SLOTS.find(s=>s[0]===x.slot)||PK_SLOTS[0])[1];
+    if(!m.has(x.place_id)) m.set(x.place_id,[]); m.get(x.place_id).push({md:d.md, slot}); }));
+  return m;
+}
 const placeOf = it => ds.places().find(p=>p.id===it.uuid);
 // 有地址時用「店名＋地址」搜尋：只用地址的話，同一棟樓可能跳到別家店
 export const pkQuery = it => it.address ? `${it.name} ${it.address}` : `${it.name} ${(it.area||"").replace(/（.*）/,"").replace("其他","北海道")}`;
 
-export function pkCardHTML(it){
+export function pkCardHTML(it, planned){
   const cat=PK_FIELDS[it.cat]?it.cat:"spot", color=PK_COLOR[cat];
   const info=it.info||{}, live=ds.mode==="live";
   // 地區統一顯示在上方（札幌加上細分區域）；標籤裡跟地區重複的字就不再顯示
@@ -56,7 +64,7 @@ export function pkCardHTML(it){
     ...PK_FIELDS[cat].map(([k,l])=>[l, info[k]&&info[k]!=="待確認"?info[k]:null]),
     ...((it.extra||[]).filter(x=>x&&x.k&&!(x.k==="電話"&&it.phone&&x.v===it.phone)).map(x=>[x.k, x.v||null]))];
   return `<div class="card ${color} hcard">
-    <div class="htop"><span class="nights">📍 ${esc(areaLabel)}</span></div>
+    <div class="htop"><span class="nights">📍 ${esc(areaLabel)}</span>${planned?`<span class="pk-planned">✓ 已排 ${esc(planned.map(x=>`${x.md} ${x.slot}`).join("、"))}</span>`:''}</div>
     <h3 style="margin-top:6px">${esc(it.name)}</h3>
     <div class="pk-tags">${(()=>{const vv=PK_VENUES.find(x=>x[0]===it.venue); return vv?`<span class="pk-venue v-${vv[0]}">${vv[1].split("（")[0]}</span>`:'';})()}${tags.map(t=>`<span>${esc(t)}</span>`).join("")}</div>
     ${it.note?`<p class="muted pk-note ${PK.open.has(it.id)?'':'clamp'}">${esc(it.note)}</p>`:''}
@@ -96,12 +104,19 @@ async function pkAddToDay(id, btn){
   }catch(e){ btn.disabled=false; pkError(e); }
 }
 
+// 符合分類、地區篩選的地點；排進行程的預設收起來，按「已排入」膠囊才只看排進去的
+const pkAreaOk = i => PK.afilter==="all" || (PK.afilter==="其他" ? !/^(札幌|登別)/.test(i.area||"") : (i.area||"").startsWith(PK.afilter));
+const pkCatOf = i => PK_FIELDS[i.cat]?i.cat:"spot";
+const pkFiltered = () => pkList().filter(i=>i&&i.name&&pkAreaOk(i)&&(PK.filter==="all"||PK.filter===pkCatOf(i)));
+const pkVisible = (planned=pkPlanned()) => pkFiltered().filter(i=>planned.has(i.uuid)===PK.done);
+const pkDoneCount = () => { const pl=pkPlanned(); return pkFiltered().filter(i=>pl.has(i.uuid)).length; };
 export function pocketListHTML(){
-  const list=pkList().filter(i=>i&&i.name).filter(i=>PK.afilter==="all" || (PK.afilter==="其他" ? !/^(札幌|登別)/.test(i.area||"") : (i.area||"").startsWith(PK.afilter)));
   if(!ds.trip()) return `<p class="muted" style="margin-top:14px">口袋名單讀取中…</p>`;
+  const planned=pkPlanned(), all=pkFiltered(), list=pkVisible(planned);
   const show = PK_CATS.filter(([k])=>PK.filter==="all"||PK.filter===k);
-  return show.map(([k,t])=>{ const L=list.filter(c=>(PK_FIELDS[c.cat]?c.cat:"spot")===k);
-    return `<div class="cat-h">${t}<span class="muted">（${L.length}）</span></div>${L.length?`<div class="grid pk-grid">${L.map(pkCardHTML).join("")}</div>`:'<p class="muted">還沒有項目。</p>'}`;}).join("");
+  return show.map(([k,t])=>{ const L=list.filter(c=>pkCatOf(c)===k);
+    const empty = PK.done ? "這一類還沒有排進行程。" : all.some(c=>pkCatOf(c)===k) ? "這一類都排進行程了。" : "還沒有項目。";
+    return `<div class="cat-h">${t}<span class="muted">（${L.length}）</span></div>${L.length?`<div class="grid pk-grid">${L.map(i=>pkCardHTML(i, planned.get(i.uuid))).join("")}</div>`:`<p class="muted">${empty}</p>`}`;}).join("");
 }
 
 export function pkStatusHTML(){
@@ -170,11 +185,12 @@ export function pocketSectionHTML(){
       ${[["all","全部"],...PK_CATS].map(([k,t])=>`<button class="chip" data-pkf="${k}" ${PK.filter===k?'aria-current="page"':''}>${t}</button>`).join("")}</div>
       <div class="row pk-areas" role="group" aria-label="篩選地區">
       ${[["all","📍 全部地區","📍 全部"],["札幌","札幌"],["登別","登別"],["其他","小樽・富良野・其他","其他"]].map(([k,t,s])=>`<button class="chip" data-pka="${k}" ${PK.afilter===k?'aria-current="page"':''}>${s?`<span class="pk-lg">${t}</span><span class="pk-sm">${s}</span>`:t}</button>`).join("")}</div>
-      ${pkAllBtnHTML()}</div>
+      ${pkDoneBtnHTML()}${pkAllBtnHTML()}</div>
     <div id="pk-area">${pocketListHTML()}</div>`;
 }
 // 全部展開／收合合成一顆：清單裡每張都打開了才顯示「收合」
-const pkAllOpen = () => { const L=pkList(); return L.length>0 && L.every(i=>PK.open.has(i.id)); };
+const pkAllOpen = () => { const L=pkVisible(); return L.length>0 && L.every(i=>PK.open.has(i.id)); };
+const pkDoneBtnHTML = () => `<div class="pk-done"><button type="button" class="chip" data-pkdone ${PK.done?'aria-current="page"':''}>✓ 已排入<span class="pk-n">（${pkDoneCount()}）</span></button></div>`;
 const pkAllBtnHTML = () => `<button type="button" class="pk-allfb" data-pkall aria-expanded="${pkAllOpen()}" aria-label="全部展開或收合"><span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></button>`;
 
 export function refreshPocket(full){
@@ -184,6 +200,7 @@ export function refreshPocket(full){
   if(full){ $("#pk-status").innerHTML=pkStatusHTML(); const n=$("#pkName"); if(!n || (!n.value && !PK.editing)){ PK.draftExtra=null; pkRenderForm(); } }
   area.innerHTML=pocketListHTML(); PK.pending=false;
   const ab=document.querySelector("[data-pkall]"); if(ab) ab.setAttribute("aria-expanded", pkAllOpen());
+  const dn=document.querySelector("[data-pkdone] .pk-n"); if(dn) dn.textContent=`（${pkDoneCount()}）`;
 }
 ds.ready().then(()=>refreshPocket());
 ds.on("change",()=>refreshPocket(true));
@@ -224,7 +241,8 @@ document.addEventListener("click",async e=>{
   if(t.closest("[data-pkaddno]")){ PK.adding=null; refreshPocket(); return; }
   const go=t.closest("[data-pkaddgo]"); if(go){ pkAddToDay(go.dataset.pkaddgo, go); return; }
   const po=t.closest("[data-pkopen]"); if(po){ const id=po.dataset.pkopen; PK.open.has(id)?PK.open.delete(id):PK.open.add(id); refreshPocket(); return; }
-  const pa=t.closest("[data-pkall]"); if(pa){ if(!pkAllOpen()) pkList().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
+  const pa=t.closest("[data-pkall]"); if(pa){ if(!pkAllOpen()) pkVisible().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
+  const dn=t.closest("[data-pkdone]"); if(dn){ PK.done=!PK.done; dn.toggleAttribute("aria-current",PK.done); refreshPocket(); return; }
   const fa=t.closest("[data-pka]"); if(fa){ PK.afilter=fa.dataset.pka; document.querySelectorAll("[data-pka]").forEach(b=>b.toggleAttribute("aria-current",b===fa)); refreshPocket(); return; }
   const f=t.closest("[data-pkf]"); if(f){ PK.filter=f.dataset.pkf; document.querySelectorAll("[data-pkf]").forEach(b=>b.toggleAttribute("aria-current",b===f)); refreshPocket(); return; }
   const ed=t.closest("[data-editpk]");
