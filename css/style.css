@@ -490,6 +490,10 @@ details.fold[open]>summary{border-bottom:2px dashed var(--line)}
 .bd-pick:hover{border-color:var(--lilac-d)}
 .bd-pick:disabled{opacity:.5}
 .bd-pick small{font-size:12px}
+/* 已排過的地點：整張變淡＋淡紫膠囊（還是可以再排到別天，滑過或聚焦時恢復） */
+.bd-pick.is-planned{opacity:.55;transition:opacity .15s}
+.bd-pick.is-planned:hover,.bd-pick.is-planned:focus-visible{opacity:1}
+.bd-pmark{display:inline-block;margin-left:6px;font-size:13px;font-weight:700;color:var(--lilac-d);background:rgba(170,140,230,.18);border-radius:999px;padding:1px 9px;white-space:normal;overflow-wrap:anywhere}
 .pk-add{margin-top:10px;padding-top:10px;border-top:1px dashed var(--lilac)}
 .pk-add .pk-form{grid-template-columns:1fr 1fr}
 .bd-grp.area{background:none;border:1px solid var(--ice)}

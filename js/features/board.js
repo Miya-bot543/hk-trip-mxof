@@ -119,8 +119,8 @@ function pickHTML(){
   // 已排過的標出排在哪幾天（同一天排兩次只寫一次）
   const daysOf = id => planned.has(id) ? [...new Set(planned.get(id).map(x=>x.md))].join("、") : "";
   const groups=PK_CATS.map(([k])=>{ const L=list.filter(x=>x.cat===k); if(!L.length) return "";
-    return `<div class="bd-pickgrp"><b>${pkCatName(k)}</b><div class="bd-picks">${L.map(x=>`<button type="button" class="bd-pick" data-bdpick="${x.uuid}">
-      <span>${esc(x.name)}</span><small class="muted">📍 ${esc((x.area||"其他").replace(/（(.+)）/,"・$1"))}${daysOf(x.uuid)?` ・✓ 已排 ${daysOf(x.uuid)}`:''}</small></button>`).join("")}</div></div>`; }).join("");
+    return `<div class="bd-pickgrp"><b>${pkCatName(k)}</b><div class="bd-picks">${L.map(x=>{ const d=daysOf(x.uuid); return `<button type="button" class="bd-pick${d?' is-planned':''}" data-bdpick="${x.uuid}">
+      <span>${esc(x.name)}</span><small class="muted">📍 ${esc((x.area||"其他").replace(/（(.+)）/,"・$1"))}${d?`<span class="bd-pmark">✓ 已排 ${d}</span>`:''}</small></button>`; }).join("")}</div></div>`; }).join("");
   return `<div class="card lilac" id="bdPickCard" style="margin-top:12px"><span class="tag lilac">＋ 從口袋名單挑</span>
     <div class="pk-form">
       <label>時段<select id="bdPickSlot">${SLOTS.map(([k,t])=>`<option value="${k}" ${k==="allday"?'selected':''}>${t}</option>`).join("")}</select></label>
