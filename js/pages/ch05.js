@@ -2,7 +2,7 @@
 import { S } from "../state.js";
 import { FLIGHTS, HOTELS, DAYS, HOTEL_DRIVER, CHAPTERS } from "../../data/static.js";
 import { esc, v } from "../util.js";
-import { isMove, dayStrip, flightCard, mapsBtn, head } from "../ui.js";
+import { isMove, ropeway, flightCard, mapsBtn, head } from "../ui.js";
 import { driverBtn } from "../features/driver.js";
 import { boardSectionHTML } from "../features/board.js";
 
@@ -52,7 +52,8 @@ export default function ch05(){
   const extra = (d.cost?`<p>💰 費用：${esc(d.cost)}</p>`:'') +
     (d.link?`<button class="btn" data-go="${d.link}">查看章節 ${d.link}</button> `:'') +
     (d.pocket?`<button class="btn ghost" data-go="07">🍜 看札幌口袋名單</button>`:'');
-  return `${head("05")}${dayStrip(i,false)}
+  const from = S.carAt ?? i; S.carAt = i;
+  return `${head("05")}${ropeway(i, from)}
   <div class="card lilac" style="margin:14px 0">
     <span class="tag lilac">Day ${i+1}</span>
     <div class="big" style="font-size:26px">${d.md}（${d.wd}）${esc(d.title)}</div>

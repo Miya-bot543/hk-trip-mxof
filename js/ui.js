@@ -12,6 +12,43 @@ export function dayStrip(activeIdx, linkTo){
     <div class="legend"><span><i style="background:var(--pink)"></i>更換住宿日（12/28、12/31、01/02）</span><span>點日期看當天安排</span></div>`;
 }
 
+/* 05 的日期線：一條纜繩串起 10 天，小纜車掛在選到的那天上方，換日期時滑過去 */
+const CAR_SVG = `<svg viewBox="0 0 44 52" aria-hidden="true">
+  <defs><linearGradient id="rwBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6aecd"/><stop offset="1" stop-color="#b79ef0"/></linearGradient></defs>
+  <circle cx="17" cy="4" r="3.2" class="rw-wh"/><circle cx="27" cy="4" r="3.2" class="rw-wh"/>
+  <rect x="14" y="3" width="16" height="5" rx="2.5" class="rw-wh"/>
+  <path d="M22 8v7M22 15l-9 4M22 15l9 4" class="rw-arm"/>
+  <rect x="6" y="18" width="32" height="30" rx="9" fill="url(#rwBody)"/>
+  <path d="M7 24c0-5 4-7.5 8-7.5h14c4 0 8 2.5 8 7.5c-2-2.2-4-2.2-6 0c-2-2.2-4-2.2-6 0c-2-2.2-4-2.2-6 0c-2-2.2-4-2.2-6 0c-2-2.2-4-2.2-6 0z" fill="#fff"/>
+  <rect x="10.5" y="26" width="9.5" height="10" rx="3" fill="#fff" opacity=".88"/><rect x="24" y="26" width="9.5" height="10" rx="3" fill="#fff" opacity=".88"/>
+  <rect x="6" y="40" width="32" height="3.2" fill="#fff" opacity=".55"/>
+</svg>`;
+export function ropeway(activeIdx, fromIdx){
+  const ti=todayIdx();
+  return `<div class="rw" style="--n:${DAYS.length}">
+    <div class="rw-cable" aria-hidden="true"></div>
+    <div class="rw-car" style="--i:${fromIdx}" data-to="${activeIdx}" aria-hidden="true">${CAR_SVG}</div>
+    <div class="rw-stops" role="group" aria-label="選擇日期">${DAYS.map((d,i)=>`
+      <button class="rw-stop ${isMove(d)?'move':''} ${i===ti?'is-today':''}" data-go="05?d=${i}" aria-pressed="${i===activeIdx}"
+        aria-label="Day ${i+1} ${d.md}（${d.wd}）${isMove(d)?'換宿':''}${i===ti?' 今天':''}"><i class="rw-dot"></i><b>${d.md}</b><span>${d.wd}${isMove(d)?'<em class="rw-bag">🧳</em>':''}</span>${i===ti?'<em class="rw-tdy">今天</em>':''}</button>`).join("")}</div>
+  </div>
+  <div class="legend"><span><i style="background:var(--pink-d)"></i>🧳 換宿日（12/28、12/31、01/02）</span><span>點日期，小纜車會滑過去</span></div>`;
+}
+/* 畫面放上去之後才把纜車移到目標日期，transition 才會動 */
+export function rideCar(){
+  const c=document.querySelector(".rw-car"); if(!c) return;
+  const from=+c.style.getPropertyValue("--i"), to=+c.dataset.to;
+  if(from===to) return;
+  c.style.setProperty("--dur", Math.min(1.1, .4+Math.abs(to-from)*.08)+"s");
+  c.style.setProperty("--tilt", (to>from?-8:8)+"deg");
+  c.getBoundingClientRect();
+  c.classList.add("moving"); c.style.setProperty("--i", to);
+  const done=e=>{ if(e.propertyName!=="left") return;
+    c.removeEventListener("transitionend",done); c.classList.remove("moving"); c.classList.add("sway"); };
+  c.addEventListener("transitionend", done);
+  if(matchMedia("(prefers-reduced-motion:reduce)").matches) c.classList.remove("moving");
+}
+
 // 地名後半段（航廈）不拆開，避免「（CTS）」單獨掉到下一行
 const placeNW=s=>{ const i=s.indexOf(" "); return i<0?esc(s):`${esc(s.slice(0,i))} <span class="nw">${esc(s.slice(i+1))}</span>`; };
 export function flightCard(f, full, bag=true){

@@ -69,5 +69,5 @@ export function todayCardHTML(){
 // 資料庫讀到或有人改了行程，就重畫首頁的今天卡片
 ds.on("change",()=>{ const c=document.getElementById("todayCard"); if(c && document.activeElement?.id!=="previewSel") c.outerHTML=todayCardHTML(); });
 document.addEventListener("change",e=>{
-  if(e.target.id==="previewSel"){ S.previewIdx = e.target.value===""?null:+e.target.value; S.dayPicked=false; S.route(); }
+  if(e.target.id==="previewSel"){ S.previewIdx = e.target.value===""?null:+e.target.value; S.route(); }
 });

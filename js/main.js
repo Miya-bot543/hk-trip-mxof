@@ -2,7 +2,8 @@
 import { S } from "./state.js";
 import { CHAPTERS, CHECKLIST } from "../data/static.js";
 import { $, store } from "./util.js";
-import "./ui.js";
+import { rideCar } from "./ui.js";
+import { coverFx } from "./features/coverfx.js";
 import { showPlace } from "./features/map.js";
 import "./features/pocket.js";
 import { todayIdx, inTrip } from "./features/today.js";
@@ -29,9 +30,18 @@ S.route = route;
 function route(){
   const h=(location.hash||"#/home").slice(2); const [page,q]=h.split("?");
   const id = PAGES[page]?page:"home";
-  if(id==="05" && q){ const m=q.match(/d=(\d+)/); if(m){ S.curDay=Math.min(9,Math.max(0,+m[1])); S.dayPicked=true; } }
-  if(id==="05" && !q && !S.dayPicked && inTrip(todayIdx())) S.curDay=todayIdx();
+  /* 05 的日期：網址有 d 就照 d；從別頁進來（或剛開網站）就回到預設日，旅途中是當天，其他時候是 Day 1。
+     停在 05 不會自己跳，要切到別頁再回來才會重新判斷。 */
+  const from=S.page; S.page=id;
+  if(id==="05"){
+    const m=(q||"").match(/d=(\d+)/);
+    if(m) S.curDay=Math.min(9,Math.max(0,+m[1]));
+    else if(from!=="05"){ const ti=todayIdx(); S.curDay=inTrip(ti)?ti:0; }
+    if(from!=="05") S.carAt=null;
+  }
   $("#app").innerHTML = PAGES[id]();
+  if(id==="05") rideCar();
+  if(id==="home") coverFx();
   const ti=todayIdx();
   $("#nav").innerHTML = `<button class="chip" data-go="home" ${id==="home"?'aria-current="page"':''}>🏠 首頁</button>`+
     (inTrip(ti)?`<button class="chip today-chip" data-go="05?d=${ti}">📍 今天</button>`:'')+
