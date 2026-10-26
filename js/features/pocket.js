@@ -242,9 +242,10 @@ document.addEventListener("click",async e=>{
   const go=t.closest("[data-pkaddgo]"); if(go){ pkAddToDay(go.dataset.pkaddgo, go); return; }
   const po=t.closest("[data-pkopen]"); if(po){ const id=po.dataset.pkopen; PK.open.has(id)?PK.open.delete(id):PK.open.add(id); refreshPocket(); return; }
   const pa=t.closest("[data-pkall]"); if(pa){ if(!pkAllOpen()) pkVisible().forEach(i=>PK.open.add(i.id)); else PK.open.clear(); refreshPocket(); return; }
-  const dn=t.closest("[data-pkdone]"); if(dn){ PK.done=!PK.done; dn.toggleAttribute("aria-current",PK.done); refreshPocket(); return; }
-  const fa=t.closest("[data-pka]"); if(fa){ PK.afilter=fa.dataset.pka; document.querySelectorAll("[data-pka]").forEach(b=>b.toggleAttribute("aria-current",b===fa)); refreshPocket(); return; }
-  const f=t.closest("[data-pkf]"); if(f){ PK.filter=f.dataset.pkf; document.querySelectorAll("[data-pkf]").forEach(b=>b.toggleAttribute("aria-current",b===f)); refreshPocket(); return; }
+  const cur=(b,on)=>on?b.setAttribute("aria-current","page"):b.removeAttribute("aria-current");
+  const dn=t.closest("[data-pkdone]"); if(dn){ PK.done=!PK.done; cur(dn,PK.done); refreshPocket(); return; }
+  const fa=t.closest("[data-pka]"); if(fa){ PK.afilter=fa.dataset.pka; document.querySelectorAll("[data-pka]").forEach(b=>cur(b,b===fa)); refreshPocket(); return; }
+  const f=t.closest("[data-pkf]"); if(f){ PK.filter=f.dataset.pkf; document.querySelectorAll("[data-pkf]").forEach(b=>cur(b,b===f)); refreshPocket(); return; }
   const ed=t.closest("[data-editpk]");
   if(ed){ if(!await ensureEditor()) return; PK.editing=ed.dataset.editpk; PK.draftExtra=null; pkRenderForm(); const c=$("#pkFormCard"); if(c) c.scrollIntoView({behavior:"smooth",block:"start"}); return; }
   const d=t.closest("[data-delpk]");
