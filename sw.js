@@ -1,7 +1,7 @@
 /* 北海道 10 日遊：離線快取。更新網站時請把 VERSION 改掉，讓手機抓到新版。
    只清除自己（PREFIX 開頭）的舊快取，不會動到其他版本的快取。 */
 const PREFIX = "hk-main-";
-const VERSION = PREFIX + "2026-10-27a";
+const VERSION = PREFIX + "2026-10-27b";
 const CORE = [
   "./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png",
   "./css/style.css", "./data/static.js", "./data/snapshot.json",
@@ -15,7 +15,7 @@ const CORE = [
   "./images/ch-01.jpg", "./images/ch-02.jpg", "./images/ch-03.jpg", "./images/ch-04.jpg", "./images/ch-05.jpg",
   "./images/ch-06.jpg", "./images/ch-07.jpg", "./images/ch-08.jpg", "./images/ch-09.jpg",
   "./images/mascot-countdown.jpg", "./images/mascot-trip.jpg", "./images/mascot-home.jpg",
-  "./images/act-asahikawa.jpg", "./images/act-ski.jpg"
+  "./images/act-asahikawa.jpg", "./images/act-asahikawa-meet.jpg", "./images/act-ski.jpg"
 ];
 const TIMEOUT = 3000;
 

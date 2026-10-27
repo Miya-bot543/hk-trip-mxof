@@ -639,6 +639,13 @@ table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;fon
 .ex-fb{display:inline-flex;align-items:center;gap:4px;flex:none;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:800;line-height:1.4;color:var(--lilac-d);background:rgba(170,140,230,.14);border:1px solid rgba(170,140,230,.4)}
 .ex-fb::before{content:"收合"}
 [aria-expanded="false"]>.ex-fb::before,[aria-expanded="false"] .ex-fb::before{content:"展開"}
+/* 06 旭川卡集合點照片 */
+.meet-pic{margin-top:6px}
+.meet-pic>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800}
+.meet-pic>summary::-webkit-details-marker{display:none}
+.meet-pic:not([open])>summary .ex-fb::before{content:"展開"}
+.meet-pic[open] .fold-ar{transform:rotate(180deg)}
+.meet-pic img{display:block;width:100%;max-width:420px;margin-top:8px;border-radius:14px;border:1px solid var(--line)}
 .ex-fb .fold-ar{font-size:13px}
 .ex-fold .ex-fb{margin-left:auto;align-self:center}
 .ex-top:hover .ex-fb,.ex-fold:hover .ex-fb{background:rgba(170,140,230,.26)}

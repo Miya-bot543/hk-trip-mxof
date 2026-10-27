@@ -81,8 +81,9 @@ export const ACTIVITIES = [
   {cls:"pink", tag:"旭川一日遊", alt:"旭川一日遊插圖", rows:[
     [{dt:"日期", dd:"12/29（二）"},{dt:"出發地", dd:"札幌（住 APA 札幌薄野站前飯店）"}],
     [{dt:"每位費用", dd:"TWD 1,710"},{dt:"整筆費用", dd:"TWD 11,970（1,710 × 7 位）"}],
-    [{dt:"方案", dd:'套裝行程（一日遊）<span class="ok">已購買</span>'},{dt:"交通", dd:"依套裝行程安排"},{dt:"集合時間地點", dd:'07:50 大通站 31 號出口<div class="split">請 07:40 前到，遲到或未出席不退款</div>'},{dt:"行程景點", dd:'旭山動物園 → Ken &amp; Mary 之樹（車上看）→ 白鬚瀑布 → 白金青池 → 森林精靈露臺<div class="split">露臺關閉時改去拓真館；行程可能依交通、天候、人數調整</div>'}],
+    [{dt:"方案", dd:'套裝行程（一日遊）<span class="ok">已購買</span>'},{dt:"交通", dd:"依套裝行程安排"},{dt:"集合時間地點", dd:'07:50 大通站 31 號出口<div class="split">請 07:40 前到，遲到或未出席不退款</div><details class="meet-pic"><summary>📷 集合點照片<span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></summary><img src="images/act-asahikawa-meet.jpg" alt="大通站 31 號出口集合點，雕像旁紅圈處" loading="lazy"></details>'},{dt:"行程景點", dd:'旭山動物園 → Ken &amp; Mary 之樹（車上看）→ 白鬚瀑布 → 白金青池 → 森林精靈露臺<div class="split">露臺關閉時改去拓真館；行程可能依交通、天候、人數調整</div>'}],
     [{dt:"回程", dd:'約 17:30 札幌站北口、<span class="nw">17:50 大通站 31 號出口</span><div class="split">實際時間看路況</div>'},{dt:"⚠️ 提醒", dd:"白鬚瀑布雪天很滑，請穿防滑雪靴"}]],
+   maps:{q:"1-chōme-1-6 Ōdōrinishi, Chuo Ward, Sapporo, Hokkaido 060-0042, Japan", label:"🗺️ 集合點地圖"},
    go:{to:"05?d=4", label:"看 12/29 每日行程"}},
   {cls:"ice", tag:"⛷️ 滑雪", alt:"滑雪插圖", rows:[
     [{dt:"日期", dd:"01/01（五）元旦"},{dt:"出發地", dd:"札幌（住札幌民宿）"}],
