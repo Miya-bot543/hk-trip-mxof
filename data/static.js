@@ -87,13 +87,16 @@ export const ACTIVITIES = [
    go:{to:"05?d=4", label:"看 12/29 每日行程"}},
   {cls:"ice", tag:"⛷️ 滑雪", alt:"滑雪插圖", rows:[
     [{dt:"日期", dd:"01/01（五）元旦"},{dt:"出發地", dd:"札幌（住札幌民宿）"}],
-    [{dt:"滑雪場", dd:'札幌手稻滑雪場<span class="nw">（サッポロテイネ）<span class="ok">預定</span></span>'}],
+    [{dt:"滑雪場", dd:'札幌手稻滑雪場<span class="nw">（サッポロテイネ）<span class="ok">已預訂</span></span><div class="split">Olympia（オリンピア）區・單板滑雪・成人 7 位</div>'}],
     [{dt:"地址", dd:'〒006-0029 北海道札幌市手稲区<span class="nw">手稲本町593番地3</span>'},{dt:"電話", dd:'<a href="tel:+81116826000">011-682-6000</a>'}],
-    [{dt:"交通", dd:null, tbd:"待決定", split:"可選：JR＋巴士、雪場「ビッグランズ號」巴士套票（市區主要飯店直達，含纜車券）、計程車套票"}],
-    [{dt:"雪具租借", dd:null, tbd:"待決定", split:"雪場有出租，可網路預約（價格請看官網「レンタル」）"},{dt:"教練課程", dd:null, tbd:"待決定"}],
-    [{dt:"纜車 1 日券", dd:'大人 ¥9,800（窗口）／<span class="nw">¥8,800（網路預購）</span><div class="split">2026–27 季 12/19～3/7 價格；<span class="nw">5 小時券 ¥7,600／¥6,600</span></div>'}],
-    [{dt:"整筆費用", dd:null},{dt:"每位費用", dd:null}]],
-   maps:{q:"北海道札幌市手稲区手稲本町593-3", label:"🗺️ Google Maps"}, links:[{name:"官網票價 ↗", url:"https://sapporo-teine.com/snow/lift-time"}],
+    [{dt:"方案", dd:'MID Travel 套裝<span class="nw">（全套雪具＋專車接送＋纜車券）</span>'}],
+    [{dt:"交通", dd:'專車往返（Toyota HiAce，7 位同一台）<div class="split">去程 08:00 札幌民宿門口上車；<span class="nw">回程 17:30 Olympia Ski Center 前集合</span></div>'}],
+    [{dt:"雪具租借", dd:'全套已含<div class="split">單板、雪鞋、雪衣、手套、帽子、護目鏡、安全帽</div>'},{dt:"纜車券", dd:'5 小時券（已含）<div class="split">第一次過纜車閘口才開始計時</div>'}],
+    [{dt:"整筆費用", dd:"¥213,500（含稅）"},{dt:"每位費用", dd:"¥30,500"}],
+    [{dt:"當天流程", dd:'<details class="meet-pic"><summary>📋 7 個步驟<span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></summary><ol><li>08:00 札幌民宿門口集合，搭專車出發</li><li>Olympia Ski Center 前下車</li><li>到纜車票櫃檯報預約代表者姓名，領 7 張 IC 卡和租借憑證</li><li>到租借櫃檯交憑證，領雪具</li><li>換好裝備去滑雪</li><li>5 小時券從第一次過閘口開始算</li><li>17:30 回到下車的地方集合，搭車回民宿</li></ol></details>'}],
+    [{dt:"⚠️ 提醒", dd:'司機資訊在出發前一天前用 Email 通知<div class="split">當天不能改接送時間；路況可能晚 10～15 分；<span class="nw">走高速公路要另外付給司機</span></div>'}],
+    [{dt:"⚠️ 免費取消期限", dd:'<b>12/21（一）前</b><div class="split">之後依天數收 20%～100%；業者只在日本時間週一～五 10:00～17:00 受理，<span class="nw">週末、國定假日、年末年始不受理</span>；積雪不足雪場沒開會全額退款</div>'}]],
+   maps:{q:"北海道札幌市手稲区手稲本町593-3", label:"🗺️ Google Maps"}, links:[{name:"MID Travel ↗", url:"https://www.mid-travel.jp/"}],
    go:{to:"05?d=7", label:"看 01/01 每日行程"}}
 ];
 export const SKI_INFO = {
@@ -103,7 +106,7 @@ export const SKI_INFO = {
     "大眾交通：JR 手稻站轉搭巴士約 16～20 分鐘；開車從札幌市中心約 40 分鐘",
     "元旦特別：山頂纜車「サミットエクスプレス」1/1 預定清晨 6:30 起運行（新年日出）",
     "窗口可用 Suica、Kitaca 等交通 IC 卡和信用卡付款"],
-  note:"滑雪場為「預定」。票價為官網公布的 2026–27 季價格，網路預購較便宜；交通方式、雪具租借與課程確定後告訴我。"
+  note:"已透過 MID Travel 預訂全套雪具、專車接送與 5 小時纜車券；以上小檔案是雪場官網資訊。"
 };
 
 /* 租車（依 World Net Rent-A-Car 報價單） */
@@ -141,18 +144,21 @@ export const RENTAL_INFO = {
 export const BUDGET = {
   flights:[{total:111196, per:27799, people:4},{total:87732, per:29244, people:3}],
   asahi:{per:1710, people:7},
-  cars:[{total:53220, people:4, per:13305},{total:26640, people:3, per:8880}]
+  cars:[{total:53220, people:4, per:13305},{total:26640, people:3, per:8880}],
+  ski:{total:213500, per:30500, people:7}
 };
 /* 08 已知費用表與每人試算的文字；試算項目的 src：flight／hotel／hotelExtra（第 2 筆訂房）／asahi，後面的數字是第幾筆 */
 export const BUDGET_INFO = {
   flightLabels:["✈️ 機票・中華航空（CI2130／CI2131）","✈️ 機票・星宇航空（JX318／JX319）"],
+  skiPer:"手稻滑雪（01/01）",
   asahiLabel:"🎫 旭川一日遊套裝（12/29）", asahiCalc:"1,710 × 7 計算",
-  currencyNote:"機票、住宿、旭川一日遊是台幣；租車是日圓，兩種幣別分開加總，不換算。",
+  skiLabel:"⛷️ 手稻滑雪套裝（01/01）",
+  currencyNote:"機票、住宿、旭川一日遊是台幣；租車、滑雪是日圓，兩種幣別分開加總，不換算。",
   groups:[
     {title:"中華航空組", people:4, color:"pink", items:[["機票 CI2130／CI2131","flight",0],["住宿 1 adex inn（3 晚）","hotel",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["住宿 4 Vessel（1 晚）","hotel",3],["旭川一日遊","asahi"]], car:["租車 第 1 台",0]},
     {title:"星宇航空組", people:3, color:"ice", items:[["機票 JX318／JX319","flight",1],["住宿 1 adex inn・第 2 筆（2 晚）","hotelExtra",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["旭川一日遊","asahi"]], car:["租車 第 2 台",1]}
   ],
-  groupNote:"試算只包含目前已知的費用（不含滑雪、餐飲、交通、購物）。各筆每位費用有小數，所以「每人小計 × 人數」與整筆合計可能差幾分錢。",
+  groupNote:"試算只包含目前已知的費用（不含餐飲、交通、購物）。各筆每位費用有小數，所以「每人小計 × 人數」與整筆合計可能差幾分錢。",
   splitNote:"試算工具，數字只存在你這台裝置。",
   tool:{title:"🧾 旅行分帳小幫手", badge:"外部工具", intro:"旅行中誰先付錢、誰該還誰，用這個工具記帳和結算：",
     points:["可記錄消費名稱、類別、日期、金額、誰先墊付和參與分帳的人，可以一鍵均分",
@@ -182,8 +188,8 @@ export const TRIP_ROUTES = [
    tip:"JR 快速エアポート到札幌站 → 地下鐵南北線到薄野站；或搭機場巴士直達薄野一帶。"},
   {d:"12/31（四）", who:"全員 7 位", from:"APA 札幌薄野站前飯店", to:"札幌民宿（中島公園附近）", oh:1, dest:2,
    tip:"距離不遠但帶著行李，建議計程車；或搭市電到「中島公園通」站。"},
-  {d:"01/01（五）", who:"全員 7 位", from:"札幌民宿", to:"札幌手稻滑雪場（預定）", oh:2, destName:"サッポロテイネ",
-   tip:"地下鐵或市電到札幌站 → JR 到手稻站 → 轉巴士。元旦班次可能不同，前一天先查。"},
+  {d:"01/01（五）", who:"全員 7 位", from:"札幌民宿", to:"札幌手稻滑雪場（Olympia）", oh:2, destName:"サッポロテイネ",
+   tip:"MID Travel 專車往返：08:00 民宿門口上車，17:30 Olympia Ski Center 前集合回程。當天不能改時間。"},
   {d:"01/02（六）", who:"星宇 3 位", from:"札幌民宿", to:"新千歲機場（16:00 起飛）", oh:2, destName:"新千歳空港",
    tip:"建議 14:00 前到機場。地下鐵到札幌站 → JR 快速エアポート，或機場巴士。"},
   {d:"01/02（六）", who:"中華 4 位", from:"札幌民宿", to:"Vessel Hotel Campana Susukino", oh:2, dest:3,
@@ -216,8 +222,9 @@ export const DAYS = [
   {md:"12/30", wd:"三", title:"札幌", area:"札幌", transport:null, plan:[], stay:1, checkout:null, pocket:true},
   {md:"12/31", wd:"四", title:"更換至札幌民宿・跨年夜", area:"札幌", transport:"計程車或市電",
    plan:["10:00 前退房 APA 札幌薄野站前飯店","15:00 後入住札幌民宿"], stay:2, checkout:1, pocket:true},
-  {md:"01/01", wd:"五", title:"滑雪・元旦", area:"札幌手稻滑雪場（預定）", transport:null,
-   plan:["從札幌民宿出發前往札幌手稻滑雪場（預定）","滑雪（雪具、課程待確認）","返回札幌民宿"], stay:2, checkout:null, link:"06"},
+  {md:"01/01", wd:"五", title:"滑雪・元旦", area:"札幌手稻滑雪場（Olympia）", transport:"MID Travel 專車往返",
+   plan:["08:00 專車從札幌民宿出發","滑雪（Olympia 區，5 小時纜車券）","17:30 Olympia Ski Center 前集合，專車返回札幌民宿"], stay:2, checkout:null, link:"06",
+   alerts:["司機資訊在出發前一天前用 Email 通知，記得確認"]},
   {md:"01/02", wd:"六", title:"札幌市區活動・換宿", area:"札幌", transport:"換宿：計程車或市電",
    plan:["10:00 前退房札幌民宿（7 位）","3 位：前往新千歲機場，16:00 搭 JX319 返回台中（19:55 抵達）","4 位：札幌市區活動","4 位：14:00 後入住 Vessel Hotel Campana Susukino"], stay:3, stayNote:"（中華 4 位）", checkout:2, pocket:true, flights:[3], split:["🏠 星宇 3 位：札幌 → 新千歲機場 → 台中（JX319 16:00 起飛）","🏨 中華 4 位：留在札幌，入住 Vessel Hotel"],
    alerts:["3 位搭 16:00 班機，前往新千歲機場的交通與出發時間待確認"]},
@@ -232,7 +239,7 @@ export const PLACES = [
   {id:"nob", name:"登別", x:490, y:800, lx:330, ly:905, color:"#e88db4", info:"溫泉住宿 3 晚，住登別 adex inn（12/25 起 4 人，12/26 起加訂 3 人）。", days:[0,1,2,3], hotels:[0]},
   {id:"spk", name:"札幌", x:420, y:470, lx:250, ly:400, color:"#9a7fd6", info:"住宿 6 晚，依序住 APA、札幌民宿、Vessel Hotel。", days:[3,4,5,6,7,8,9], hotels:[1,2,3], link:"07"},
   {id:"asa", name:"旭川", x:860, y:360, lx:860, ly:270, color:"#e88db4", info:"12/29 旭川一日遊套裝行程（TWD 1,710／每位），從札幌出發。", days:[4], hotels:[], link:"06"},
-  {id:"ski", name:"手稻滑雪場", x:470, y:258, lx:560, ly:160, color:"#e9b44a", tbd:true, info:"01/01 滑雪，預定在札幌手稻滑雪場（サッポロテイネ），位在札幌市區西北方的手稻區。", days:[7], hotels:[], link:"06"}
+  {id:"ski", name:"手稻滑雪場", x:470, y:258, lx:560, ly:160, color:"#e9b44a", info:"01/01 滑雪，在札幌手稻滑雪場（サッポロテイネ）Olympia 區，位在札幌市區西北方的手稻區。", days:[7], hotels:[], link:"06"}
 ];
 export const TODAY_PLACE = ["nob","nob","nob","spk","asa","spk","spk","ski","spk","cts"];
 /* [起點, 終點, 是否待確認] */
@@ -284,7 +291,7 @@ export const CHECKLIST = [
   ["證件","護照（效期足夠）"],["證件","駕駛：護照＋台灣駕照＋日文譯本（正本，內容一致）"],["租車","加入租車公司中文 LINE，留言訂單號碼"],["租車","12/28 還車前在千歲市內加滿 REGULAR，保留收據"],["證件","電子機票：中華 CI2130／CI2131、星宇 JX318／JX319"],
   ["證件","四間住宿訂房確認信"],["證件","旅遊保險"],["證件","Visit Japan Web 填寫（小抄在本頁最上方）"],
   ["行程","確認 12/25 清晨前往桃園機場的交通（05:00 起飛）"],["行程","確認 01/02 星宇 3 位前往機場的交通（16:00 起飛）"],["行程","確認 01/03 中華 4 位前往新千歲機場的交通（10:40 起飛）"],
-  ["行程","確認手稻滑雪場元旦營業、雪具租借與交通"],
+  ["行程","手稻滑雪已預訂：出發前一天前確認司機資訊 Email"],
   ["行李","託運每人 1 件、23 公斤以內"],["行李","手提每人 1 件、7 公斤以內"],["行李","預留伴手禮空間"],
   ["保暖","發熱衣、羽絨外套"],["保暖","防水防滑雪靴或冰爪"],["保暖","手套、毛帽、圍巾"],["保暖","暖暖包"],
   ["電子","行動電源（隨身，不可託運）"],["電子","充電線、轉接頭"],["電子","網卡／eSIM"],

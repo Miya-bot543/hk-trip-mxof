@@ -34,7 +34,7 @@ export function mapHTML(){
           ${seg}${pts}
         </svg>
       </div>
-      <p class="muted" style="margin:8px 6px 0">🗺️ 插畫示意地圖，非實際比例。數字是移動順序，金色虛線是 01/01 往返手稻滑雪場（預定）。點地名看相關日期與住宿。</p>
+      <p class="muted" style="margin:8px 6px 0">🗺️ 插畫示意地圖，非實際比例。數字是移動順序，金色虛線是 01/01 往返手稻滑雪場。點地名看相關日期與住宿。</p>
     </div>
     <div class="card pink" id="placeInfo" aria-live="polite">
       <span class="tag">點地圖上的地名</span>

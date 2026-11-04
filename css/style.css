@@ -645,6 +645,7 @@ table.ex-st{min-width:0;width:100%;border-collapse:separate;border-spacing:0;fon
 .meet-pic>summary::-webkit-details-marker{display:none}
 .meet-pic:not([open])>summary .ex-fb::before{content:"展開"}
 .meet-pic[open] .fold-ar{transform:rotate(180deg)}
+.meet-pic ol{margin:8px 0 0;padding-left:20px;font-size:13px;line-height:1.7}
 .meet-pic img{display:block;width:100%;max-width:420px;margin-top:8px;border-radius:14px;border:1px solid var(--line)}
 .ex-fb .fold-ar{font-size:13px}
 .ex-fold .ex-fb{margin-left:auto;align-self:center}
