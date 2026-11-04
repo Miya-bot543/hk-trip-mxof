@@ -92,7 +92,7 @@ export const ACTIVITIES = [
     [{dt:"方案", dd:'MID Travel 套裝<span class="nw">（全套雪具＋專車接送＋纜車券）</span>'}],
     [{dt:"交通", dd:'專車往返（Toyota HiAce，7 位同一台）<div class="split">去程 08:00 札幌民宿門口上車；<span class="nw">回程 17:30 Olympia Ski Center 前集合</span></div>'}],
     [{dt:"雪具租借", dd:'全套已含<div class="split">單板、雪鞋、雪衣、手套、帽子、護目鏡、安全帽</div>'},{dt:"纜車券", dd:'5 小時券（已含）<div class="split">第一次過纜車閘口才開始計時</div>'}],
-    [{dt:"整筆費用", dd:"¥213,500（含稅）"},{dt:"每位費用", dd:"¥30,500"}],
+    [{dt:"整筆費用", dd:'¥213,500（含稅）<div class="split">刷卡約 TWD 43,968，<span class="nw">以帳單為準</span></div>'},{dt:"每位費用", dd:'¥30,500<div class="split">約 TWD 6,281.15</div>'}],
     [{dt:"當天流程", dd:'<details class="meet-pic"><summary>📋 7 個步驟<span class="ex-fb" aria-hidden="true"><span class="fold-ar">▾</span></span></summary><ol><li>08:00 札幌民宿門口集合，搭專車出發</li><li>Olympia Ski Center 前下車</li><li>到纜車票櫃檯報預約代表者姓名，領 7 張 IC 卡和租借憑證</li><li>到租借櫃檯交憑證，領雪具</li><li>換好裝備去滑雪</li><li>5 小時券從第一次過閘口開始算</li><li>17:30 回到下車的地方集合，搭車回民宿</li></ol></details>'}],
     [{dt:"⚠️ 提醒", dd:'司機資訊在出發前一天前用 Email 通知<div class="split">當天不能改接送時間；路況可能晚 10～15 分；<span class="nw">走高速公路要另外付給司機</span></div>'}],
     [{dt:"⚠️ 免費取消期限", dd:'<b>12/21（一）前</b><div class="split">之後依天數收 20%～100%；業者只在日本時間週一～五 10:00～17:00 受理，<span class="nw">週末、國定假日、年末年始不受理</span>；積雪不足雪場沒開會全額退款</div>'}]],
@@ -145,7 +145,8 @@ export const BUDGET = {
   flights:[{total:111196, per:27799, people:4},{total:87732, per:29244, people:3}],
   asahi:{per:1710, people:7},
   cars:[{total:53220, people:4, per:13305},{total:26640, people:3, per:8880}],
-  ski:{total:213500, per:30500, people:7}
+  /* 滑雪：業者報價 ¥213,500；刷卡金額依 11/04 聯邦卡簡訊（約 TWD 43,968，以帳單為準），每位 = 整筆 ÷ 7 */
+  ski:{total:43968, per:43968/7, people:7, jpy:213500}
 };
 /* 08 已知費用表與每人試算的文字；試算項目的 src：flight／hotel／hotelExtra（第 2 筆訂房）／asahi，後面的數字是第幾筆 */
 export const BUDGET_INFO = {
@@ -153,7 +154,8 @@ export const BUDGET_INFO = {
   skiPer:"手稻滑雪（01/01）",
   asahiLabel:"🎫 旭川一日遊套裝（12/29）", asahiCalc:"1,710 × 7 計算",
   skiLabel:"⛷️ 手稻滑雪套裝（01/01）",
-  currencyNote:"機票、住宿、旭川一日遊是台幣；租車、滑雪是日圓，兩種幣別分開加總，不換算。",
+  skiCalc:'刷卡金額，<span class="nw">以帳單為準</span>',
+  currencyNote:"租車是日圓，其他都是台幣，兩種幣別分開加總，不換算。滑雪依刷卡簡訊金額，帳單出來再更新。",
   groups:[
     {title:"中華航空組", people:4, color:"pink", items:[["機票 CI2130／CI2131","flight",0],["住宿 1 adex inn（3 晚）","hotel",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["住宿 4 Vessel（1 晚）","hotel",3],["旭川一日遊","asahi"]], car:["租車 第 1 台",0]},
     {title:"星宇航空組", people:3, color:"ice", items:[["機票 JX318／JX319","flight",1],["住宿 1 adex inn・第 2 筆（2 晚）","hotelExtra",0],["住宿 2 APA（3 晚）","hotel",1],["住宿 3 札幌民宿（2 晚）","hotel",2],["旭川一日遊","asahi"]], car:["租車 第 2 台",1]}
